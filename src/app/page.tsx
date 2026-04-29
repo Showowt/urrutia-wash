@@ -11,10 +11,136 @@ import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 // import Preloader from '@/components/cinema/Preloader';
 import HeroHeadline from '@/components/cinema/HeroHeadline';
 import StatsCounter from '@/components/cinema/StatsCounter';
+import JsonLd, { type SchemaInput } from '@/components/seo/JsonLd';
+
+// ─── Schema.org structured data ───────────────────────────────────────────────
+const BUSINESS_ADDRESS = {
+  streetAddress: '1195 Wellness Pl',
+  addressLocality: 'Henderson',
+  addressRegion: 'NV',
+  postalCode: '89074',
+  addressCountry: 'US',
+};
+
+const BUSINESS_URL = 'https://urrutiawash.com';
+const BUSINESS_IMAGE = `${BUSINESS_URL}/gallery/brabus-g63.jpg`;
+const OPENING_HOURS = [
+  'Mo 07:00-16:30',
+  'Tu 07:00-16:30',
+  'We 07:00-16:30',
+  'Th 07:00-16:30',
+  'Fr 07:00-16:30',
+  'Sa 07:00-16:30',
+];
+
+const homepageSchemas: SchemaInput[] = [
+  {
+    type: 'LocalBusiness',
+    name: 'Urrutia Carwash & Detail',
+    description:
+      'Premium hand wash and auto detailing at LVAC Henderson. Express washes, full details, and ceramic coating — while you train.',
+    url: BUSINESS_URL,
+    address: BUSINESS_ADDRESS,
+    geo: { latitude: 36.0211, longitude: -115.0707 },
+    openingHours: OPENING_HOURS,
+    priceRange: '$$',
+    image: BUSINESS_IMAGE,
+    sameAs: [
+      'https://www.instagram.com/lvacwashndetail',
+    ],
+  },
+  {
+    type: 'AutoRepair',
+    name: 'Urrutia Carwash & Detail',
+    description:
+      'Premium hand wash, interior detail, paint correction, and ceramic coating services in Henderson, NV.',
+    url: BUSINESS_URL,
+    address: BUSINESS_ADDRESS,
+    openingHours: OPENING_HOURS,
+    priceRange: '$$',
+    image: BUSINESS_IMAGE,
+    hasOfferCatalog: {
+      name: 'Car Wash & Detail Services',
+      itemListElement: [
+        {
+          name: 'Express Hand Wash',
+          description: 'Full exterior hand wash with spot-free rinse and hand dry.',
+          price: '35',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Wash + Interior',
+          description: 'Exterior hand wash plus full interior vacuum, wipe-down, and glass clean.',
+          price: '75',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Full Detail',
+          description:
+            'Complete paint decontamination, interior deep clean, leather conditioning, and ceramic spray sealant.',
+          price: '295',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Ceramic Coating',
+          description:
+            'Professional-grade 9H ceramic coating with multi-year paint protection and hydrophobic finish.',
+          price: '895',
+          priceCurrency: 'USD',
+        },
+      ],
+    },
+  },
+  {
+    type: 'AggregateRating',
+    itemReviewed: { name: 'Urrutia Carwash & Detail', url: BUSINESS_URL },
+    ratingValue: 4.9,
+    bestRating: 5,
+    worstRating: 1,
+    reviewCount: 120,
+  },
+  {
+    type: 'FAQPage',
+    questions: [
+      {
+        question: 'Where is Urrutia Carwash & Detail located?',
+        answer:
+          'We are located at 1195 Wellness Pl, Henderson, NV 89074 — inside the LVAC (Las Vegas Athletic Club) parking area.',
+      },
+      {
+        question: 'What are your hours?',
+        answer: 'We are open Monday through Saturday from 7:00 AM to 4:30 PM. We are closed on Sundays at this location.',
+      },
+      {
+        question: 'Do you offer mobile detailing?',
+        answer:
+          'Yes. We offer mobile detailing 7 days a week across the Las Vegas valley. We come to your home, office, or any location within 15 miles of Henderson.',
+      },
+      {
+        question: 'How does the LVAC drop-off service work?',
+        answer:
+          'Park at LVAC Henderson, hand your keys to your detailer, and work out. We send you an SMS with before/after photos the moment your car is ready. Walk out to a clean car.',
+      },
+      {
+        question: 'Do you offer memberships?',
+        answer:
+          'Yes. We offer three membership tiers: SOLO ($89/mo, 4 washes), DUO ($149/mo, 8 washes, 2 vehicles), and FLEET ($279/mo, unlimited washes, up to 4 vehicles). Members also receive discounts on details and ceramic coatings.',
+      },
+      {
+        question: 'Do you do ceramic coating?',
+        answer:
+          'Yes. We offer professional 9H ceramic coating starting at $895. This includes full paint decontamination and a multi-year hydrophobic protection warranty.',
+      },
+    ],
+  },
+];
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
+      {/* ─── Structured data ─── */}
+      <JsonLd schemas={homepageSchemas} />
+
       {/* Preloader removed — was blocking page load */}
 
       {/* ─── Navigation ─── */}

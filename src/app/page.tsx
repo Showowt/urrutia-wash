@@ -7,15 +7,15 @@ import LocationSection from '@/components/sections/LocationSection';
 import FaqSection from '@/components/sections/FaqSection';
 import FinalCta from '@/components/sections/FinalCta';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
-import Preloader from '@/components/cinema/Preloader';
+// Preloader disabled — video autoplay blocked on most browsers
+// import Preloader from '@/components/cinema/Preloader';
 import HeroHeadline from '@/components/cinema/HeroHeadline';
 import StatsCounter from '@/components/cinema/StatsCounter';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* ─── Cinematic Preloader ─── */}
-      <Preloader />
+      {/* Preloader removed — was blocking page load */}
 
       {/* ─── Navigation ─── */}
       <SiteNav />

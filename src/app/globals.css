@@ -219,12 +219,7 @@ html {
   color: #ffffff;
 }
 
-/* ─── Custom cursor (desktop only) ─── */
-@media (pointer: fine) {
-  a, button, [role="button"], label[for] {
-    cursor: none;
-  }
-}
+/* Custom cursor disabled */
 
 .cursor-dot {
   pointer-events: none;

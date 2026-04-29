@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/cinema/CustomCursor";
+// import CustomCursor from "@/components/cinema/CustomCursor";
 
 const outfit = Outfit({
   variable: "--font-display",
@@ -54,7 +54,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} ${spaceMono.variable}`}>
       <body className="min-h-screen antialiased">
-        <CustomCursor />
         {children}
       </body>
     </html>

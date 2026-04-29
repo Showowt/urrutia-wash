@@ -219,9 +219,11 @@ html {
   color: #ffffff;
 }
 
-/* ─── Custom cursor ─── */
-a, button, [role="button"], label[for] {
-  cursor: none;
+/* ─── Custom cursor (desktop only) ─── */
+@media (pointer: fine) {
+  a, button, [role="button"], label[for] {
+    cursor: none;
+  }
 }
 
 .cursor-dot {

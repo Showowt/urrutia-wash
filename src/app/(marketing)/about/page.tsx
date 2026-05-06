@@ -179,7 +179,7 @@ export default function AboutPage() {
                     The connection to the LVAC community, the decision to focus on premium vehicles, and the obsession with doing the work right the first time — this is where that story lives. It builds trust because it&rsquo;s real.
                   </p>
                   <p>
-                    Based in Henderson, NV. Serving the valley since 2024. Mobile detailing 7 days a week. The only car care service built specifically for the desert climate your car actually lives in.
+                    Based in Henderson, NV. Serving the valley since 2024. Open Monday through Saturday at LVAC. The only car care service built specifically for the desert climate your car actually lives in.
                   </p>
                 </div>
               </RevealOnScroll>

@@ -17,8 +17,8 @@ const FAQS = [
     a: 'When you book, we capture your phone number. You\u2019ll get a text when we start, when we\u2019re halfway, and the moment your car is ready \u2014 with before/after photos. No app needed.',
   },
   {
-    q: 'Where does the mobile service cover?',
-    a: 'All of Henderson, Green Valley, Anthem, and most of the Las Vegas valley. We bring water, power, product, and pressure \u2014 nothing required from you.',
+    q: 'Where are you located?',
+    a: '1195 Wellness Pl, Henderson, NV 89011 — inside the LVAC (Las Vegas Athletic Club) parking area. Drop your car, train, drive home clean.',
   },
   {
     q: 'Can I cancel my membership?',

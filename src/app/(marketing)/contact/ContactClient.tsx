@@ -53,9 +53,9 @@ export default function ContactPage() {
   const CONTACT_ITEMS = [
     {
       label: 'Address',
-      value: '1195 Wellness Pl, Henderson, NV 89074',
+      value: '1195 Wellness Pl, Henderson, NV 89011',
       sub: 'Inside LVAC parking lot',
-      href: 'https://maps.google.com/?q=1195+Wellness+Pl+Henderson+NV+89074',
+      href: 'https://maps.google.com/?q=1195+Wellness+Pl+Henderson+NV+89011',
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -172,9 +172,9 @@ export default function ContactPage() {
                   />
                 </div>
                 <p className="text-xs text-muted mt-2 font-mono">
-                  1195 Wellness Pl · Henderson, NV 89074 ·{' '}
+                  1195 Wellness Pl · Henderson, NV 89011 ·{' '}
                   <a
-                    href="https://maps.google.com/?q=1195+Wellness+Pl+Henderson+NV+89074"
+                    href="https://maps.google.com/?q=1195+Wellness+Pl+Henderson+NV+89011"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-water hover:underline"

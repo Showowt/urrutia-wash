@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         '/admin/',
       ],
     },
-    sitemap: 'https://urrutiawash.com/sitemap.xml',
+    sitemap: 'https://www.washduringworkout.com/sitemap.xml',
   };
 }

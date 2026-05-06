@@ -7,8 +7,9 @@
 import { bookingSchema } from "@/lib/validators/booking";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTemplateSMS } from "@/lib/twilio/sms";
-import { SERVICE_PRICES } from "@/lib/stripe/pricing";
+import { SERVICES } from "@/lib/square/pricing";
 import type { ServiceType } from "@/types/database";
+import { notifyBooking } from "@/lib/telegram";
 
 export async function POST(request: Request) {
   try {
@@ -164,7 +165,7 @@ export async function POST(request: Request) {
     }
 
     // ── 4. Create wash record ──────────────────────────
-    const amountCents = SERVICE_PRICES[service_type as ServiceType];
+    const amountCents = SERVICES[service_type as keyof typeof SERVICES]?.priceCents ?? 3500;
 
     const { data: wash, error: washError } = await supabase
       .from("washes")
@@ -187,6 +188,16 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    // ── 5a. Notify owner via Telegram ──────────────────
+    await notifyBooking({
+      name: userName,
+      phone,
+      service: service_type,
+      vehicle: vehicleLabel,
+      plate,
+      when: scheduled_for ?? undefined,
+    });
 
     // ── 5. Send confirmation SMS ───────────────────────
     const serviceLabel =

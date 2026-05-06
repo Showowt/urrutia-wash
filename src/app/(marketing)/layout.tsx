@@ -31,7 +31,7 @@ function SiteFooter() {
             <span className="wordmark text-lg">URRUTIA</span>
           </Link>
           <p className="text-sm text-muted leading-relaxed">
-            Premium hand wash and detail at LVAC Henderson. Mobile service available valley-wide.
+            Premium hand wash and detail at LVAC Henderson. Open Mon-Sat 7:00-4:30.
           </p>
           <p className="text-xs text-muted mt-4">
             Fully insured &amp; bonded · Henderson, NV
@@ -57,7 +57,7 @@ function SiteFooter() {
           <p className="font-mono text-[10px] text-muted tracking-widest mb-4">LOCATION</p>
           <ul className="space-y-2 text-sm text-muted">
             <li>1195 Wellness Pl</li>
-            <li>Henderson, NV 89074</li>
+            <li>Henderson, NV 89011</li>
             <li className="mt-3">Mon–Sat · 7:00–4:30</li>
             <li className="text-muted/60 text-xs">Sunday · Closed</li>
           </ul>

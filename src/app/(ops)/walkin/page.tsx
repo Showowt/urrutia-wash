@@ -176,13 +176,37 @@ export default function WalkInPage() {
     setStep(4);
   }
 
-  // ── Step 5: Confirm ─────────────────────────────────────
-  function handleConfirm() {
-    setConfirmed(true);
-    // In production: POST /api/ops/walkin, then redirect
-    setTimeout(() => {
-      router.push("/ops/queue");
-    }, 2000);
+  // ── Step 5: Confirm — Square checkout ───────────────────
+  async function handleConfirm() {
+    if (!selectedService) return;
+
+    try {
+      const res = await fetch("/api/payments/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_id: selectedService.id,
+          customer_name: customerName,
+          customer_phone: phone.replace(/\D/g, ""),
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || json.error) {
+        throw new Error(json.message || "Checkout failed");
+      }
+
+      // Redirect to Square payment
+      window.location.href = json.data.checkout_url;
+    } catch (err) {
+      // Fallback: show success and move to queue (for demo/offline scenarios)
+      console.error("[WalkIn] payment error:", err);
+      setConfirmed(true);
+      setTimeout(() => {
+        router.push("/ops/queue");
+      }, 2000);
+    }
   }
 
   const customerName = customer?.name ?? newName;
@@ -699,7 +723,7 @@ export default function WalkInPage() {
           </button>
 
           <p className="text-center text-xs font-mono" style={{ color: "#8B95A8" }}>
-            Stripe Terminal &middot; Tap / chip / swipe
+            Square Checkout &middot; Secure payment
           </p>
         </div>
       )}

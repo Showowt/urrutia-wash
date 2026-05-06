@@ -62,7 +62,7 @@ export async function POST(request: Request) {
 
       if (!user) {
         return twimlResponse(
-          "URRUTIA: We couldn't find your booking. Call us at (725) 200-0000 or visit urrutiawash.com to reschedule."
+          "URRUTIA: We couldn't find your booking. Call us at (702) 326-4101 or visit washduringworkout.com to reschedule."
         );
       }
 
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
 
       if (!latestWash) {
         return twimlResponse(
-          "URRUTIA: No active booking found. Visit urrutiawash.com to book a new appointment."
+          "URRUTIA: No active booking found. Visit washduringworkout.com to book a new appointment."
         );
       }
 
@@ -86,12 +86,12 @@ export async function POST(request: Request) {
       const activeStatuses = ["started", "washing", "detailing", "finishing", "ready"];
       if (activeStatuses.includes(latestWash.status)) {
         return twimlResponse(
-          "URRUTIA: Your car is already in progress — changes aren't possible at this stage. Call (725) 200-0000 if you need help."
+          "URRUTIA: Your car is already in progress — changes aren't possible at this stage. Call (702) 326-4101 if you need help."
         );
       }
 
       return twimlResponse(
-        "URRUTIA: To reschedule, visit urrutiawash.com/book or call (725) 200-0000. Have your booking ID ready: " +
+        "URRUTIA: To reschedule, visit washduringworkout.com/book or call (702) 326-4101. Have your booking ID ready: " +
           latestWash.id.slice(0, 8).toUpperCase()
       );
     }
@@ -116,7 +116,7 @@ export async function POST(request: Request) {
 
       if (!user) {
         return twimlResponse(
-          "URRUTIA: No account found for this number. Book at urrutiawash.com."
+          "URRUTIA: No account found for this number. Book at washduringworkout.com."
         );
       }
 
@@ -130,7 +130,7 @@ export async function POST(request: Request) {
 
       if (!latestWash) {
         return twimlResponse(
-          "URRUTIA: No recent washes found. Book at urrutiawash.com."
+          "URRUTIA: No recent washes found. Book at washduringworkout.com."
         );
       }
 
@@ -151,11 +151,11 @@ export async function POST(request: Request) {
 
     // ── 6. Unrecognized — friendly fallback ───────────
     return twimlResponse(
-      "URRUTIA: Reply CHANGE to reschedule, STATUS for an update, or visit urrutiawash.com. Reply STOP to opt out."
+      "URRUTIA: Reply CHANGE to reschedule, STATUS for an update, or visit washduringworkout.com. Reply STOP to opt out."
     );
   } catch (error) {
     console.error("[POST /api/webhooks/twilio]", error);
     // Always return valid TwiML — never let Twilio see a 500
-    return twimlResponse("URRUTIA: Something went wrong. Please call (725) 200-0000.");
+    return twimlResponse("URRUTIA: Something went wrong. Please call (702) 326-4101.");
   }
 }

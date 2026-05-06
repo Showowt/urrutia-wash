@@ -17,26 +17,31 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-  title: "URRUTIA - Premium Hand Wash & Detail | LVAC Henderson, NV",
+  title: "LVAC Carwash and Detailing | Premium Hand Wash & Detail | Henderson, NV",
   description:
-    "Drop your car. Train. Drive home clean. Premium hand wash and detailing at LVAC Henderson. Mobile service available 7 days a week.",
+    "Drop your car. Train. Drive home clean. Premium hand wash and detailing at LVAC Henderson, NV. Express wash, full detail, and ceramic coating — while you work out.",
   keywords: [
     "car wash",
     "hand wash",
-    "detail",
+    "auto detailing",
     "LVAC",
     "Henderson",
     "Las Vegas",
     "ceramic coating",
-    "mobile detailing",
+    "car detail Henderson NV",
+    "LVAC carwash",
+    "wash during workout",
   ],
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+  },
   openGraph: {
-    title: "URRUTIA - Premium Hand Wash & Detail",
+    title: "LVAC Carwash and Detailing | Premium Hand Wash & Detail",
     description:
       "Park at LVAC. We hand-wash and detail your car while you train. Walk out to clean.",
     type: "website",
     locale: "en_US",
-    siteName: "URRUTIA",
+    siteName: "LVAC Carwash and Detailing",
   },
 };
 

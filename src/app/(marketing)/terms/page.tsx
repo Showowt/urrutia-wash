@@ -7,9 +7,9 @@ export const metadata = {
 };
 
 const LAST_UPDATED = 'April 29, 2026';
-const BUSINESS_NAME = 'URRUTIA Carwash & Detail';
-const BUSINESS_ADDRESS = '1195 Wellness Pl, Henderson, NV 89074';
-const CONTACT_EMAIL = 'hello@urrutiawash.com';
+const BUSINESS_NAME = 'LVAC Carwash and Detailing';
+const BUSINESS_ADDRESS = '1195 Wellness Pl, Henderson, NV 89011';
+const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
 
 function Breadcrumb() {
   return (
@@ -56,7 +56,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold mb-4 text-ink">2. Services Description</h2>
               <p className="text-sm mb-3">
-                URRUTIA provides premium hand car wash and detailing services at {BUSINESS_ADDRESS} and mobile detailing services throughout the Las Vegas valley. Our services include:
+                URRUTIA provides premium hand car wash and detailing services at {BUSINESS_ADDRESS}. Our services include:
               </p>
               <ul className="list-none space-y-2 text-sm">
                 {[
@@ -64,7 +64,7 @@ export default function TermsPage() {
                   'Wash + interior cleaning ($75 per vehicle)',
                   'Full detail (starting at $295)',
                   'Ceramic coating (starting at $895)',
-                  'Mobile detailing (surcharge applies)',
+                  'Add-on services (spray wax, engine detail, etc.)',
                   'URRUTIA Club membership subscriptions (SOLO/DUO/FLEET)',
                 ].map((s, i) => (
                   <li key={i} className="flex gap-3">
@@ -103,7 +103,7 @@ export default function TermsPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <p className="font-semibold text-ink mb-1">4.1 Subscription Terms</p>
-                  <p>Membership subscriptions (SOLO, DUO, FLEET) are billed monthly or annually via Stripe. By subscribing, you authorize recurring charges at the stated interval until you cancel.</p>
+                  <p>Membership subscriptions (SOLO, DUO, FLEET) are billed monthly or annually via Square. By subscribing, you authorize recurring charges at the stated interval until you cancel.</p>
                 </div>
                 <div>
                   <p className="font-semibold text-ink mb-1">4.2 Auto-Renewal Disclosure (Nevada Law)</p>
@@ -129,7 +129,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold mb-4 text-ink">5. Payments</h2>
               <div className="space-y-3 text-sm">
-                <p>All payments are processed securely by Stripe. We do not store credit card information on our servers. By providing payment information, you authorize URRUTIA to charge the applicable fees.</p>
+                <p>All payments are processed securely by Square. We do not store credit card information on our servers. By providing payment information, you authorize URRUTIA to charge the applicable fees.</p>
                 <p>In the event of a payment failure, we will attempt to retry the charge and notify you via SMS and email. Continued failure may result in suspension of membership services until payment is resolved.</p>
                 <p>All prices are in USD and include applicable Nevada sales tax where required.</p>
               </div>

@@ -8,9 +8,9 @@ export const metadata = {
 
 const LAST_UPDATED = 'April 29, 2026';
 const EFFECTIVE_DATE = 'April 29, 2026';
-const BUSINESS_NAME = 'URRUTIA Carwash & Detail';
-const BUSINESS_ADDRESS = '1195 Wellness Pl, Henderson, NV 89074';
-const CONTACT_EMAIL = 'hello@urrutiawash.com';
+const BUSINESS_NAME = 'LVAC Carwash and Detailing';
+const BUSINESS_ADDRESS = '1195 Wellness Pl, Henderson, NV 89011';
+const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
 
 function Breadcrumb() {
   return (
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
                 {BUSINESS_NAME} (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates a premium car wash and detailing service located at {BUSINESS_ADDRESS}. We are committed to protecting your personal information and your right to privacy.
               </p>
               <p className="mt-3">
-                This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our mobile application, book our services, or interact with us in any way. Please read this policy carefully. If you disagree with its terms, please discontinue use of our services.
+                This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, book our services, or interact with us in any way. Please read this policy carefully. If you disagree with its terms, please discontinue use of our services.
               </p>
             </section>
 
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
                 {[
                   'Name, email address, and phone number when you create an account or book a service',
                   'Vehicle information (make, model, year, color, license plate number)',
-                  'Payment information (processed and stored securely by Stripe — we never see or store raw card numbers)',
+                  'Payment information (processed and stored securely by Square — we never see or store raw card numbers)',
                   'Communication preferences and notification settings',
                   'Messages and inquiries submitted via our contact form or Instagram',
                   'Feedback and ratings you provide after service',
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
                   'Device information (operating system, device identifiers)',
                   'Usage data (features used, booking patterns, wash frequency)',
                   'Cookies and similar tracking technologies (see Section 7)',
-                  'Location data (only if you grant permission for mobile service scheduling)',
+                  'Location data (only if you grant permission for service scheduling)',
                 ].map((item, i) => (
                   <li key={i} className="flex gap-3 text-sm">
                     <span className="text-water shrink-0 mt-1">·</span>
@@ -96,7 +96,7 @@ export default function PrivacyPage() {
 
               <h3 className="text-lg font-semibold mb-2 text-ink">2.3 Information from Third Parties</h3>
               <p className="text-sm">
-                We may receive information about you from payment processors (Stripe), SMS providers (Twilio), analytics tools (PostHog), and error monitoring services (Sentry) in the course of providing our services to you.
+                We may receive information about you from payment processors (Square), SMS providers (Twilio), analytics tools (PostHog), and error monitoring services (Sentry) in the course of providing our services to you.
               </p>
             </section>
 
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
               <div className="space-y-4 text-sm">
                 <div>
                   <p className="font-semibold text-ink mb-1">Service Providers (Data Processors)</p>
-                  <p className="text-muted">Stripe (payments), Twilio (SMS/voice), Resend (email), Supabase (database), Vercel (hosting), PostHog (analytics), Sentry (error monitoring). These processors are contractually bound to protect your data and may not use it for their own purposes.</p>
+                  <p className="text-muted">Square (payments), Twilio (SMS/voice), Resend (email), Supabase (database), Vercel (hosting), PostHog (analytics), Sentry (error monitoring). These processors are contractually bound to protect your data and may not use it for their own purposes.</p>
                 </div>
                 <div>
                   <p className="font-semibold text-ink mb-1">Legal Requirements</p>
@@ -160,7 +160,7 @@ export default function PrivacyPage() {
                 We implement industry-standard security measures including encrypted data transmission (TLS/HTTPS), encrypted data storage (Supabase with AES-256 at rest), row-level security policies on our database, access controls limiting data to authorized personnel, and regular security reviews. No method of electronic storage or transmission is 100% secure, and we cannot guarantee absolute security.
               </p>
               <p className="text-sm mt-3">
-                We never log, store, or transmit full credit card numbers. All payment processing is handled by Stripe, a PCI DSS Level 1 certified provider.
+                We never log, store, or transmit full credit card numbers. All payment processing is handled by Square, a PCI DSS Level 1 certified provider.
               </p>
             </section>
 

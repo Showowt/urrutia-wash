@@ -63,7 +63,7 @@ export default function BookPage() {
   const [step, setStep] = useState(1);
   const [vehicleId, setVehicleId] = useState<string>(DEMO_VEHICLES[0].id);
   const [serviceId, setServiceId] = useState<ServiceId | null>(null);
-  const [location, setLocation] = useState<"lvac" | "mobile">("lvac");
+  const [location, setLocation] = useState<"lvac">("lvac");
   const [timeSlot, setTimeSlot] = useState<string | null>(null);
 
   const vehicle = DEMO_VEHICLES.find((v) => v.id === vehicleId);
@@ -226,45 +226,20 @@ export default function BookPage() {
             >
               LOCATION
             </p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setLocation("lvac")}
-                className="rounded-xl p-3 text-left"
-                style={{
-                  background: "#0B0F1A",
-                  border:
-                    location === "lvac"
-                      ? "1px solid #00B4FF"
-                      : "1px solid #1B2236",
-                }}
+            <div
+              className="rounded-xl p-3 text-left"
+              style={{
+                background: "#0B0F1A",
+                border: "1px solid #00B4FF",
+              }}
+            >
+              <p className="text-sm font-semibold">LVAC Henderson</p>
+              <p
+                className="text-[10px] font-mono mt-0.5"
+                style={{ color: "#8B95A8" }}
               >
-                <p className="text-sm font-semibold">LVAC Henderson</p>
-                <p
-                  className="text-[10px] font-mono mt-0.5"
-                  style={{ color: "#8B95A8" }}
-                >
-                  1195 WELLNESS PL
-                </p>
-              </button>
-              <button
-                onClick={() => setLocation("mobile")}
-                className="rounded-xl p-3 text-left"
-                style={{
-                  background: "#0B0F1A",
-                  border:
-                    location === "mobile"
-                      ? "1px solid #00B4FF"
-                      : "1px solid #1B2236",
-                }}
-              >
-                <p className="text-sm font-semibold">Mobile</p>
-                <p
-                  className="text-[10px] font-mono mt-0.5"
-                  style={{ color: "#8B95A8" }}
-                >
-                  WE COME TO YOU
-                </p>
-              </button>
+                1195 WELLNESS PL
+              </p>
             </div>
           </div>
 

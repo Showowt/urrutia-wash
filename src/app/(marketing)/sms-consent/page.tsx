@@ -7,8 +7,8 @@ export const metadata = {
 };
 
 const LAST_UPDATED = 'April 29, 2026';
-const CONTACT_EMAIL = 'hello@urrutiawash.com';
-const BUSINESS_NAME = 'URRUTIA Carwash & Detail';
+const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
+const BUSINESS_NAME = 'LVAC Carwash and Detailing';
 
 function Breadcrumb() {
   return (
@@ -65,7 +65,7 @@ export default function SmsConsentPage() {
             <section>
               <h2 className="text-2xl font-bold mb-4 text-ink">1. Who We Are</h2>
               <p className="text-sm">
-                {BUSINESS_NAME} operates the URRUTIA car wash and detailing service at 1195 Wellness Pl, Henderson, NV 89074. Our SMS messages are sent via Twilio using a dedicated long-code number registered to our business. We are the sole sender of messages on this number — we do not share our messaging service with other companies.
+                {BUSINESS_NAME} operates a car wash and detailing service at 1195 Wellness Pl, Henderson, NV 89011. Our SMS messages are sent via Twilio using a dedicated long-code number registered to our business. We are the sole sender of messages on this number — we do not share our messaging service with other companies.
               </p>
             </section>
 
@@ -181,7 +181,7 @@ export default function SmsConsentPage() {
               <h2 className="text-2xl font-bold mb-4 text-ink">8. Contact</h2>
               <div className="card rounded-xl p-5 text-sm space-y-1">
                 <p className="font-bold text-ink">{BUSINESS_NAME}</p>
-                <p className="text-muted">1195 Wellness Pl, Henderson, NV 89074</p>
+                <p className="text-muted">1195 Wellness Pl, Henderson, NV 89011</p>
                 <p><a href={`mailto:${CONTACT_EMAIL}`} className="text-water hover:underline">{CONTACT_EMAIL}</a></p>
                 <p><a href="https://instagram.com/lvacwashndetail" target="_blank" rel="noopener noreferrer" className="text-water hover:underline">@lvacwashndetail</a></p>
               </div>

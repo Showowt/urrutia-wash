@@ -72,7 +72,7 @@ const TIERS = [
       loyalty: 'Every 10th wash free (all vehicles)',
       wallet: 'Apple Wallet pass included',
       sameDay: 'Same-day availability',
-      mobile: '1 mobile service included / month',
+      mobile: '—',
       manager: 'Dedicated account manager',
     },
   },
@@ -87,7 +87,6 @@ const COMPARE_ROWS = [
   { label: 'Loyalty program', key: 'loyalty' as const },
   { label: 'Apple Wallet pass', key: 'wallet' as const },
   { label: 'Same-day booking', key: 'sameDay' as const },
-  { label: 'Mobile service', key: 'mobile' as const },
   { label: 'Account manager', key: 'manager' as const },
 ];
 
@@ -110,7 +109,7 @@ const MEMBERSHIP_FAQS = [
   },
   {
     q: 'Can I add vehicles to my plan?',
-    a: 'SOLO covers 1 vehicle. DUO covers 2. FLEET covers up to 4. To add a vehicle mid-cycle, upgrade your plan — the prorated difference is charged immediately via Stripe.',
+    a: 'SOLO covers 1 vehicle. DUO covers 2. FLEET covers up to 4. To add a vehicle mid-cycle, upgrade your plan — the prorated difference is charged immediately.',
   },
   {
     q: 'Do membership washes cover the full detail or ceramic?',
@@ -445,7 +444,7 @@ export default function MembershipsPage() {
                 See All Services
               </Link>
             </div>
-            <p className="text-xs text-muted mt-5 font-mono">No contract · Pause or cancel anytime · Stripe secure billing</p>
+            <p className="text-xs text-muted mt-5 font-mono">No contract · Pause or cancel anytime · Square secure billing</p>
           </RevealOnScroll>
         </div>
       </section>

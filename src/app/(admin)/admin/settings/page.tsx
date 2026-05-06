@@ -400,10 +400,10 @@ export default function AdminSettingsPage() {
             type="number"
           />
           <TextInput
-            label="Mobile Service Radius"
+            label="Max Vehicles Per Slot"
             value={mobileRadius}
             onChange={setMobileRadius}
-            suffix="miles"
+            suffix="cars"
             type="number"
           />
         </div>

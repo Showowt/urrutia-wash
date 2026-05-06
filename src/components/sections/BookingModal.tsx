@@ -2,15 +2,14 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { X, Check, ArrowRight } from 'lucide-react';
+import { SERVICES, MEMBERSHIPS } from '@/lib/square/pricing';
+import type { ServiceId, MembershipId } from '@/lib/square/pricing';
 import type { BookingInput } from '@/lib/validators/booking';
 
-type ServiceType = BookingInput['service_type'];
 type LocationType = BookingInput['location'];
 
-// Extended service options for the modal (includes memberships / mobile not in the Zod enum)
-// The API only accepts 'express' | 'classic' | 'detail' | 'ceramic' — memberships handled separately
 type ServiceOption = {
-  value: ServiceType | 'solo' | 'duo' | 'fleet' | 'mobile';
+  value: ServiceId | MembershipId;
   label: string;
 };
 
@@ -22,8 +21,10 @@ const SERVICE_OPTIONS: ServiceOption[] = [
   { value: 'solo', label: 'Solo Membership · $89/mo' },
   { value: 'duo', label: 'Duo Membership · $149/mo' },
   { value: 'fleet', label: 'Fleet Membership · $279/mo' },
-  { value: 'mobile', label: 'Mobile Service · custom quote' },
 ];
+
+const VALID_SERVICES: ServiceId[] = ['express', 'classic', 'detail', 'ceramic'];
+const VALID_MEMBERSHIPS: MembershipId[] = ['solo', 'duo', 'fleet'];
 
 type ModalPreset = ServiceOption['value'] | null;
 
@@ -41,6 +42,9 @@ interface FormState {
   service: ServiceOption['value'];
   location: LocationType;
   when: string;
+  selectedAddOns: string[];
+  billingCycle: 'monthly' | 'annual';
+  promoCode: string;
 }
 
 interface FormErrors {
@@ -56,14 +60,27 @@ function validate(form: FormState): FormErrors {
   return errors;
 }
 
+function isService(val: string): val is ServiceId {
+  return VALID_SERVICES.includes(val as ServiceId);
+}
+
+function isMembership(val: string): val is MembershipId {
+  return VALID_MEMBERSHIPS.includes(val as MembershipId);
+}
+
+function formatCents(cents: number): string {
+  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
+}
+
 export default function BookingModal({ isOpen, onClose, preset }: BookingModalProps) {
   const [step, setStep] = useState<1 | 2>(1);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [toastMsg, setToastMsg] = useState<string | null>(null);
-  const [successName, setSuccessName] = useState('');
-  const [successService, setSuccessService] = useState('');
-  const [successVehicle, setSuccessVehicle] = useState('');
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [promoValid, setPromoValid] = useState<boolean | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [promoChecking, setPromoChecking] = useState(false);
 
   const [form, setForm] = useState<FormState>({
     name: '',
@@ -73,6 +90,9 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
     service: 'express',
     location: 'lvac',
     when: '',
+    selectedAddOns: [],
+    billingCycle: 'monthly',
+    promoCode: '',
   });
 
   // Sync preset when modal opens
@@ -80,8 +100,11 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
     if (isOpen) {
       setStep(1);
       setErrors({});
+      setPaymentError(null);
+      setPromoValid(null);
+      setPromoDiscount(0);
       if (preset) {
-        setForm((prev) => ({ ...prev, service: preset }));
+        setForm((prev) => ({ ...prev, service: preset, selectedAddOns: [], promoCode: '' }));
       }
     }
   }, [isOpen, preset]);
@@ -117,6 +140,72 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
     if (errors[field as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+    // Reset add-ons when service changes
+    if (field === 'service') {
+      setForm((prev) => ({ ...prev, service: value as ServiceOption['value'], selectedAddOns: [] }));
+    }
+  }
+
+  function toggleAddOn(addOnId: string) {
+    setForm((prev) => ({
+      ...prev,
+      selectedAddOns: prev.selectedAddOns.includes(addOnId)
+        ? prev.selectedAddOns.filter((id) => id !== addOnId)
+        : [...prev.selectedAddOns, addOnId],
+    }));
+  }
+
+  async function validatePromo() {
+    if (!form.promoCode.trim()) return;
+    setPromoChecking(true);
+    setPromoValid(null);
+    try {
+      const res = await fetch('/api/promo/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: form.promoCode.trim() }),
+      });
+      const json = await res.json();
+      if (res.ok && json.data?.valid) {
+        setPromoValid(true);
+        setPromoDiscount(json.data.discount_percent);
+      } else {
+        setPromoValid(false);
+        setPromoDiscount(0);
+      }
+    } catch {
+      setPromoValid(false);
+      setPromoDiscount(0);
+    }
+    setPromoChecking(false);
+  }
+
+  // Calculate subtotal (before promo)
+  function getSubtotal(): number {
+    if (isService(form.service)) {
+      const svc = SERVICES[form.service];
+      const addOnTotal = form.selectedAddOns.reduce((sum, id) => {
+        const addOn = svc.addOns.find((a) => a.id === id);
+        return sum + (addOn?.priceCents ?? 0);
+      }, 0);
+      return svc.priceCents + addOnTotal;
+    }
+    if (isMembership(form.service)) {
+      const mem = MEMBERSHIPS[form.service];
+      return form.billingCycle === 'annual'
+        ? mem.annualMonthlyCents * 12
+        : mem.monthlyCents;
+    }
+    return 0;
+  }
+
+  function getTotal(): number {
+    const subtotal = getSubtotal();
+    if (promoValid && promoDiscount > 0) {
+      const discount = Math.round(subtotal * (promoDiscount / 100));
+      return Math.max(subtotal - discount, 100);
+    }
+    return subtotal;
   }
 
   async function handleSubmit() {
@@ -127,45 +216,76 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
       return;
     }
 
+    // Move to add-ons / payment step
+    setStep(2);
+  }
+
+  async function handlePayment() {
     setSubmitting(true);
+    setPaymentError(null);
 
-    // Map extended service values to API-accepted enum when applicable
-    const apiServiceType = (['express', 'classic', 'detail', 'ceramic'] as const).includes(
-      form.service as ServiceType
-    )
-      ? (form.service as ServiceType)
-      : 'express'; // memberships/mobile fall back gracefully
-
+    // Also submit the booking for tracking
     try {
-      const payload: BookingInput = {
-        name: form.name.trim(),
-        phone: form.phone.trim(),
-        vehicle: form.vehicle.trim() || undefined,
-        plate: form.plate.trim() || undefined,
-        service_type: apiServiceType,
-        location: form.location,
-        scheduled_for: form.when.trim() || undefined,
-      };
-
+      const apiServiceType = isService(form.service) ? form.service : 'express';
       await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          vehicle: form.vehicle.trim() || undefined,
+          plate: form.plate.trim() || undefined,
+          service_type: apiServiceType,
+          location: form.location,
+          scheduled_for: form.when.trim() || undefined,
+        }),
       });
     } catch {
-      // Fail silently on network error — still show success to not block UX
-      console.error('[BookingModal] submission error');
+      // Non-blocking
     }
 
-    // Set success copy
-    const serviceLabel =
-      SERVICE_OPTIONS.find((o) => o.value === form.service)?.label ?? 'Express wash';
-    setSuccessName(form.name.split(' ')[0]);
-    setSuccessService(serviceLabel.split(' · ')[0]);
-    setSuccessVehicle(form.vehicle.trim() || 'your vehicle');
-    setSubmitting(false);
-    setStep(2);
+    // Create Square checkout
+    try {
+      const checkoutBody: Record<string, unknown> = {
+        customer_name: form.name.trim(),
+        customer_phone: form.phone.trim(),
+      };
+
+      if (isService(form.service)) {
+        checkoutBody.service_id = form.service;
+        checkoutBody.add_on_ids = form.selectedAddOns;
+      } else if (isMembership(form.service)) {
+        checkoutBody.membership_id = form.service;
+        checkoutBody.billing_cycle = form.billingCycle;
+      }
+
+      // Attach promo code if valid
+      if (promoValid && form.promoCode.trim()) {
+        checkoutBody.promo_code = form.promoCode.trim();
+      }
+
+      const res = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(checkoutBody),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || json.error) {
+        throw new Error(json.message || 'Checkout failed');
+      }
+
+      // Redirect to Square payment page
+      window.location.href = json.data.checkout_url;
+    } catch (err) {
+      setPaymentError(err instanceof Error ? err.message : 'Something went wrong');
+      setSubmitting(false);
+    }
   }
+
+  // Get add-ons for current service
+  const currentAddOns = isService(form.service) ? SERVICES[form.service].addOns : [];
 
   if (!isOpen) return null;
 
@@ -192,14 +312,14 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
               <X className="w-4 h-4" strokeWidth={2.5} />
             </button>
 
-            {/* Step 1: Form */}
+            {/* Step 1: Info Form */}
             {step === 1 && (
               <div>
                 <p className="font-mono text-[10px] tracking-widest text-water mb-2">
                   RESERVE YOUR WASH
                 </p>
                 <h3 className="text-2xl font-bold mb-6">
-                  Tell us a little. We&rsquo;ll text you back.
+                  Tell us a little. We&rsquo;ll handle the rest.
                 </h3>
 
                 <div className="space-y-4">
@@ -294,9 +414,7 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                     <select
                       id="b_service"
                       value={form.service}
-                      onChange={(e) =>
-                        handleField('service', e.target.value as ServiceOption['value'])
-                      }
+                      onChange={(e) => handleField('service', e.target.value)}
                       className="field w-full px-4 py-3 rounded-xl text-sm cursor-pointer"
                     >
                       {SERVICE_OPTIONS.map((opt) => (
@@ -307,38 +425,49 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                     </select>
                   </div>
 
+                  {/* Billing cycle for memberships */}
+                  {isMembership(form.service) && (
+                    <div>
+                      <p className="block text-xs font-mono text-muted mb-1.5 tracking-widest">
+                        BILLING
+                      </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, billingCycle: 'monthly' }))}
+                          aria-pressed={form.billingCycle === 'monthly'}
+                          className={`card rounded-xl px-3 py-3 text-sm text-left transition-all cursor-pointer ${
+                            form.billingCycle === 'monthly' ? 'border-water/60' : ''
+                          }`}
+                        >
+                          <p className="font-semibold">Monthly</p>
+                          <p className="text-xs text-muted mt-0.5">Cancel anytime</p>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, billingCycle: 'annual' }))}
+                          aria-pressed={form.billingCycle === 'annual'}
+                          className={`card rounded-xl px-3 py-3 text-sm text-left transition-all cursor-pointer ${
+                            form.billingCycle === 'annual' ? 'border-water/60' : ''
+                          }`}
+                        >
+                          <p className="font-semibold">Annual <span className="text-flame text-xs font-mono">-15%</span></p>
+                          <p className="text-xs text-muted mt-0.5">Billed upfront</p>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Location */}
                   <div>
                     <p className="block text-xs font-mono text-muted mb-1.5 tracking-widest">
                       LOCATION
                     </p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => handleField('location', 'lvac')}
-                        aria-pressed={form.location === 'lvac'}
-                        className={`card rounded-xl px-3 py-3 text-sm text-left transition-all cursor-pointer ${
-                          form.location === 'lvac'
-                            ? 'border-water/60'
-                            : ''
-                        }`}
-                      >
-                        <p className="font-semibold">LVAC Henderson</p>
-                        <p className="text-xs text-muted mt-0.5">Drop off &amp; train</p>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleField('location', 'mobile')}
-                        aria-pressed={form.location === 'mobile'}
-                        className={`card rounded-xl px-3 py-3 text-sm text-left transition-all cursor-pointer ${
-                          form.location === 'mobile'
-                            ? 'border-water/60'
-                            : ''
-                        }`}
-                      >
-                        <p className="font-semibold">Mobile Service</p>
-                        <p className="text-xs text-muted mt-0.5">We come to you</p>
-                      </button>
+                    <div
+                      className="card rounded-xl px-3 py-3 text-sm border-water/60"
+                    >
+                      <p className="font-semibold">LVAC Henderson</p>
+                      <p className="text-xs text-muted mt-0.5">1195 Wellness Pl · Drop off &amp; train</p>
                     </div>
                   </div>
 
@@ -370,51 +499,220 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                       'Sending...'
                     ) : (
                       <>
-                        Reserve &amp; Get SMS Confirmation
+                        Continue to Payment
                         <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
                       </>
                     )}
                   </button>
 
                   <p className="text-[10px] text-center text-muted font-mono">
-                    By submitting you consent to receive SMS updates from URRUTIA.
+                    Secure payment via Square. You&rsquo;ll be redirected to complete payment.
                   </p>
                 </div>
               </div>
             )}
 
-            {/* Step 2: Success */}
+            {/* Step 2: Add-ons + Payment */}
             {step === 2 && (
-              <div className="text-center py-6">
-                <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-success/10 border border-success/40 grid place-items-center">
-                  <Check className="w-7 h-7 text-success" strokeWidth={2.5} />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">You&rsquo;re booked.</h3>
-                <p className="text-muted mb-6">
-                  We sent a confirmation to your phone. Urrutia will text you back within
-                  minutes to lock in the time.
-                </p>
-
-                <div className="card rounded-xl p-4 text-left mb-6 font-mono text-xs text-muted">
-                  <p className="text-water mb-2">SMS PREVIEW</p>
-                  <p>
-                    URRUTIA: Got your booking,{' '}
-                    <span className="text-ink">{successName}</span>.{' '}
-                    <span className="text-ink">{successService}</span> for your{' '}
-                    <span className="text-ink">{successVehicle}</span>. Confirming time
-                    now &mdash; reply YES to lock it in.
-                  </p>
-                </div>
-
+              <div>
                 <button
                   type="button"
-                  onClick={onClose}
-                  className="btn-ghost w-full py-3 rounded-xl text-sm cursor-pointer"
+                  onClick={() => setStep(1)}
+                  className="text-xs font-mono text-water mb-4 hover:underline cursor-pointer"
                 >
-                  Done
+                  ← Back to details
                 </button>
+
+                <p className="font-mono text-[10px] tracking-widest text-water mb-2">
+                  {isMembership(form.service) ? 'CONFIRM MEMBERSHIP' : 'CUSTOMIZE YOUR SERVICE'}
+                </p>
+                <h3 className="text-2xl font-bold mb-6">
+                  {isMembership(form.service)
+                    ? 'Review & pay'
+                    : 'Add extras to your wash'}
+                </h3>
+
+                {/* Add-ons for services */}
+                {isService(form.service) && currentAddOns.length > 0 && (
+                  <div className="space-y-2 mb-6">
+                    <p className="text-xs font-mono text-muted tracking-widest mb-3">
+                      POPULAR ADD-ONS (optional)
+                    </p>
+                    {currentAddOns.map((addOn) => {
+                      const isChecked = form.selectedAddOns.includes(addOn.id);
+                      return (
+                        <button
+                          key={addOn.id}
+                          type="button"
+                          onClick={() => toggleAddOn(addOn.id)}
+                          className={`w-full flex items-center justify-between p-3.5 rounded-xl text-sm transition-all cursor-pointer ${
+                            isChecked
+                              ? 'bg-water/8 border border-water/40'
+                              : 'card'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-5 h-5 rounded-md border-2 grid place-items-center transition-all ${
+                                isChecked
+                                  ? 'bg-water border-water'
+                                  : 'border-line'
+                              }`}
+                            >
+                              {isChecked && <Check className="w-3 h-3 text-void" strokeWidth={3} />}
+                            </div>
+                            <span className={isChecked ? 'text-ink' : 'text-muted'}>
+                              {addOn.label}
+                            </span>
+                          </div>
+                          <span className="font-mono text-xs text-water">
+                            +{formatCents(addOn.priceCents)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Membership billing summary */}
+                {isMembership(form.service) && (
+                  <div className="card rounded-xl p-4 mb-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-muted">Plan</span>
+                      <span className="text-sm font-semibold">
+                        {MEMBERSHIPS[form.service as MembershipId].label}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-muted">Billing</span>
+                      <span className="text-sm font-semibold capitalize">{form.billingCycle}</span>
+                    </div>
+                    {form.billingCycle === 'annual' && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted">Savings</span>
+                        <span className="text-sm font-semibold text-flame">
+                          Save {formatCents(
+                            (MEMBERSHIPS[form.service as MembershipId].monthlyCents -
+                              MEMBERSHIPS[form.service as MembershipId].annualMonthlyCents) * 12
+                          )}/yr
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Promo code input */}
+                <div className="mb-4">
+                  <p className="text-xs font-mono text-muted tracking-widest mb-2">PROMO CODE</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={form.promoCode}
+                      onChange={(e) => {
+                        setForm((prev) => ({ ...prev, promoCode: e.target.value.toUpperCase() }));
+                        setPromoValid(null);
+                        setPromoDiscount(0);
+                      }}
+                      onKeyDown={(e) => { if (e.key === 'Enter') validatePromo(); }}
+                      placeholder="URR-XXXX"
+                      className="field flex-1 px-3 py-2.5 rounded-lg text-sm font-mono tracking-widest"
+                    />
+                    <button
+                      type="button"
+                      onClick={validatePromo}
+                      disabled={promoChecking || !form.promoCode.trim()}
+                      className="px-4 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all disabled:opacity-40 cursor-pointer"
+                      style={{
+                        background: promoValid ? 'rgba(16,185,129,0.15)' : 'rgba(0,180,255,0.1)',
+                        color: promoValid ? '#10B981' : '#00B4FF',
+                        border: promoValid ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(0,180,255,0.25)',
+                      }}
+                    >
+                      {promoChecking ? '...' : promoValid ? 'APPLIED' : 'APPLY'}
+                    </button>
+                  </div>
+                  {promoValid === true && (
+                    <p className="text-xs font-mono mt-1.5 flex items-center gap-1.5" style={{ color: '#10B981' }}>
+                      <Check className="w-3 h-3" strokeWidth={3} />
+                      {promoDiscount}% off + free spray wax applied!
+                    </p>
+                  )}
+                  {promoValid === false && (
+                    <p className="text-xs font-mono mt-1.5 text-flame">
+                      Invalid or expired promo code
+                    </p>
+                  )}
+                </div>
+
+                {/* Total */}
+                <div className="p-4 rounded-xl bg-water/5 border border-water/20 mb-6">
+                  {promoValid && promoDiscount > 0 && (
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-muted">Subtotal</span>
+                      <span className="text-sm text-muted line-through">{formatCents(getSubtotal())}</span>
+                    </div>
+                  )}
+                  {promoValid && promoDiscount > 0 && (
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm" style={{ color: '#10B981' }}>Promo ({promoDiscount}% off)</span>
+                      <span className="text-sm font-semibold" style={{ color: '#10B981' }}>
+                        -{formatCents(Math.round(getSubtotal() * (promoDiscount / 100)))}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold">Total</span>
+                    <span className="text-2xl font-black text-water">
+                      {formatCents(getTotal())}
+                    </span>
+                  </div>
+                  {promoValid && (
+                    <p className="text-xs font-mono mt-2" style={{ color: '#10B981' }}>
+                      + FREE Spray Wax included
+                    </p>
+                  )}
+                </div>
+
+                {/* Payment error */}
+                {paymentError && (
+                  <div
+                    className="p-4 rounded-xl text-sm mb-4"
+                    style={{
+                      background: 'rgba(239,68,68,0.08)',
+                      border: '1px solid rgba(239,68,68,0.3)',
+                      color: '#ef4444',
+                    }}
+                  >
+                    {paymentError}
+                  </div>
+                )}
+
+                {/* Pay button */}
+                <button
+                  type="button"
+                  onClick={handlePayment}
+                  disabled={submitting}
+                  className="btn-primary w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+                >
+                  {submitting ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-void/30 border-t-void rounded-full animate-spin" />
+                      Redirecting to Square...
+                    </span>
+                  ) : (
+                    <>
+                      Pay {formatCents(getTotal())}
+                      <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
+                    </>
+                  )}
+                </button>
+
+                <p className="text-[10px] text-center text-muted font-mono mt-3">
+                  Secure checkout powered by Square
+                </p>
               </div>
             )}
+
           </div>
         </div>
       </div>

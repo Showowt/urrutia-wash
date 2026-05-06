@@ -5,7 +5,7 @@ import BookingModal from '@/components/sections/BookingModal';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
 type BillingCycle = 'monthly' | 'annual';
-type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | 'mobile' | null;
+type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | null;
 
 const PRICES = {
   solo: { monthly: 89, annual: 76 },
@@ -299,7 +299,7 @@ export default function MembershipSection() {
                   </li>
                   <li className="flex gap-3">
                     <span className="text-flame">→</span>
-                    <span>Mobile service included monthly</span>
+                    <span>Priority scheduling every visit</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-flame">→</span>

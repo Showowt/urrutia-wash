@@ -32,8 +32,7 @@ function buildCSP(nonce: string): string {
     "default-src": ["'self'"],
     "script-src": [
       "'self'",
-      `'nonce-${nonce}'`,
-      // Next.js requires this for dev HMR; remove in production via env check
+      "'unsafe-inline'",
       ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
     ],
     "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
@@ -42,14 +41,13 @@ function buildCSP(nonce: string): string {
     "connect-src": [
       "'self'",
       ...(supabaseHost ? [`https://${supabaseHost}`, `wss://${supabaseHost}`] : []),
-      "https://api.stripe.com",
-      "https://js.stripe.com",
+      "https://connect.squareup.com",
+      "https://connect.squareupsandbox.com",
+      "https://api.telegram.org",
       ...(process.env.NODE_ENV === "development" ? ["ws://localhost:*"] : []),
     ],
     "frame-src": [
       "'self'",
-      "https://js.stripe.com",
-      "https://hooks.stripe.com",
       "https://www.openstreetmap.org",
     ],
     "frame-ancestors": ["'none'"],

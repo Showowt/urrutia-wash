@@ -5,7 +5,7 @@ import { MapPin, Clock, Phone } from 'lucide-react';
 import BookingModal from '@/components/sections/BookingModal';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
-type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | 'mobile' | null;
+type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | null;
 
 /* ─── Operating hours: Mon–Sat 7:00–16:30 PST ─── */
 function getOperatingStatus(): { isOpen: boolean; label: string; nextAction: string } {
@@ -116,7 +116,7 @@ export default function LocationSection() {
                     <p className="text-sm text-muted">
                       1195 Wellness Pl
                       <br />
-                      Henderson, NV 89074
+                      Henderson, NV 89011
                     </p>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export default function LocationSection() {
                     <p className="text-sm text-muted">
                       Mon &ndash; Sat &middot; 7:00 AM &ndash; 4:30 PM
                       <br />
-                      Mobile service available 7 days / week
+                      Closed Sundays
                     </p>
                   </div>
                 </div>
@@ -168,12 +168,6 @@ export default function LocationSection() {
                   className="btn-primary px-7 py-3.5 rounded-full text-sm font-bold cursor-pointer shadow-lg hover:shadow-flame/30 transition-shadow"
                 >
                   Book at LVAC
-                </button>
-                <button
-                  onClick={() => openBooking('mobile')}
-                  className="btn-ghost px-7 py-3.5 rounded-full text-sm cursor-pointer hover:border-water/50 hover:text-water transition-all"
-                >
-                  Book Mobile Service
                 </button>
               </div>
             </RevealOnScroll>

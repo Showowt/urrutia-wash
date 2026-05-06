@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 const LAST_UPDATED = 'April 29, 2026';
-const CONTACT_EMAIL = 'hello@urrutiawash.com';
+const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
 const BUSINESS_NAME = 'URRUTIA Carwash & Detail';
 
 function Breadcrumb() {
@@ -99,7 +99,7 @@ export default function AccessibilityPage() {
                   },
                   {
                     issue: 'Third-party payment UI',
-                    detail: 'The Stripe payment interface is a third-party component. Stripe maintains its own accessibility standards; we cannot directly control its implementation.',
+                    detail: 'The Square payment interface is a third-party component. Square maintains its own accessibility standards; we cannot directly control its implementation.',
                   },
                   {
                     issue: 'Video content',
@@ -141,10 +141,7 @@ export default function AccessibilityPage() {
             <section>
               <h2 className="text-2xl font-bold mb-4 text-ink">Physical Location Accessibility</h2>
               <p className="text-sm mb-3">
-                Our service location at LVAC Henderson (1195 Wellness Pl, Henderson, NV 89074) is located within an LVAC parking lot. For physical accessibility information regarding the LVAC facility, please contact LVAC directly.
-              </p>
-              <p className="text-sm">
-                For our service specifically: we offer mobile detailing as an alternative to drop-off service. Mobile detailing can be performed at any accessible location of your choosing — your home, workplace, or any other address in the Henderson / Las Vegas valley.
+                Our service location at LVAC Henderson (1195 Wellness Pl, Henderson, NV 89011) is located within an LVAC parking lot. For physical accessibility information regarding the LVAC facility, please contact LVAC directly.
               </p>
             </section>
 
@@ -163,7 +160,7 @@ export default function AccessibilityPage() {
                   <li>
                     Instagram: <a href="https://instagram.com/lvacwashndetail" target="_blank" rel="noopener noreferrer" className="text-water hover:underline">@lvacwashndetail</a>
                   </li>
-                  <li>In person: 1195 Wellness Pl, Henderson, NV 89074 · Mon–Sat 7:00–4:30</li>
+                  <li>In person: 1195 Wellness Pl, Henderson, NV 89011 · Mon–Sat 7:00–4:30</li>
                 </ul>
                 <p className="mt-4 text-muted">
                   Please describe the barrier you encountered, the page or feature affected, the assistive technology or browser you use, and how we can best help you. We aim to respond within 2 business days and resolve issues within 30 days.

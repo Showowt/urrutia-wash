@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 const LAST_UPDATED = 'April 29, 2026';
-const CONTACT_EMAIL = 'hello@urrutiawash.com';
+const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
 
 function Breadcrumb() {
   return (
@@ -99,7 +99,7 @@ export default function RefundPolicyPage() {
                 <div>
                   <h3 className="text-lg font-semibold mb-2 text-ink">1.3 Service Cannot Be Performed</h3>
                   <p className="text-sm">
-                    If URRUTIA is unable to perform your booked service due to circumstances on our end (equipment failure, staffing, inclement weather for mobile), we will contact you immediately to reschedule or issue a full refund with no fees.
+                    If URRUTIA is unable to perform your booked service due to circumstances on our end (equipment failure, staffing, inclement weather), we will contact you immediately to reschedule or issue a full refund with no fees.
                   </p>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function RefundPolicyPage() {
                 <ul className="space-y-2 text-muted">
                   <li>Email: <a href={`mailto:${CONTACT_EMAIL}`} className="text-water hover:underline">{CONTACT_EMAIL}</a></li>
                   <li>Instagram DM: <a href="https://instagram.com/lvacwashndetail" target="_blank" rel="noopener noreferrer" className="text-water hover:underline">@lvacwashndetail</a></li>
-                  <li>In person: 1195 Wellness Pl, Henderson, NV 89074 · Mon–Sat 7:00–4:30</li>
+                  <li>In person: 1195 Wellness Pl, Henderson, NV 89011 · Mon–Sat 7:00–4:30</li>
                 </ul>
                 <p className="mt-4 text-muted">
                   Please include your name, phone number, service date, and a description of the issue. We will respond within 2 business days and process approved refunds within 5–10 business days back to your original payment method.

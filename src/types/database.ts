@@ -275,6 +275,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      promo_codes: {
+        Row: {
+          id: string;
+          phone: string;
+          code: string;
+          discount_percent: number;
+          free_addon: string | null;
+          used: boolean;
+          used_at: string | null;
+          order_reference: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          phone: string;
+          code: string;
+          discount_percent?: number;
+          free_addon?: string | null;
+          used?: boolean;
+          used_at?: string | null;
+          order_reference?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          phone?: string;
+          code?: string;
+          discount_percent?: number;
+          free_addon?: string | null;
+          used?: boolean;
+          used_at?: string | null;
+          order_reference?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

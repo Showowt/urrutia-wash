@@ -1,145 +1,428 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
-type Filter = 'all' | 'express' | 'detail' | 'ceramic' | 'interior';
+type Filter = 'all' | 'express' | 'detail' | 'ceramic' | 'trucks';
 
-const GALLERY_ITEMS = [
+interface GalleryItem {
+  id: number;
+  label: string;
+  sub: string;
+  category: Filter;
+  imageSrc: string;
+  imageAlt: string;
+  span: string;
+  height: string;
+}
+
+const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 1,
     label: 'G63 AMG · BRABUS',
     sub: 'Full Detail + Ceramic',
-    category: 'ceramic' as Filter,
-    imageSrc: '/gallery/brabus-g63.jpg',
-    imageAlt: 'Brabus G63 AMG detailed by URRUTIA — showroom ceramic finish',
-    isReal: true,
-    bg: '',
-    accent: 'rgba(255,107,26,0.4)',
-    span: 'md:col-span-2 md:row-span-2',
+    category: 'ceramic',
+    imageSrc: '/gallery/brabus-g63-sunset.jpg',
+    imageAlt: 'Brabus G63 AMG at sunset — ceramic coating by LVAC Carwash Henderson',
+    span: 'col-span-2 row-span-2',
+    height: 'h-[460px] sm:h-[520px]',
   },
   {
     id: 2,
-    label: 'Ford Raptor · Stealth Gray',
-    sub: 'Express Hand Wash',
-    category: 'express' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #1a0f05 0%, #2a1a08 40%, #1a0a04 100%)',
-    accent: 'rgba(255,107,26,0.4)',
+    label: 'Rolls-Royce Cullinan · Rose Gold',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/rolls-royce-cullinan-rose-gold.jpg',
+    imageAlt: 'Rolls-Royce Cullinan rose gold chrome wrap detailed at LVAC Henderson',
     span: '',
+    height: 'h-[250px]',
   },
   {
     id: 3,
-    label: 'Rolls-Royce Cullinan',
+    label: 'Corvette C8 · Torch Red',
     sub: 'Ceramic Coating',
-    category: 'ceramic' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #05140f 0%, #0a251a 40%, #031008 100%)',
-    accent: 'rgba(16,185,129,0.5)',
+    category: 'ceramic',
+    imageSrc: '/gallery/corvette-c8-red.jpg',
+    imageAlt: 'Corvette C8 Torch Red ceramic coating at LVAC Carwash',
     span: '',
+    height: 'h-[250px]',
   },
   {
     id: 4,
-    label: 'BMW M3 Competition',
-    sub: 'Interior Detail',
-    category: 'interior' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #0a0515 0%, #140a25 40%, #07031a 100%)',
-    accent: 'rgba(0,180,255,0.35)',
-    span: '',
+    label: 'Rolls-Royce Ghost · Black',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/rolls-royce-ghost-black.jpg',
+    imageAlt: 'Rolls-Royce Ghost Black detailed at LVAC Henderson',
+    span: 'col-span-2',
+    height: 'h-[300px]',
   },
   {
     id: 5,
-    label: 'Jeep Wrangler · Matte',
-    sub: 'Wash + Interior',
-    category: 'express' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #080510 0%, #130a1e 40%, #060315 100%)',
-    accent: 'rgba(255,255,255,0.15)',
+    label: 'BMW M4 · Isle of Man Green',
+    sub: 'Ceramic Coating',
+    category: 'ceramic',
+    imageSrc: '/gallery/bmw-m4-green.jpg',
+    imageAlt: 'BMW M4 Isle of Man Green with carbon lip — ceramic coating',
     span: '',
+    height: 'h-[320px]',
   },
   {
     id: 6,
-    label: 'Ford F-450 Platinum',
-    sub: 'Paint Correction + Ceramic',
-    category: 'ceramic' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #150a02 0%, #251503 40%, #100801 100%)',
-    accent: 'rgba(255,107,26,0.3)',
+    label: 'Ford Raptor · Dark Gray',
+    sub: 'Express Hand Wash',
+    category: 'trucks',
+    imageSrc: '/gallery/ford-raptor-gray.jpg',
+    imageAlt: 'Ford Raptor dark gray — express hand wash at LVAC Henderson',
     span: '',
+    height: 'h-[320px]',
   },
   {
     id: 7,
-    label: 'Porsche Cayenne · Black',
+    label: 'Porsche 993 · Dark Green',
     sub: 'Full Detail',
-    category: 'detail' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 40%, #0a0a0a 100%)',
-    accent: 'rgba(255,255,255,0.1)',
+    category: 'detail',
+    imageSrc: '/gallery/porsche-993-green.jpg',
+    imageAlt: 'Porsche 993 dark green classic detailed at LVAC Henderson',
     span: '',
+    height: 'h-[280px]',
   },
   {
     id: 8,
-    label: 'Tesla Model S Plaid',
+    label: 'Rolls-Royce Cullinan · White',
     sub: 'Ceramic Coating',
-    category: 'ceramic' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #0a1020 0%, #15203a 40%, #08101a 100%)',
-    accent: 'rgba(0,180,255,0.4)',
-    span: '',
+    category: 'ceramic',
+    imageSrc: '/gallery/rolls-royce-cullinan-white.jpg',
+    imageAlt: 'Rolls-Royce Cullinan white with teal wheels — ceramic coating at LVAC',
+    span: 'col-span-2',
+    height: 'h-[360px]',
   },
   {
     id: 9,
-    label: 'Range Rover Sport',
-    sub: 'Full Interior Detail',
-    category: 'interior' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #0e0905 0%, #1c1208 40%, #0a0804 100%)',
-    accent: 'rgba(255,180,50,0.3)',
+    label: 'Corvette C8 · Amplify Orange',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/corvette-c8-orange.jpg',
+    imageAlt: 'Corvette C8 Amplify Orange with gold wheels — full detail',
     span: '',
+    height: 'h-[280px]',
   },
   {
     id: 10,
-    label: 'Mercedes S580',
-    sub: 'Full Detail + Paint Correction',
-    category: 'detail' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #050810 0%, #0b1025 40%, #050810 100%)',
-    accent: 'rgba(0,100,200,0.3)',
+    label: 'Cadillac Escalade · Sport Black',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/cadillac-escalade-black.jpg',
+    imageAlt: 'Cadillac Escalade Sport Black — full detail at LVAC Henderson',
     span: '',
+    height: 'h-[300px]',
   },
   {
     id: 11,
-    label: 'Lamborghini Urus',
-    sub: 'Ceramic Coating',
-    category: 'ceramic' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #1a0500 0%, #2a0a00 40%, #150300 100%)',
-    accent: 'rgba(255,107,26,0.6)',
-    span: '',
+    label: 'Camaro SS + Challenger · Duo',
+    sub: 'Express Hand Wash',
+    category: 'express',
+    imageSrc: '/gallery/camaro-challenger-duo.jpg',
+    imageAlt: 'Camaro SS Blue and Chrome Dodge Challenger — duo wash with mountain backdrop',
+    span: 'col-span-2',
+    height: 'h-[340px]',
   },
   {
     id: 12,
-    label: 'Cadillac Escalade',
-    sub: 'Express Hand Wash',
-    category: 'express' as Filter,
-    isReal: false,
-    bg: 'linear-gradient(135deg, #080808 0%, #141414 40%, #060606 100%)',
-    accent: 'rgba(180,150,100,0.3)',
+    label: 'Mercedes S-Class · Black',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/mercedes-s-class-black.jpg',
+    imageAlt: 'Mercedes S-Class Black — full detail at LVAC Henderson',
     span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 13,
+    label: 'BMW M4 · Yas Marina Blue',
+    sub: 'Ceramic Coating',
+    category: 'ceramic',
+    imageSrc: '/gallery/bmw-m4-blue.jpg',
+    imageAlt: 'BMW M4 Yas Marina Blue — ceramic coating at LVAC wash station',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 14,
+    label: 'Ford F-450 · Platinum',
+    sub: 'Express Hand Wash',
+    category: 'trucks',
+    imageSrc: '/gallery/ford-f450-platinum.jpg',
+    imageAlt: 'Ford F-450 Platinum Stone Gray — express hand wash at LVAC',
+    span: '',
+    height: 'h-[320px]',
+  },
+  {
+    id: 15,
+    label: 'RAM 1500 · Rebel Black',
+    sub: 'Express Hand Wash',
+    category: 'trucks',
+    imageSrc: '/gallery/ram-1500-rebel-black.jpg',
+    imageAlt: 'RAM 1500 Rebel Black — express hand wash at LVAC Henderson',
+    span: '',
+    height: 'h-[320px]',
+  },
+  {
+    id: 16,
+    label: "'64 Impala · Convertible Red",
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/chevy-impala-64-red.jpg',
+    imageAlt: '1964 Chevy Impala Convertible Red — classic car full detail',
+    span: 'col-span-2',
+    height: 'h-[360px]',
+  },
+  {
+    id: 17,
+    label: 'Porsche 911 · Cabriolet White',
+    sub: 'Ceramic Coating',
+    category: 'ceramic',
+    imageSrc: '/gallery/porsche-911-cab-white.jpg',
+    imageAlt: 'Porsche 911 Cabriolet white with red interior — ceramic coating',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 18,
+    label: 'Rolls-Royce Cullinan · Black Badge',
+    sub: 'Ceramic Coating',
+    category: 'ceramic',
+    imageSrc: '/gallery/rolls-royce-cullinan-matte-black.jpg',
+    imageAlt: 'Rolls-Royce Cullinan Black Badge matte black — ceramic coating',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 19,
+    label: 'Corvette C8 · Ceramic Gray',
+    sub: 'Express Hand Wash',
+    category: 'express',
+    imageSrc: '/gallery/corvette-c8-silver.jpg',
+    imageAlt: 'Corvette C8 Ceramic Gray — express wash at LVAC station',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 20,
+    label: 'Indian Scout · Matte Black',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/indian-scout-matte.jpg',
+    imageAlt: 'Indian Scout motorcycle matte black — hand detailed at LVAC',
+    span: '',
+    height: 'h-[300px]',
+  },
+  {
+    id: 21,
+    label: 'RAM 1500 · Flame Red Lifted',
+    sub: 'Express Hand Wash',
+    category: 'trucks',
+    imageSrc: '/gallery/ram-1500-red-lifted.jpg',
+    imageAlt: 'RAM 1500 flame red lifted truck — express wash at LVAC',
+    span: '',
+    height: 'h-[320px]',
+  },
+  {
+    id: 22,
+    label: 'BMW X5 · Mineral White',
+    sub: 'Express Hand Wash',
+    category: 'express',
+    imageSrc: '/gallery/bmw-x5-white.jpg',
+    imageAlt: 'BMW X5 Mineral White — express hand wash at LVAC Henderson',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 23,
+    label: 'Lexus RC F · Sport White',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/lexus-rcf-white.jpg',
+    imageAlt: 'Lexus RC F-Sport White — full detail at LVAC Henderson',
+    span: 'col-span-2',
+    height: 'h-[340px]',
+  },
+  {
+    id: 24,
+    label: 'Corvette C7 · Mint Teal',
+    sub: 'Ceramic Coating',
+    category: 'ceramic',
+    imageSrc: '/gallery/corvette-c7-teal.jpg',
+    imageAlt: 'Corvette C7 mint teal — ceramic coating at LVAC Henderson',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 25,
+    label: 'Subaru WRX STI · Dark Gray',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/subaru-wrx-sti.jpg',
+    imageAlt: 'Subaru WRX STI dark gray with gold wheels — full detail',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 26,
+    label: 'Polaris Slingshot · Black/Red',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/polaris-slingshot.jpg',
+    imageAlt: 'Polaris Slingshot black and red — full detail at LVAC',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 27,
+    label: 'RAM 1500 · White',
+    sub: 'Express Hand Wash',
+    category: 'trucks',
+    imageSrc: '/gallery/ram-1500-white.jpg',
+    imageAlt: 'RAM 1500 white — express hand wash at LVAC Henderson',
+    span: '',
+    height: 'h-[280px]',
+  },
+  {
+    id: 28,
+    label: 'Spoon S2000 · Race Car',
+    sub: 'Full Detail',
+    category: 'detail',
+    imageSrc: '/gallery/s2000-spoon-racecar.jpg',
+    imageAlt: 'Spoon Sports S2000 race car yellow and blue — detailed at LVAC',
+    span: 'col-span-2',
+    height: 'h-[340px]',
+  },
+  {
+    id: 29,
+    label: 'Isuzu NPR · Commercial',
+    sub: 'Express Hand Wash',
+    category: 'trucks',
+    imageSrc: '/gallery/isuzu-npr-truck.jpg',
+    imageAlt: 'Isuzu NPR box truck — commercial vehicle wash at LVAC',
+    span: '',
+    height: 'h-[260px]',
   },
 ];
 
-const FILTERS: { label: string; value: Filter }[] = [
-  { label: 'All Work', value: 'all' },
-  { label: 'Express Wash', value: 'express' },
-  { label: 'Full Detail', value: 'detail' },
-  { label: 'Ceramic Coating', value: 'ceramic' },
-  { label: 'Interior Detail', value: 'interior' },
+const FILTERS: { label: string; value: Filter; count: number }[] = [
+  { label: 'All Work', value: 'all', count: GALLERY_ITEMS.length },
+  { label: 'Express Wash', value: 'express', count: GALLERY_ITEMS.filter(i => i.category === 'express').length },
+  { label: 'Full Detail', value: 'detail', count: GALLERY_ITEMS.filter(i => i.category === 'detail').length },
+  { label: 'Ceramic Coating', value: 'ceramic', count: GALLERY_ITEMS.filter(i => i.category === 'ceramic').length },
+  { label: 'Trucks & SUVs', value: 'trucks', count: GALLERY_ITEMS.filter(i => i.category === 'trucks').length },
 ];
 
+/* --- Lightbox --- */
+function Lightbox({
+  item,
+  onClose,
+  onPrev,
+  onNext,
+  current,
+  total,
+}: {
+  item: GalleryItem;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  current: number;
+  total: number;
+}) {
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onPrev();
+      if (e.key === 'ArrowRight') onNext();
+    }
+    document.addEventListener('keydown', handleKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose, onPrev, onNext]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center lightbox-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${item.label} — ${item.sub}`}
+    >
+      {/* Close */}
+      <button
+        onClick={onClose}
+        className="absolute top-5 right-5 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
+        aria-label="Close lightbox"
+      >
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+        </svg>
+      </button>
+
+      {/* Prev */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
+        aria-label="Previous photo"
+      >
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {/* Next */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
+        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
+        aria-label="Next photo"
+      >
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {/* Image */}
+      <div
+        className="relative w-[92vw] h-[80vh] sm:w-[85vw] sm:h-[85vh] lightbox-image"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={item.imageSrc}
+          alt={item.imageAlt}
+          fill
+          sizes="92vw"
+          quality={90}
+          style={{ objectFit: 'contain' }}
+          priority
+        />
+      </div>
+
+      {/* Caption bar */}
+      <div className="absolute bottom-0 inset-x-0 p-5 sm:p-8 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
+        <div className="max-w-7xl mx-auto flex items-end justify-between">
+          <div>
+            <p className="font-mono text-[10px] sm:text-xs text-water tracking-widest mb-1">{item.sub.toUpperCase()}</p>
+            <p className="font-bold text-base sm:text-xl text-white">{item.label}</p>
+          </div>
+          <p className="font-mono text-xs text-white/40">
+            {current} / {total}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --- Breadcrumb --- */
 function Breadcrumb() {
   return (
     <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-muted">
@@ -150,113 +433,183 @@ function Breadcrumb() {
   );
 }
 
+/* --- Main Gallery Page --- */
 export default function GalleryPage() {
   const [activeFilter, setActiveFilter] = useState<Filter>('all');
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filtered = activeFilter === 'all'
     ? GALLERY_ITEMS
     : GALLERY_ITEMS.filter((item) => item.category === activeFilter);
 
+  const openLightbox = useCallback((idx: number) => setLightboxIndex(idx), []);
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+
+  const goPrev = useCallback(() => {
+    setLightboxIndex((prev) => (prev === null ? null : prev <= 0 ? filtered.length - 1 : prev - 1));
+  }, [filtered.length]);
+
+  const goNext = useCallback(() => {
+    setLightboxIndex((prev) => (prev === null ? null : prev >= filtered.length - 1 ? 0 : prev + 1));
+  }, [filtered.length]);
+
   return (
     <>
-      {/* ─── Hero ─── */}
-      <section className="relative pt-28 pb-20 overflow-hidden hero-bg">
-        <div className="hero-grid absolute inset-0 z-0" aria-hidden="true" />
-        <div className="film-grain absolute inset-0 z-[1] pointer-events-none" aria-hidden="true" />
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 relative z-10">
-          <RevealOnScroll>
-            <Breadcrumb />
-          </RevealOnScroll>
-          <RevealOnScroll delay={100}>
-            <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-water/25 bg-water/5 text-xs font-mono text-water">
-              <span className="w-1.5 h-1.5 rounded-full bg-water pulse-ring" aria-hidden="true" />
-              THE WORK · @lvacwashndetail
-            </div>
-          </RevealOnScroll>
-          <RevealOnScroll delay={200}>
-            <h1 className="mt-5 text-5xl lg:text-7xl font-black leading-none tracking-tight">
-              <span className="text-gradient-luxury">The Work</span>
-            </h1>
-          </RevealOnScroll>
-          <RevealOnScroll delay={300}>
-            <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
-              From daily drivers to seven-figure builds. Every car gets the same standard — the kind that shows up in photos and holds up to Henderson heat.
-            </p>
-          </RevealOnScroll>
+      {/* --- Immersive Hero --- */}
+      <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
+        <Image
+          src="/gallery/brabus-g63-sunset.jpg"
+          alt="Brabus G63 AMG at sunset — LVAC Carwash showpiece"
+          fill
+          priority
+          quality={90}
+          sizes="100vw"
+          style={{ objectFit: 'cover', objectPosition: 'center 35%' }}
+        />
+        {/* Cinematic overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(5,8,16,0.6) 0%, rgba(5,8,16,0.3) 40%, rgba(5,8,16,0.7) 75%, #050810 100%)',
+          }}
+        />
+        <div className="absolute inset-0 hero-vignette" />
+        <div className="film-grain absolute inset-0 pointer-events-none" aria-hidden="true" />
+
+        {/* Hero content */}
+        <div className="absolute inset-0 flex flex-col justify-end z-10">
+          <div className="max-w-7xl mx-auto px-5 lg:px-8 w-full pb-12 sm:pb-16">
+            <RevealOnScroll>
+              <Breadcrumb />
+            </RevealOnScroll>
+            <RevealOnScroll delay={100}>
+              <div className="mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-water/25 bg-water/5 text-xs font-mono text-water">
+                <span className="w-1.5 h-1.5 rounded-full bg-water pulse-ring" aria-hidden="true" />
+                {GALLERY_ITEMS.length} VEHICLES · @LVACWASHNDETAIL
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll delay={200}>
+              <h1
+                className="mt-4 font-black leading-[0.92] tracking-tight"
+                style={{ fontSize: 'clamp(3rem, 10vw, 7rem)' }}
+              >
+                <span className="text-gradient-luxury">The Work.</span>
+              </h1>
+            </RevealOnScroll>
+            <RevealOnScroll delay={300}>
+              <p className="mt-4 text-lg sm:text-xl text-muted max-w-xl leading-relaxed">
+                From daily drivers to seven-figure builds. Every car gets the same obsessive standard.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 scroll-indicator">
+          <svg className="w-5 h-5 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M12 5v14M5 12l7 7 7-7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
       </section>
 
-      <div className="section-divider" />
+      {/* --- Stats strip --- */}
+      <section className="border-y border-line bg-surface-2/50 relative z-20">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
+            {[
+              { value: '500+', label: 'Vehicles Detailed' },
+              { value: '4.7', label: 'Google Rating' },
+              { value: '100%', label: 'Hand Finished' },
+              { value: '27+', label: 'Five-Star Reviews' },
+            ].map((stat, i) => (
+              <RevealOnScroll key={i} delay={i * 80}>
+                <div className="text-center sm:text-left">
+                  <p className="text-2xl sm:text-3xl font-black tracking-tight">{stat.value}</p>
+                  <p className="text-xs font-mono text-muted tracking-wider mt-0.5">{stat.label.toUpperCase()}</p>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* ─── Filter bar ─── */}
-      <section className="py-8 bg-surface sticky top-16 z-30 border-b border-line">
+      {/* --- Filter bar --- */}
+      <section className="py-6 bg-surface sticky top-16 z-30 border-b border-line">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             {FILTERS.map((f) => (
               <button
                 key={f.value}
-                onClick={() => setActiveFilter(f.value)}
+                onClick={() => { setActiveFilter(f.value); setLightboxIndex(null); }}
                 aria-pressed={activeFilter === f.value}
-                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+                className={`shrink-0 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer flex items-center gap-2 ${
                   activeFilter === f.value
                     ? 'bg-water text-void font-bold'
                     : 'btn-ghost'
                 }`}
               >
                 {f.label}
+                <span className={`text-[10px] font-mono ${
+                  activeFilter === f.value ? 'text-void/60' : 'text-muted'
+                }`}>
+                  {f.count}
+                </span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── Gallery Grid ─── */}
-      <section className="py-12 lg:py-16">
+      {/* --- Gallery Grid --- */}
+      <section className="py-12 lg:py-20">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[220px] gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((item, i) => (
               <RevealOnScroll
                 key={item.id}
-                delay={i * 50}
-                className={item.span || ''}
+                delay={Math.min(i * 60, 400)}
+                className={item.span}
               >
-                <div className="relative w-full h-full rounded-2xl overflow-hidden group cursor-pointer">
-                  {item.isReal ? (
-                    <Image
-                      src={item.imageSrc!}
-                      alt={item.imageAlt!}
-                      fill
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      style={{ objectFit: 'cover', objectPosition: 'center', transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)' }}
-                      className="group-hover:scale-105"
-                    />
-                  ) : (
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: item.bg }}
-                    >
-                      <div
-                        className="absolute inset-0 opacity-30"
-                        style={{ background: `radial-gradient(ellipse at 40% 40%, ${item.accent}, transparent 60%)` }}
-                        aria-hidden="true"
-                      />
-                    </div>
-                  )}
-
-                  {/* Hover overlay */}
-                  <div
-                    className="absolute inset-0 transition-opacity duration-400"
-                    style={{ background: 'linear-gradient(to top, rgba(5,8,16,0.9) 0%, rgba(5,8,16,0.2) 50%, transparent 100%)' }}
+                <button
+                  onClick={() => openLightbox(i)}
+                  className={`gallery-card relative w-full ${item.height} rounded-2xl overflow-hidden group cursor-pointer block`}
+                  aria-label={`View ${item.label} — ${item.sub}`}
+                >
+                  <Image
+                    src={item.imageSrc}
+                    alt={item.imageAlt}
+                    fill
+                    sizes={item.span.includes('col-span-2') ? '(max-width: 640px) 100vw, 66vw' : '(max-width: 640px) 100vw, 33vw'}
+                    style={{ objectFit: 'cover', objectPosition: 'center' }}
+                    className="transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                   />
 
+                  {/* Permanent bottom gradient */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(to top, rgba(5,8,16,0.85) 0%, rgba(5,8,16,0.15) 40%, transparent 70%)' }}
+                  />
+
+                  {/* Hover glow overlay */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none gallery-glow" />
+
+                  {/* View indicator */}
+                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/5 border border-white/10 grid place-items-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 backdrop-blur-sm">
+                    <svg className="w-4 h-4 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+
                   {/* Labels */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="font-mono text-[10px] tracking-widest text-water mb-1">
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <p className="font-mono text-[10px] tracking-widest text-water mb-1.5 translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
                       {item.sub.toUpperCase()}
                     </p>
-                    <p className="font-bold text-sm text-ink">{item.label}</p>
+                    <p className="font-bold text-sm sm:text-base text-white translate-y-1 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                      {item.label}
+                    </p>
                   </div>
-                </div>
+                </button>
               </RevealOnScroll>
             ))}
           </div>
@@ -272,12 +625,15 @@ export default function GalleryPage() {
 
       <div className="section-divider" />
 
-      {/* ─── Before / After Section ─── */}
+      {/* --- Before / After Section --- */}
       <section className="py-20 lg:py-28 bg-surface">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
-          <RevealOnScroll className="mb-12">
+          <RevealOnScroll className="mb-14">
             <p className="font-mono text-xs text-water tracking-widest mb-3">BEFORE / AFTER</p>
-            <h2 className="text-3xl lg:text-4xl font-bold">
+            <h2
+              className="font-black leading-[0.93] tracking-tight"
+              style={{ fontSize: 'clamp(2rem, 6vw, 4rem)' }}
+            >
               The difference is not subtle.
             </h2>
             <p className="mt-4 text-muted text-lg max-w-xl">
@@ -285,68 +641,100 @@ export default function GalleryPage() {
             </p>
           </RevealOnScroll>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-5">
             {[
               {
-                vehicle: 'G63 AMG · BRABUS',
+                vehicle: 'Rolls-Royce Cullinan · White',
                 service: 'Ceramic Coating',
-                beforeBg: 'ph-1',
-                afterSrc: '/gallery/brabus-g63.jpg',
-                afterAlt: 'Brabus G63 AMG after ceramic coating by URRUTIA — showroom finish',
-                isReal: true,
+                beforeSrc: '/gallery/rolls-royce-cullinan-rose-gold.jpg',
+                beforeAlt: 'Rolls-Royce Cullinan before ceramic coating',
+                afterSrc: '/gallery/rolls-royce-cullinan-white.jpg',
+                afterAlt: 'Rolls-Royce Cullinan after ceramic coating — showroom finish',
               },
               {
-                vehicle: 'Ford F-450 Platinum',
+                vehicle: 'G63 AMG · BRABUS',
                 service: 'Full Detail',
-                beforeBg: 'ph-2',
-                afterBg: 'ph-6',
-                isReal: false,
+                beforeSrc: '/gallery/ford-raptor-gray.jpg',
+                beforeAlt: 'Ford Raptor before detail',
+                afterSrc: '/gallery/brabus-g63-sunset.jpg',
+                afterAlt: 'G63 AMG BRABUS after full detail — sunset finish',
               },
             ].map((ba, i) => (
-              <RevealOnScroll key={i} delay={i * 100}>
-                <div className="card rounded-2xl overflow-hidden">
-                  <div className="grid grid-cols-2 h-56 sm:h-64">
-                    <div className={`relative overflow-hidden ${ba.beforeBg}`}>
-                      <div className="absolute inset-0 bg-black/40 flex items-end p-4">
-                        <div>
-                          <span className="font-mono text-[10px] text-white/70 tracking-widest block">BEFORE</span>
-                        </div>
+              <RevealOnScroll key={i} delay={i * 120}>
+                <div className="ba-comparison rounded-2xl overflow-hidden border border-line group hover:border-water/30 transition-all duration-500">
+                  <div className="grid grid-cols-2 h-64 sm:h-80">
+                    <div className="relative overflow-hidden">
+                      <Image
+                        src={ba.beforeSrc}
+                        alt={ba.beforeAlt}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="340px"
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex items-end p-5">
+                        <span className="font-mono text-[10px] text-white/60 tracking-widest">BEFORE</span>
                       </div>
                     </div>
                     <div className="relative overflow-hidden">
-                      {ba.isReal ? (
-                        <Image
-                          src={ba.afterSrc!}
-                          alt={ba.afterAlt!}
-                          fill
-                          className="object-cover"
-                          sizes="280px"
-                        />
-                      ) : (
-                        <div className={`absolute inset-0 ${ba.afterBg}`} />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
-                        <span className="font-mono text-[10px] text-white/80 tracking-widest">AFTER</span>
+                      <Image
+                        src={ba.afterSrc}
+                        alt={ba.afterAlt}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="340px"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-5">
+                        <span className="font-mono text-[10px] text-water/80 tracking-widest">AFTER</span>
                       </div>
                     </div>
+                    {/* Center divider line */}
+                    <div className="absolute inset-y-0 left-1/2 w-px bg-white/20 z-10 pointer-events-none" />
                   </div>
-                  <div className="p-4 border-t border-line bg-surface-2">
-                    <p className="font-mono text-[10px] text-water tracking-widest">{ba.service.toUpperCase()}</p>
-                    <p className="font-semibold mt-0.5">{ba.vehicle}</p>
+                  <div className="p-5 border-t border-line bg-surface-2 flex items-center justify-between">
+                    <div>
+                      <p className="font-mono text-[10px] text-water tracking-widest">{ba.service.toUpperCase()}</p>
+                      <p className="font-bold mt-0.5 text-sm">{ba.vehicle}</p>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-water/8 border border-water/20 grid place-items-center">
+                      <svg className="w-4 h-4 text-water" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </RevealOnScroll>
             ))}
           </div>
+        </div>
+      </section>
 
-          <RevealOnScroll className="mt-8 flex justify-center" delay={200}>
+      <div className="section-divider" />
+
+      {/* --- Instagram CTA --- */}
+      <section className="py-20 lg:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 hero-bg opacity-60" aria-hidden="true" />
+        <div className="max-w-3xl mx-auto px-5 lg:px-8 relative text-center">
+          <RevealOnScroll>
+            <p className="font-mono text-xs text-water tracking-widest mb-4">FOLLOW THE WORK</p>
+            <h2
+              className="font-black leading-[0.93] tracking-tight mb-6"
+              style={{ fontSize: 'clamp(2rem, 7vw, 4.5rem)' }}
+            >
+              Every wash.{' '}
+              <span className="text-gradient-water">Every detail.</span>
+            </h2>
+            <p className="text-muted text-lg max-w-md mx-auto mb-10">
+              New before/afters posted weekly. Follow us on Instagram to see our latest work.
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={150}>
             <a
               href="https://instagram.com/lvacwashndetail"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary px-8 py-4 rounded-full text-sm font-bold flex items-center gap-2 shimmer-btn"
+              className="btn-mega inline-flex items-center gap-3 px-10 py-5 rounded-full text-base cursor-pointer"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.81.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.81-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.81-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.81.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.34 4.14.63a5.85 5.85 0 0 0-2.13 1.38A5.85 5.85 0 0 0 .63 4.14C.34 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.27 2.15.56 2.91a5.85 5.85 0 0 0 1.38 2.13 5.85 5.85 0 0 0 2.13 1.38c.76.29 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.27 2.91-.56a5.85 5.85 0 0 0 2.13-1.38 5.85 5.85 0 0 0 1.38-2.13c.29-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.27-2.15-.56-2.91a5.85 5.85 0 0 0-1.38-2.13A5.85 5.85 0 0 0 19.86.63c-.76-.29-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z" />
               </svg>
               Follow @lvacwashndetail
@@ -354,6 +742,18 @@ export default function GalleryPage() {
           </RevealOnScroll>
         </div>
       </section>
+
+      {/* --- Lightbox --- */}
+      {lightboxIndex !== null && filtered[lightboxIndex] && (
+        <Lightbox
+          item={filtered[lightboxIndex]}
+          onClose={closeLightbox}
+          onPrev={goPrev}
+          onNext={goNext}
+          current={lightboxIndex + 1}
+          total={filtered.length}
+        />
+      )}
     </>
   );
 }

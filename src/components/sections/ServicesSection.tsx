@@ -6,20 +6,38 @@ import { Star } from 'lucide-react';
 import BookingModal from '@/components/sections/BookingModal';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
-type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | 'mobile' | null;
+type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | null;
 
 /* ─── Before/After strip data ─── */
 const BA_SLOTS = [
   {
-    label: 'G63 AMG · BRABUS',
-    afterSrc: '/gallery/brabus-g63.jpg',
-    afterAlt: 'Brabus G63 AMG detailed by URRUTIA — showroom finish',
-    beforeClass: 'ph-1',
-    isReal: true,
+    label: 'ROLLS-ROYCE CULLINAN · WHITE',
+    beforeSrc: '/gallery/rolls-royce-cullinan-rose-gold.jpg',
+    beforeAlt: 'Rolls-Royce Cullinan before ceramic coating',
+    afterSrc: '/gallery/rolls-royce-cullinan-white.jpg',
+    afterAlt: 'Rolls-Royce Cullinan after ceramic coating — showroom finish',
   },
-  { label: 'FORD RAPTOR · GRAY', beforeClass: 'ph-2', afterClass: 'ph-3', isReal: false },
-  { label: 'CULLINAN · ROSE GOLD', beforeClass: 'ph-4', afterClass: 'ph-5', isReal: false },
-  { label: 'BMW M3 · INTERIOR', beforeClass: 'ph-6', afterClass: 'ph-1', isReal: false },
+  {
+    label: 'BMW M4 · GREEN',
+    beforeSrc: '/gallery/bmw-m4-blue.jpg',
+    beforeAlt: 'BMW M4 before ceramic coating',
+    afterSrc: '/gallery/bmw-m4-green.jpg',
+    afterAlt: 'BMW M4 Isle of Man Green after ceramic coating',
+  },
+  {
+    label: 'CORVETTE C8 · RED',
+    beforeSrc: '/gallery/corvette-c8-silver.jpg',
+    beforeAlt: 'Corvette C8 before detail',
+    afterSrc: '/gallery/corvette-c8-red.jpg',
+    afterAlt: 'Corvette C8 Torch Red after ceramic coating',
+  },
+  {
+    label: 'CADILLAC ESCALADE · BLACK',
+    beforeSrc: '/gallery/mercedes-s-class-black.jpg',
+    beforeAlt: 'Mercedes S-Class before detail',
+    afterSrc: '/gallery/cadillac-escalade-black.jpg',
+    afterAlt: 'Cadillac Escalade Sport Black after full detail',
+  },
 ];
 
 /* ─── Icon float wrapper ─── */
@@ -209,24 +227,27 @@ export default function ServicesSection() {
                 >
                   <div className="grid grid-cols-2 h-40 sm:h-48">
                     {/* Before */}
-                    <div className={`relative overflow-hidden ${slot.beforeClass ?? 'ph-1'}`}>
+                    <div className="relative overflow-hidden">
+                      <Image
+                        src={slot.beforeSrc}
+                        alt={slot.beforeAlt}
+                        fill
+                        className="object-cover"
+                        sizes="160px"
+                      />
                       <div className="absolute inset-0 bg-black/30 flex items-end p-2">
                         <span className="font-mono text-[9px] text-white/70 tracking-widest">BEFORE</span>
                       </div>
                     </div>
                     {/* After */}
                     <div className="relative overflow-hidden">
-                      {slot.isReal ? (
-                        <Image
-                          src={slot.afterSrc!}
-                          alt={slot.afterAlt!}
-                          fill
-                          className="object-cover"
-                          sizes="160px"
-                        />
-                      ) : (
-                        <div className={`absolute inset-0 ${slot.afterClass}`} />
-                      )}
+                      <Image
+                        src={slot.afterSrc}
+                        alt={slot.afterAlt}
+                        fill
+                        className="object-cover"
+                        sizes="160px"
+                      />
                       <div className="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-black/40 to-transparent">
                         <span className="font-mono text-[9px] text-white/80 tracking-widest">AFTER</span>
                       </div>

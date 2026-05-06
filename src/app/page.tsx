@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import SiteNav from '@/components/sections/SiteNav';
+import PromoBanner from '@/components/sections/PromoBanner';
 import HeroCtas from '@/components/sections/HeroCtas';
 import ServicesSection from '@/components/sections/ServicesSection';
 import MembershipSection from '@/components/sections/MembershipSection';
 import LocationSection from '@/components/sections/LocationSection';
 import FaqSection from '@/components/sections/FaqSection';
 import FinalCta from '@/components/sections/FinalCta';
+import PhotoShowcase from '@/components/sections/PhotoShowcase';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 // Preloader disabled — video autoplay blocked on most browsers
 // import Preloader from '@/components/cinema/Preloader';
@@ -18,12 +20,13 @@ const BUSINESS_ADDRESS = {
   streetAddress: '1195 Wellness Pl',
   addressLocality: 'Henderson',
   addressRegion: 'NV',
-  postalCode: '89074',
+  postalCode: '89011',
   addressCountry: 'US',
 };
 
-const BUSINESS_URL = 'https://urrutiawash.com';
-const BUSINESS_IMAGE = `${BUSINESS_URL}/gallery/brabus-g63.jpg`;
+const BUSINESS_URL = 'https://www.washduringworkout.com';
+const BUSINESS_IMAGE = `${BUSINESS_URL}/gallery/brabus-g63-sunset.jpg`;
+const BUSINESS_PHONE = '+1-702-326-4101';
 const OPENING_HOURS = [
   'Mo 07:00-16:30',
   'Tu 07:00-16:30',
@@ -36,10 +39,11 @@ const OPENING_HOURS = [
 const homepageSchemas: SchemaInput[] = [
   {
     type: 'LocalBusiness',
-    name: 'Urrutia Carwash & Detail',
+    name: 'LVAC Carwash and Detailing',
     description:
       'Premium hand wash and auto detailing at LVAC Henderson. Express washes, full details, and ceramic coating — while you train.',
     url: BUSINESS_URL,
+    telephone: BUSINESS_PHONE,
     address: BUSINESS_ADDRESS,
     geo: { latitude: 36.0211, longitude: -115.0707 },
     openingHours: OPENING_HOURS,
@@ -47,14 +51,16 @@ const homepageSchemas: SchemaInput[] = [
     image: BUSINESS_IMAGE,
     sameAs: [
       'https://www.instagram.com/lvacwashndetail',
+      'https://maps.google.com/?cid=LVAC+Carwash+and+Detailing',
     ],
   },
   {
     type: 'AutoRepair',
-    name: 'Urrutia Carwash & Detail',
+    name: 'LVAC Carwash and Detailing',
     description:
       'Premium hand wash, interior detail, paint correction, and ceramic coating services in Henderson, NV.',
     url: BUSINESS_URL,
+    telephone: BUSINESS_PHONE,
     address: BUSINESS_ADDRESS,
     openingHours: OPENING_HOURS,
     priceRange: '$$',
@@ -93,28 +99,28 @@ const homepageSchemas: SchemaInput[] = [
   },
   {
     type: 'AggregateRating',
-    itemReviewed: { name: 'Urrutia Carwash & Detail', url: BUSINESS_URL },
-    ratingValue: 4.9,
+    itemReviewed: { name: 'LVAC Carwash and Detailing', url: BUSINESS_URL },
+    ratingValue: 4.7,
     bestRating: 5,
     worstRating: 1,
-    reviewCount: 120,
+    reviewCount: 27,
   },
   {
     type: 'FAQPage',
     questions: [
       {
-        question: 'Where is Urrutia Carwash & Detail located?',
+        question: 'Where is LVAC Carwash and Detailing located?',
         answer:
-          'We are located at 1195 Wellness Pl, Henderson, NV 89074 — inside the LVAC (Las Vegas Athletic Club) parking area.',
+          'We are located at 1195 Wellness Pl, Henderson, NV 89011 — inside the LVAC (Las Vegas Athletic Club) parking area.',
       },
       {
         question: 'What are your hours?',
         answer: 'We are open Monday through Saturday from 7:00 AM to 4:30 PM. We are closed on Sundays at this location.',
       },
       {
-        question: 'Do you offer mobile detailing?',
+        question: 'Do you have a first-wash discount?',
         answer:
-          'Yes. We offer mobile detailing 7 days a week across the Las Vegas valley. We come to your home, office, or any location within 15 miles of Henderson.',
+          'Yes! New customers get 10% off their first wash plus a free spray wax. Enter your phone number in the promo banner at the top of the site to unlock your code.',
       },
       {
         question: 'How does the LVAC drop-off service work?',
@@ -143,6 +149,9 @@ export default function HomePage() {
 
       {/* Preloader removed — was blocking page load */}
 
+      {/* ─── Promo Banner ─── */}
+      <PromoBanner />
+
       {/* ─── Navigation ─── */}
       <SiteNav />
 
@@ -154,8 +163,8 @@ export default function HomePage() {
         {/* Brabus background image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/gallery/brabus-g63.jpg"
-            alt="Brabus G63 AMG — Urrutia Car Wash"
+            src="/gallery/brabus-g63-sunset.jpg"
+            alt="Brabus G63 AMG at sunset — Urrutia Car Wash"
             fill
             priority
             quality={90}
@@ -191,7 +200,7 @@ export default function HomePage() {
 
           <RevealOnScroll delay={300}>
             <p className="text-lg sm:text-xl text-muted max-w-2xl leading-relaxed mb-10" style={{ maxWidth: '36rem' }}>
-              Park at LVAC. We hand-wash and detail your car while you train. Get an SMS the
+              Park at LVAC Henderson. We hand-wash and detail your car while you train. Get an SMS the
               moment it&rsquo;s ready. Walk out to clean.
             </p>
           </RevealOnScroll>
@@ -208,7 +217,7 @@ export default function HomePage() {
               </span>
               <span className="flex items-center gap-2 shrink-0">
                 <span className="w-1 h-1 rounded-full bg-water" aria-hidden="true" />
-                MOBILE 7 DAYS / WEEK
+                10% OFF FIRST WASH
               </span>
               <span className="flex items-center gap-2 shrink-0">
                 <span className="w-1 h-1 rounded-full bg-flame" aria-hidden="true" />
@@ -230,17 +239,17 @@ export default function HomePage() {
         >
           <div className="flex marquee-track whitespace-nowrap text-muted font-mono text-sm tracking-widest gap-12 px-8">
             <span>ROLLS-ROYCE CULLINAN</span><span>·</span>
-            <span>MERCEDES G63 AMG</span><span>·</span>
+            <span>G63 AMG BRABUS</span><span>·</span>
+            <span>CORVETTE C8</span><span>·</span>
+            <span>BMW M4</span><span>·</span>
             <span>FORD RAPTOR</span><span>·</span>
-            <span>BMW M-SERIES</span><span>·</span>
-            <span>JEEP WRANGLER</span><span>·</span>
+            <span>PORSCHE 993</span><span>·</span>
+            <span>CADILLAC ESCALADE</span><span>·</span>
             <span>FORD F-450 PLATINUM</span><span>·</span>
-            <span>ROLLS-ROYCE CULLINAN</span><span>·</span>
-            <span>MERCEDES G63 AMG</span><span>·</span>
-            <span>FORD RAPTOR</span><span>·</span>
-            <span>BMW M-SERIES</span><span>·</span>
-            <span>JEEP WRANGLER</span><span>·</span>
-            <span>FORD F-450 PLATINUM</span>
+            <span>ROLLS-ROYCE GHOST</span><span>·</span>
+            <span>INDIAN SCOUT</span><span>·</span>
+            <span>&apos;64 IMPALA</span><span>·</span>
+            <span>SUBARU WRX STI</span>
           </div>
         </div>
       </section>
@@ -278,8 +287,8 @@ export default function HomePage() {
                 <p className="font-mono text-xs text-muted mb-2">STEP 01</p>
                 <h3 className="text-xl font-semibold mb-3">Drop Off</h3>
                 <p className="text-muted leading-relaxed">
-                  Park at LVAC Henderson. Hand the keys to your detailer. Or book mobile and we
-                  come to you &mdash; home, office, anywhere in the valley.
+                  Park at LVAC Henderson. Hand the keys to your detailer. Hit the gym. We&rsquo;ll text
+                  you the moment your car is ready.
                 </p>
               </div>
             </RevealOnScroll>
@@ -336,6 +345,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── Photo showcase strip ─── */}
+      <PhotoShowcase />
+
       {/* Section divider */}
       <div className="section-divider" />
 
@@ -367,54 +379,38 @@ export default function HomePage() {
 
           <RevealOnScroll>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-              {/* Slot 1 — real Brabus photo */}
-              <div className="aspect-[4/3] rounded-2xl relative overflow-hidden group">
-                <Image
-                  src="/gallery/brabus-g63.jpg"
-                  alt="Brabus G63 AMG — Urrutia Detail"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                  style={{ objectFit: 'cover', objectPosition: 'center', transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)' }}
-                  className="group-hover:scale-105"
-                />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,8,16,0.8) 0%, transparent 60%)' }} />
-                <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/90 tracking-widest">
-                  G63 AMG · BRABUS
+              {[
+                { src: '/gallery/brabus-g63-sunset.jpg', alt: 'Brabus G63 AMG at sunset — ceramic detail', label: 'G63 AMG · BRABUS' },
+                { src: '/gallery/rolls-royce-cullinan-white.jpg', alt: 'Rolls-Royce Cullinan white — ceramic coating', label: 'ROLLS-ROYCE · CULLINAN' },
+                { src: '/gallery/corvette-c8-red.jpg', alt: 'Corvette C8 Torch Red — ceramic coating', label: 'CORVETTE C8 · RED' },
+                { src: '/gallery/bmw-m4-green.jpg', alt: 'BMW M4 Isle of Man Green — ceramic coating', label: 'BMW M4 · GREEN' },
+                { src: '/gallery/rolls-royce-ghost-black.jpg', alt: 'Rolls-Royce Ghost Black — full detail', label: 'RR GHOST · BLACK' },
+                { src: '/gallery/porsche-993-green.jpg', alt: 'Porsche 993 dark green — full detail', label: 'PORSCHE 993 · GREEN' },
+              ].map((photo, i) => (
+                <div key={i} className="aspect-[4/3] rounded-2xl relative overflow-hidden group">
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    style={{ objectFit: 'cover', objectPosition: 'center' }}
+                    className="transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,8,16,0.8) 0%, transparent 60%)' }} />
+                  <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/90 tracking-widest">
+                    {photo.label}
+                  </div>
                 </div>
-              </div>
-
-              {/* Slots 2-6 — styled placeholders with richer gradients */}
-              <div className="aspect-[4/3] rounded-2xl relative overflow-hidden group" style={{ background: 'linear-gradient(135deg, #1a0f05 0%, #2a1a08 40%, #1a0a04 100%)' }}>
-                <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse at 30% 40%, rgba(255,107,26,0.4), transparent 60%)' }} />
-                <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/80 tracking-widest">FORD RAPTOR · GRAY</div>
-              </div>
-              <div className="aspect-[4/3] rounded-2xl relative overflow-hidden group" style={{ background: 'linear-gradient(135deg, #05140f 0%, #0a251a 40%, #031008 100%)' }}>
-                <div className="absolute inset-0 opacity-25" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(16,185,129,0.5), transparent 60%)' }} />
-                <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/80 tracking-widest">CULLINAN · ROSE GOLD</div>
-              </div>
-              <div className="aspect-[4/3] rounded-2xl relative overflow-hidden group" style={{ background: 'linear-gradient(135deg, #0a0515 0%, #140a25 40%, #07031a 100%)' }}>
-                <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse at 50% 60%, rgba(0,180,255,0.35), transparent 60%)' }} />
-                <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/80 tracking-widest">BMW M3 · INTERIOR DETAIL</div>
-              </div>
-              <div className="aspect-[4/3] rounded-2xl relative overflow-hidden group" style={{ background: 'linear-gradient(135deg, #080510 0%, #130a1e 40%, #060315 100%)' }}>
-                <div className="absolute inset-0 opacity-20" style={{ background: 'radial-gradient(ellipse at 60% 20%, rgba(255,255,255,0.15), transparent 60%)' }} />
-                <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/80 tracking-widest">JEEP WRANGLER · MATTE</div>
-              </div>
-              <div className="aspect-[4/3] rounded-2xl relative overflow-hidden group" style={{ background: 'linear-gradient(135deg, #150a02 0%, #251503 40%, #100801 100%)' }}>
-                <div className="absolute inset-0 opacity-25" style={{ background: 'radial-gradient(ellipse at 40% 70%, rgba(255,107,26,0.3), transparent 60%)' }} />
-                <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/80 tracking-widest">F-450 PLATINUM · CERAMIC</div>
-              </div>
+              ))}
             </div>
           </RevealOnScroll>
 
           <div className="mt-8 flex justify-center">
             <a
-              href="https://instagram.com/lvacwashndetail"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/gallery"
               className="btn-ghost px-6 py-3 rounded-full text-sm flex items-center gap-2"
             >
-              See more on Instagram
+              View Full Gallery
               <svg
                 className="w-4 h-4"
                 viewBox="0 0 24 24"
@@ -423,7 +419,7 @@ export default function HomePage() {
                 strokeWidth="2"
                 aria-hidden="true"
               >
-                <path d="M7 17L17 7M17 7H8M17 7V16" />
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
           </div>
@@ -471,7 +467,7 @@ export default function HomePage() {
               <span className="wordmark text-lg">URRUTIA</span>
             </div>
             <p className="text-sm text-muted leading-relaxed">
-              Premium hand wash and detail. LVAC Henderson + mobile valley-wide.
+              Premium hand wash and detail at LVAC Henderson. Open Mon-Sat 7:00-4:30.
             </p>
           </div>
 
@@ -489,7 +485,7 @@ export default function HomePage() {
             <p className="font-mono text-[10px] text-muted tracking-widest mb-3">LOCATION</p>
             <ul className="space-y-2 text-sm text-muted">
               <li>1195 Wellness Pl</li>
-              <li>Henderson, NV 89074</li>
+              <li>Henderson, NV 89011</li>
               <li>Mon&ndash;Sat · 7:00&ndash;4:30</li>
             </ul>
           </div>

@@ -1,44 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import BookingModal from '@/components/sections/BookingModal';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
 type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | null;
-
-/* ─── Before/After strip data ─── */
-const BA_SLOTS = [
-  {
-    label: 'ROLLS-ROYCE CULLINAN · WHITE',
-    beforeSrc: '/gallery/rolls-royce-cullinan-rose-gold.jpg',
-    beforeAlt: 'Rolls-Royce Cullinan before ceramic coating',
-    afterSrc: '/gallery/rolls-royce-cullinan-white.jpg',
-    afterAlt: 'Rolls-Royce Cullinan after ceramic coating — showroom finish',
-  },
-  {
-    label: 'BMW M4 · GREEN',
-    beforeSrc: '/gallery/bmw-m4-blue.jpg',
-    beforeAlt: 'BMW M4 before ceramic coating',
-    afterSrc: '/gallery/bmw-m4-green.jpg',
-    afterAlt: 'BMW M4 Isle of Man Green after ceramic coating',
-  },
-  {
-    label: 'CORVETTE C8 · RED',
-    beforeSrc: '/gallery/corvette-c8-silver.jpg',
-    beforeAlt: 'Corvette C8 before detail',
-    afterSrc: '/gallery/corvette-c8-red.jpg',
-    afterAlt: 'Corvette C8 Torch Red after ceramic coating',
-  },
-  {
-    label: 'CADILLAC ESCALADE · BLACK',
-    beforeSrc: '/gallery/mercedes-s-class-black.jpg',
-    beforeAlt: 'Mercedes S-Class before detail',
-    afterSrc: '/gallery/cadillac-escalade-black.jpg',
-    afterAlt: 'Cadillac Escalade Sport Black after full detail',
-  },
-];
 
 /* ─── Icon float wrapper ─── */
 function FloatIcon({ children }: { children: React.ReactNode }) {
@@ -53,7 +20,6 @@ export default function ServicesSection() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPreset, setModalPreset] = useState<ModalPreset>(null);
   const [ribbonMounted, setRibbonMounted] = useState(false);
-  const stripRef = useRef<HTMLDivElement>(null);
 
   function openBooking(preset: ModalPreset) {
     setModalPreset(preset);
@@ -202,64 +168,6 @@ export default function ServicesSection() {
               </div>
             </RevealOnScroll>
           </div>
-
-          {/* ─── Before / After Strip ─── */}
-          <RevealOnScroll className="mt-14" delay={100}>
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <p className="font-mono text-xs text-water tracking-widest mb-1">BEFORE / AFTER</p>
-                <p className="text-sm text-muted">The work speaks for itself. Scroll to explore.</p>
-              </div>
-              <p className="text-xs text-muted font-mono hidden sm:block">SWIPE →</p>
-            </div>
-            <div
-              ref={stripRef}
-              className="ba-strip gap-4 pb-2"
-              role="list"
-              aria-label="Before and after gallery"
-            >
-              {BA_SLOTS.map((slot, i) => (
-                <div
-                  key={i}
-                  className="ba-card rounded-2xl overflow-hidden border border-line"
-                  style={{ width: 'min(72vw, 320px)' }}
-                  role="listitem"
-                >
-                  <div className="grid grid-cols-2 h-40 sm:h-48">
-                    {/* Before */}
-                    <div className="relative overflow-hidden">
-                      <Image
-                        src={slot.beforeSrc}
-                        alt={slot.beforeAlt}
-                        fill
-                        className="object-cover"
-                        sizes="160px"
-                      />
-                      <div className="absolute inset-0 bg-black/30 flex items-end p-2">
-                        <span className="font-mono text-[9px] text-white/70 tracking-widest">BEFORE</span>
-                      </div>
-                    </div>
-                    {/* After */}
-                    <div className="relative overflow-hidden">
-                      <Image
-                        src={slot.afterSrc}
-                        alt={slot.afterAlt}
-                        fill
-                        className="object-cover"
-                        sizes="160px"
-                      />
-                      <div className="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-black/40 to-transparent">
-                        <span className="font-mono text-[9px] text-white/80 tracking-widest">AFTER</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="px-3 py-2.5 bg-surface-2 border-t border-line">
-                    <p className="font-mono text-[10px] text-muted tracking-widest">{slot.label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </RevealOnScroll>
 
           {/* ─── Desert Callout ─── */}
           <RevealOnScroll className="mt-10">

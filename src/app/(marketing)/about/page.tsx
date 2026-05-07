@@ -24,7 +24,7 @@ const TRUST_SIGNALS = [
     ),
   },
   {
-    stat: '4.9★',
+    stat: '4.7★',
     label: 'Customer Rating',
     color: 'flame',
     icon: (

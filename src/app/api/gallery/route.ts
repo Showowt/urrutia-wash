@@ -16,7 +16,13 @@ export async function GET(req: NextRequest) {
     .limit(limit);
 
   if (category && category !== 'all') {
-    query = query.eq('category', category);
+    // Only allow known category values to prevent injection
+    const validCategories = ['express', 'detail', 'ceramic', 'trucks'];
+    if (validCategories.includes(category)) {
+      query = query.eq('category', category);
+    } else {
+      return NextResponse.json({ data: [] });
+    }
   }
 
   const { data, error } = await query;

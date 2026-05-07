@@ -312,6 +312,59 @@ export type Database = {
         };
         Relationships: [];
       };
+      gallery_photos: {
+        Row: {
+          id: string;
+          image_url: string;
+          storage_path: string | null;
+          make: string;
+          model: string;
+          color: string;
+          year: string | null;
+          label: string;
+          service_type: string | null;
+          category: string;
+          featured: boolean;
+          sort_order: number;
+          ai_description: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          image_url: string;
+          storage_path?: string | null;
+          make?: string;
+          model?: string;
+          color?: string;
+          year?: string | null;
+          label?: string;
+          service_type?: string | null;
+          category?: string;
+          featured?: boolean;
+          sort_order?: number;
+          ai_description?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          image_url?: string;
+          storage_path?: string | null;
+          make?: string;
+          model?: string;
+          color?: string;
+          year?: string | null;
+          label?: string;
+          service_type?: string | null;
+          category?: string;
+          featured?: boolean;
+          sort_order?: number;
+          ai_description?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       reviews: {
         Row: {
           id: string;

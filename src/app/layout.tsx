@@ -17,6 +17,9 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
   title: "LVAC Carwash and Detailing | Premium Hand Wash & Detail | Henderson, NV",
   description:
     "Drop your car. Train. Drive home clean. Premium hand wash and detailing at LVAC Henderson, NV. Express wash, full detail, and ceramic coating — while you work out.",
@@ -42,6 +45,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "LVAC Carwash and Detailing",
+    images: [
+      {
+        url: "/gallery/brabus-g63-sunset.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Premium hand wash and detailing at LVAC Henderson",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LVAC Carwash and Detailing | Premium Hand Wash & Detail",
+    description:
+      "Park at LVAC. We hand-wash and detail your car while you train. Walk out to clean.",
+    images: ["/gallery/brabus-g63-sunset.jpg"],
   },
 };
 

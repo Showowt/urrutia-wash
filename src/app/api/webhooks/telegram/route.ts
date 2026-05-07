@@ -36,12 +36,15 @@ async function analyzeCarPhoto(imageUrl: string): Promise<{
   // Download image and convert to base64
   const imgRes = await fetch(imageUrl);
   if (!imgRes.ok) {
-    await sendTelegramMessage(CHAT_ID, `DEBUG: Image download failed ${imgRes.status}`);
+    console.error('[telegram webhook] Image download failed:', imgRes.status);
     return null;
   }
   const imgBuffer = await imgRes.arrayBuffer();
   const base64 = Buffer.from(imgBuffer).toString('base64');
-  const mediaType = imgRes.headers.get('content-type') || 'image/jpeg';
+  const rawType = imgRes.headers.get('content-type') || 'image/jpeg';
+  // Claude only accepts image/jpeg, image/png, image/gif, image/webp
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  const mediaType = ALLOWED_TYPES.includes(rawType) ? rawType : 'image/jpeg';
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -77,8 +80,6 @@ If this is NOT a photo of a car/vehicle, respond with: {"error":"not a vehicle"}
   if (!res.ok) {
     const errBody = await res.text();
     console.error('[telegram webhook] Claude API error:', res.status, errBody);
-    // Send error detail to Telegram for debugging
-    await sendTelegramMessage(CHAT_ID, `DEBUG: Claude API ${res.status}\n${errBody.slice(0, 500)}`);
     return null;
   }
 
@@ -95,7 +96,7 @@ If this is NOT a photo of a car/vehicle, respond with: {"error":"not a vehicle"}
     return null;
   }
   } catch (err) {
-    await sendTelegramMessage(CHAT_ID, `DEBUG: analyzeCarPhoto error: ${err instanceof Error ? err.message : String(err)}`);
+    console.error('[telegram webhook] analyzeCarPhoto error:', err);
     return null;
   }
 }
@@ -148,9 +149,8 @@ export async function POST(request: NextRequest) {
     // Analyze with Claude Vision
     const analysis = await analyzeCarPhoto(fileUrl);
     if (!analysis) {
-      const hasKey = ANTHROPIC_API_KEY.length > 0;
       await sendTelegramMessage(chatId,
-        `Could not identify a vehicle in this photo.\nAPI key present: ${hasKey} (${ANTHROPIC_API_KEY.length} chars)\nMake sure the car is clearly visible and try again.`
+        'Could not identify a vehicle in this photo. Make sure the car is clearly visible and try again.'
       );
       return NextResponse.json({ ok: true });
     }

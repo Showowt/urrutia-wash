@@ -26,15 +26,13 @@ export type Wash = Database["public"]["Tables"]["washes"]["Row"];
 export type Membership = Database["public"]["Tables"]["memberships"]["Row"];
 export type Referral = Database["public"]["Tables"]["referrals"]["Row"];
 export type SmsLog = Database["public"]["Tables"]["sms_log"]["Row"];
+export type Review = Database["public"]["Tables"]["reviews"]["Row"];
 
 // ═══ Database schema map ═══════════════════════════════
 // Format mirrors `npx supabase gen types typescript` output exactly.
 // __InternalSupabase is required by @supabase/supabase-js v2.105+
 // to auto-resolve PostgrestVersion without an explicit client option.
 export type Database = {
-  __InternalSupabase: {
-    PostgrestVersion: "12";
-  };
   public: {
     Tables: {
       users: {
@@ -310,6 +308,47 @@ export type Database = {
           used_at?: string | null;
           order_reference?: string | null;
           created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      reviews: {
+        Row: {
+          id: string;
+          name: string;
+          text: string;
+          stars: number;
+          ago: string;
+          vehicle: string | null;
+          source: string;
+          featured: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          text: string;
+          stars?: number;
+          ago?: string;
+          vehicle?: string | null;
+          source?: string;
+          featured?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          text?: string;
+          stars?: number;
+          ago?: string;
+          vehicle?: string | null;
+          source?: string;
+          featured?: boolean;
+          sort_order?: number;
           updated_at?: string;
         };
         Relationships: [];

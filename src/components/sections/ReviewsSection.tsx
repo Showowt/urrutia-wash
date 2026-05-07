@@ -3,87 +3,22 @@
 import { useRef, useState, useEffect } from 'react';
 
 interface Review {
+  id?: string;
   name: string;
   text: string;
   stars: number;
   ago: string;
-  vehicle?: string;
+  vehicle?: string | null;
 }
 
-const REVIEWS: Review[] = [
-  {
-    name: 'Jeffrey Nunn',
-    text: 'I have a brand new Porsche that I trust these guys with more than any place in town. They give it a hand wash and don\'t miss a spot. The paint is still pristine condition. Only place I take my car to get it washed now.',
-    stars: 5,
-    ago: '4 months ago',
-    vehicle: 'Porsche',
-  },
-  {
-    name: 'Jeremy Huard',
-    text: 'Jose and his crew are great. Always gets my car looking fresh. Just drop it off, workout, and when you come back your cars looking new again! A+',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'Lex Tucker',
-    text: 'I contacted so many detailers & Jose answered quickly & gave me an estimate in just a few seconds then offered to have it done in the next hour. He did absolutely amazing & I will definitely be coming back.',
-    stars: 5,
-    ago: '4 months ago',
-  },
-  {
-    name: 'Michael Mohfanz',
-    text: 'Hands down the best car detail I\'ve ever had! My car looked brand new when he was done! Every corner, seat, and panel was spotless. You can tell he really takes pride in his work and doesn\'t rush the job.',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'Jonny O',
-    text: 'Can\'t say enough about Jose and his crew for always coming thru with the BEST car wash in Vegas and does an amazing job. Been going with him for many years and several cars and never disappoint!',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'John Giron',
-    text: 'My car looks brand new inside and out. They paid attention to every little detail. The exterior has a beautiful shine, and the interior smells fresh and spotless. The team was professional, friendly, and worked quickly.',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'Lilia Santos',
-    text: 'Amazing car wash! The employees\' attention to detail is fantastic, and the owner Jose is willing to go above and beyond for your car\'s needs. Worth the 30 minute drive!',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'Alejandro Rodriguez-Chavez',
-    text: 'They get the job done every time. No questions, no fuss. The attention to detail is great, and my car always comes back looking brand new. Highly recommend.',
-    stars: 5,
-    ago: '3 months ago',
-  },
-  {
-    name: 'Al Ander',
-    text: 'Jose does excellent work! He\'s very detailed!! I take all my cars to him and refer all my friends as well.',
-    stars: 5,
-    ago: '3 months ago',
-  },
-  {
-    name: 'The Official Austin Bruno',
-    text: 'I\'ve been going to Jose well over a year now. I have a Jeep that I off-road frequently with and he takes care of me every time. He takes the best care — really pays attention to the details.',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'Hannah Sharpe',
-    text: 'Always such amazing service! My car is always on point when this location is done with it! I won\'t be going to anyone else.',
-    stars: 5,
-    ago: '6 months ago',
-  },
-  {
-    name: 'Ferhad Alic',
-    text: 'Great prices and amazing service. The owner takes great pride in attention to detail and cares about his clients.',
-    stars: 5,
-    ago: '6 months ago',
-  },
+// Hardcoded fallback in case DB fetch fails
+const FALLBACK_REVIEWS: Review[] = [
+  { name: 'Jeffrey Nunn', text: 'I have a brand new Porsche that I trust these guys with more than any place in town. They give it a hand wash and don\'t miss a spot. The paint is still pristine condition. Only place I take my car to get it washed now.', stars: 5, ago: '4 months ago', vehicle: 'Porsche' },
+  { name: 'Jeremy Huard', text: 'Jose and his crew are great. Always gets my car looking fresh. Just drop it off, workout, and when you come back your cars looking new again! A+', stars: 5, ago: '6 months ago' },
+  { name: 'Lex Tucker', text: 'I contacted so many detailers & Jose answered quickly & gave me an estimate in just a few seconds then offered to have it done in the next hour. He did absolutely amazing & I will definitely be coming back.', stars: 5, ago: '4 months ago' },
+  { name: 'Michael Mohfanz', text: 'Hands down the best car detail I\'ve ever had! My car looked brand new when he was done! Every corner, seat, and panel was spotless. You can tell he really takes pride in his work and doesn\'t rush the job.', stars: 5, ago: '6 months ago' },
+  { name: 'Jonny O', text: 'Can\'t say enough about Jose and his crew for always coming thru with the BEST car wash in Vegas and does an amazing job. Been going with him for many years and several cars and never disappoint!', stars: 5, ago: '6 months ago' },
+  { name: 'Ferhad Alic', text: 'Great prices and amazing service. The owner takes great pride in attention to detail and cares about his clients.', stars: 5, ago: '6 months ago' },
 ];
 
 function StarRow({ count }: { count: number }) {
@@ -145,6 +80,20 @@ export default function ReviewsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [reviews, setReviews] = useState<Review[]>(FALLBACK_REVIEWS);
+
+  useEffect(() => {
+    fetch('/api/reviews')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && json.data.length > 0) {
+          setReviews(json.data);
+        }
+      })
+      .catch(() => {
+        // Keep fallback reviews
+      });
+  }, []);
 
   function checkScroll() {
     const el = scrollRef.current;
@@ -159,7 +108,7 @@ export default function ReviewsSection() {
     checkScroll();
     el.addEventListener('scroll', checkScroll, { passive: true });
     return () => el.removeEventListener('scroll', checkScroll);
-  }, []);
+  }, [reviews]);
 
   function scroll(direction: 'left' | 'right') {
     const el = scrollRef.current;
@@ -212,8 +161,8 @@ export default function ReviewsSection() {
         className="flex gap-4 overflow-x-auto scroll-hide px-5 lg:px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))]"
         style={{ scrollSnapType: 'x mandatory' }}
       >
-        {REVIEWS.map((review, i) => (
-          <div key={i} style={{ scrollSnapAlign: 'start' }}>
+        {reviews.map((review, i) => (
+          <div key={review.id || i} style={{ scrollSnapAlign: 'start' }}>
             <ReviewCard review={review} />
           </div>
         ))}
@@ -229,7 +178,7 @@ export default function ReviewsSection() {
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
           <span>
-            <span className="text-ink font-semibold">4.7</span> out of 5 &middot; 27 reviews on Google
+            <span className="text-ink font-semibold">4.7</span> out of 5 &middot; {reviews.length} reviews on Google
           </span>
         </div>
       </div>

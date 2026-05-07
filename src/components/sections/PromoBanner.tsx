@@ -66,7 +66,7 @@ export default function PromoBanner() {
 
   return (
     <div
-      className="relative overflow-hidden"
+      className="relative overflow-hidden z-50"
       style={{
         background: 'linear-gradient(135deg, rgba(0,180,255,0.08) 0%, rgba(255,107,26,0.06) 50%, rgba(0,180,255,0.04) 100%)',
         borderBottom: '1px solid rgba(0,180,255,0.15)',

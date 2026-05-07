@@ -59,7 +59,7 @@ export default function SiteNav() {
           transition: 'opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, background 0.4s ease',
           borderBottomColor: scrolled ? 'rgba(27,34,54,0.9)' : 'transparent',
         }}
-        className="fixed top-0 inset-x-0 z-40 backdrop-blur-md bg-void/80 border-b"
+        className="fixed top-0 inset-x-0 z-40 backdrop-blur-md bg-void/80 border-b pointer-events-auto"
       >
         <div className="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo */}

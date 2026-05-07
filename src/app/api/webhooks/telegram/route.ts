@@ -70,7 +70,8 @@ If this is NOT a photo of a car/vehicle, respond with: {"error":"not a vehicle"}
   });
 
   if (!res.ok) {
-    console.error('[telegram webhook] Claude API error:', await res.text());
+    const errBody = await res.text();
+    console.error('[telegram webhook] Claude API error:', res.status, errBody);
     return null;
   }
 
@@ -136,8 +137,9 @@ export async function POST(request: NextRequest) {
     // Analyze with Claude Vision
     const analysis = await analyzeCarPhoto(fileUrl);
     if (!analysis) {
+      const hasKey = ANTHROPIC_API_KEY.length > 0;
       await sendTelegramMessage(chatId,
-        'Could not identify a vehicle in this photo. Make sure the car is clearly visible and try again.'
+        `Could not identify a vehicle in this photo.\nAPI key present: ${hasKey} (${ANTHROPIC_API_KEY.length} chars)\nMake sure the car is clearly visible and try again.`
       );
       return NextResponse.json({ ok: true });
     }

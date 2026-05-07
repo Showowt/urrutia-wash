@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
-const CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN || '').trim();
+const CHAT_ID = (process.env.TELEGRAM_CHAT_ID || '').trim();
+const ANTHROPIC_API_KEY = (process.env.ANTHROPIC_API_KEY || '').trim();
+const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim();
 
 async function sendTelegramMessage(chatId: string | number, text: string) {
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {

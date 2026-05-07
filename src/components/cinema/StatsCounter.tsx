@@ -85,9 +85,14 @@ export default function StatsCounter() {
   }, []);
 
   return (
-    <dl ref={ref} className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
-      {STATS.map(stat => (
-        <StatItem key={stat.label} stat={stat} active={active} />
+    <dl ref={ref} className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0">
+      {STATS.map((stat, i) => (
+        <div
+          key={stat.label}
+          className={`${i > 0 ? 'lg:border-l lg:border-line lg:pl-10' : ''} ${i === 2 ? 'border-t border-line pt-6 lg:border-t-0 lg:pt-0' : ''} ${i === 3 ? 'border-t border-line pt-6 lg:border-t-0 lg:pt-0' : ''}`}
+        >
+          <StatItem stat={stat} active={active} />
+        </div>
       ))}
     </dl>
   );

@@ -238,18 +238,22 @@ export default function HomePage() {
           aria-hidden="true"
         >
           <div className="flex marquee-track whitespace-nowrap text-muted font-mono text-sm tracking-widest gap-12 px-8">
-            <span>ROLLS-ROYCE CULLINAN</span><span>·</span>
-            <span>G63 AMG BRABUS</span><span>·</span>
-            <span>CORVETTE C8</span><span>·</span>
-            <span>BMW M4</span><span>·</span>
-            <span>FORD RAPTOR</span><span>·</span>
-            <span>PORSCHE 993</span><span>·</span>
-            <span>CADILLAC ESCALADE</span><span>·</span>
-            <span>FORD F-450 PLATINUM</span><span>·</span>
-            <span>ROLLS-ROYCE GHOST</span><span>·</span>
-            <span>INDIAN SCOUT</span><span>·</span>
-            <span>&apos;64 IMPALA</span><span>·</span>
-            <span>SUBARU WRX STI</span>
+            {[0, 1].map(i => (
+              <div key={i} className="flex gap-12 shrink-0">
+                <span>ROLLS-ROYCE CULLINAN</span><span className="text-water/30">·</span>
+                <span>G63 AMG BRABUS</span><span className="text-water/30">·</span>
+                <span>CORVETTE C8</span><span className="text-water/30">·</span>
+                <span>BMW M4</span><span className="text-water/30">·</span>
+                <span>FORD RAPTOR</span><span className="text-water/30">·</span>
+                <span>PORSCHE 993</span><span className="text-water/30">·</span>
+                <span>CADILLAC ESCALADE</span><span className="text-water/30">·</span>
+                <span>FORD F-450 PLATINUM</span><span className="text-water/30">·</span>
+                <span>ROLLS-ROYCE GHOST</span><span className="text-water/30">·</span>
+                <span>INDIAN SCOUT</span><span className="text-water/30">·</span>
+                <span>&apos;64 IMPALA</span><span className="text-water/30">·</span>
+                <span>SUBARU WRX STI</span><span className="text-water/30 mr-12">·</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -435,6 +439,57 @@ export default function HomePage() {
           <RevealOnScroll>
             <StatsCounter />
           </RevealOnScroll>
+
+          {/* Google Reviews social proof */}
+          <RevealOnScroll delay={200}>
+            <div className="mt-16 flex justify-center">
+              <div
+                className="inline-flex items-center gap-4 px-8 py-4 rounded-2xl"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                {/* Google G icon */}
+                <div className="flex items-center gap-1">
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                </div>
+
+                {/* Stars */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-2xl font-black text-ink">4.7</span>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4].map(i => (
+                      <svg key={i} viewBox="0 0 20 20" width="16" height="16" fill="#FBBC05" aria-hidden="true">
+                        <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.69l5.34-.78z" />
+                      </svg>
+                    ))}
+                    <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="half-star">
+                          <stop offset="70%" stopColor="#FBBC05" />
+                          <stop offset="70%" stopColor="#1B2236" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.69l5.34-.78z" fill="url(#half-star)" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="w-px h-8 bg-line" />
+
+                <div>
+                  <p className="text-sm font-semibold text-ink">27 Reviews</p>
+                  <p className="text-[10px] font-mono text-muted tracking-wide">GOOGLE VERIFIED</p>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
@@ -457,46 +512,26 @@ export default function HomePage() {
       <FinalCta />
 
       {/* ─── Footer ─── */}
-      <footer className="border-t border-line py-12">
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 grid md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-2.5 mb-4">
+      <footer className="border-t border-line">
+        {/* Main footer grid */}
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-16 grid md:grid-cols-12 gap-8 lg:gap-12">
+          {/* Brand column */}
+          <div className="md:col-span-4">
+            <div className="flex items-center gap-2.5 mb-5">
               <div className="w-9 h-9 rounded-full bg-gradient-to-br from-water-deep to-water glow-water grid place-items-center">
                 <span className="text-[10px] font-black tracking-tighter text-white">URR</span>
               </div>
               <span className="wordmark text-lg">URRUTIA</span>
             </div>
-            <p className="text-sm text-muted leading-relaxed">
-              Premium hand wash and detail at LVAC Henderson. Open Mon-Sat 7:00-4:30.
+            <p className="text-sm text-muted leading-relaxed mb-6">
+              Premium hand wash and detailing at LVAC Henderson.
+              Your car gets clean while you do.
             </p>
-          </div>
-
-          <div>
-            <p className="font-mono text-[10px] text-muted tracking-widest mb-3">EXPLORE</p>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#process" className="text-muted hover:text-ink transition">How It Works</a></li>
-              <li><a href="#services" className="text-muted hover:text-ink transition">Services</a></li>
-              <li><a href="#membership" className="text-muted hover:text-ink transition">Membership</a></li>
-              <li><a href="#gallery" className="text-muted hover:text-ink transition">Gallery</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-mono text-[10px] text-muted tracking-widest mb-3">LOCATION</p>
-            <ul className="space-y-2 text-sm text-muted">
-              <li>1195 Wellness Pl</li>
-              <li>Henderson, NV 89011</li>
-              <li>Mon&ndash;Sat · 7:00&ndash;4:30</li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-mono text-[10px] text-muted tracking-widest mb-3">FOLLOW</p>
             <a
               href="https://instagram.com/lvacwashndetail"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink transition"
+              className="inline-flex items-center gap-2 text-sm text-muted hover:text-water transition"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.81.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.81-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.81-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.81.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.34 4.14.63a5.85 5.85 0 0 0-2.13 1.38A5.85 5.85 0 0 0 .63 4.14C.34 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.27 2.15.56 2.91a5.85 5.85 0 0 0 1.38 2.13 5.85 5.85 0 0 0 2.13 1.38c.76.29 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.27 2.91-.56a5.85 5.85 0 0 0 2.13-1.38 5.85 5.85 0 0 0 1.38-2.13c.29-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.27-2.15-.56-2.91a5.85 5.85 0 0 0-1.38-2.13A5.85 5.85 0 0 0 19.86.63c-.76-.29-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z" />
@@ -504,11 +539,54 @@ export default function HomePage() {
               @lvacwashndetail
             </a>
           </div>
+
+          {/* Explore */}
+          <div className="md:col-span-2">
+            <p className="font-mono text-[10px] text-muted tracking-widest mb-4">EXPLORE</p>
+            <ul className="space-y-2.5 text-sm">
+              <li><a href="#process" className="text-muted hover:text-ink transition">How It Works</a></li>
+              <li><a href="#services" className="text-muted hover:text-ink transition">Services</a></li>
+              <li><a href="#membership" className="text-muted hover:text-ink transition">Membership</a></li>
+              <li><a href="/gallery" className="text-muted hover:text-ink transition">Gallery</a></li>
+              <li><a href="/about" className="text-muted hover:text-ink transition">About</a></li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div className="md:col-span-2">
+            <p className="font-mono text-[10px] text-muted tracking-widest mb-4">LEGAL</p>
+            <ul className="space-y-2.5 text-sm">
+              <li><a href="/terms" className="text-muted hover:text-ink transition">Terms of Service</a></li>
+              <li><a href="/privacy" className="text-muted hover:text-ink transition">Privacy Policy</a></li>
+              <li><a href="/refund-policy" className="text-muted hover:text-ink transition">Refund Policy</a></li>
+              <li><a href="/sms-consent" className="text-muted hover:text-ink transition">SMS Consent</a></li>
+              <li><a href="/accessibility" className="text-muted hover:text-ink transition">Accessibility</a></li>
+            </ul>
+          </div>
+
+          {/* Location */}
+          <div className="md:col-span-4">
+            <p className="font-mono text-[10px] text-muted tracking-widest mb-4">LOCATION</p>
+            <address className="not-italic space-y-2 text-sm text-muted">
+              <p className="text-ink font-medium">LVAC Henderson</p>
+              <p>1195 Wellness Pl</p>
+              <p>Henderson, NV 89011</p>
+              <p className="pt-1">Mon&ndash;Sat · 7:00 AM &ndash; 4:30 PM</p>
+              <p>
+                <a href="tel:+17023264101" className="text-water hover:text-water-deep transition">
+                  (702) 326-4101
+                </a>
+              </p>
+            </address>
+          </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-xs text-muted font-mono">
-          <p>© 2026 URRUTIA Carwash and Detailing. All rights reserved.</p>
-          <p>Crafted by <span className="text-water">MachineMind</span></p>
+        {/* Bottom bar */}
+        <div className="border-t border-line">
+          <div className="max-w-7xl mx-auto px-5 lg:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-muted font-mono">
+            <p>&copy; 2026 URRUTIA Carwash and Detailing. All rights reserved.</p>
+            <p>Crafted by <span className="text-water">MachineMind</span></p>
+          </div>
         </div>
       </footer>
     </div>

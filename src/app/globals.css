@@ -196,22 +196,10 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ═══ Gallery placeholders ═══ */
-.ph-1 { background: linear-gradient(135deg, #1a2a4a 0%, #0a1525 100%); }
-.ph-2 { background: linear-gradient(135deg, #2a1a0a 0%, #1a0a05 100%); }
-.ph-3 { background: linear-gradient(135deg, #1a4a3a 0%, #051a15 100%); }
-.ph-4 { background: linear-gradient(135deg, #4a1a2a 0%, #15050a 100%); }
-.ph-5 { background: linear-gradient(135deg, #2a2a4a 0%, #0a0a25 100%); }
-.ph-6 { background: linear-gradient(135deg, #4a3a1a 0%, #251a05 100%); }
 
 /* ══════════════════════════════════════════════════════
    CINEMA ENGINE — Luxury Upgrades
    ══════════════════════════════════════════════════════ */
-
-/* ─── Smooth scroll ─── */
-html {
-  scroll-behavior: smooth;
-}
 
 /* ─── Selection ─── */
 ::selection {
@@ -798,17 +786,6 @@ html {
   );
 }
 
-/* ─── Before/After comparison card ─── */
-.ba-comparison {
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, border-color 0.5s ease;
-}
-
-.ba-comparison:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 24px 48px -12px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(0, 180, 255, 0.06);
-}
 
 /* ─── Photo showcase strip (homepage) ─── */
 @keyframes photo-scroll {
@@ -833,16 +810,6 @@ html {
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
 }
 
-/* ─── Before/After strip ─── */
-.ba-strip {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.ba-strip::-webkit-scrollbar { display: none; }
-.ba-card { scroll-snap-align: start; flex-shrink: 0; }
 
 /* ─── Glass card for service hover ─── */
 .service-card {

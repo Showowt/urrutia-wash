@@ -8,6 +8,7 @@ import LocationSection from '@/components/sections/LocationSection';
 import FaqSection from '@/components/sections/FaqSection';
 import FinalCta from '@/components/sections/FinalCta';
 import PhotoShowcase from '@/components/sections/PhotoShowcase';
+import ReviewsSection from '@/components/sections/ReviewsSection';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 // Preloader disabled — video autoplay blocked on most browsers
 // import Preloader from '@/components/cinema/Preloader';
@@ -492,6 +493,12 @@ export default function HomePage() {
           </RevealOnScroll>
         </div>
       </section>
+
+      {/* Section divider */}
+      <div className="section-divider" />
+
+      {/* ─── Reviews ─── */}
+      <ReviewsSection />
 
       {/* Section divider */}
       <div className="section-divider" />

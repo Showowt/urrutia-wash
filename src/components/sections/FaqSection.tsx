@@ -37,7 +37,7 @@ export default function FaqSection() {
     <section className="py-24 lg:py-32">
       <div className="max-w-3xl mx-auto px-5 lg:px-8">
         <RevealOnScroll className="mb-14">
-          <p className="font-mono text-xs text-water tracking-widest mb-3">06 — FAQ</p>
+          <p className="font-mono text-xs text-water tracking-widest mb-3">07 — FAQ</p>
           <h2 className="text-4xl lg:text-5xl font-bold leading-tight">Quick answers.</h2>
           <p className="mt-4 text-muted text-lg max-w-lg">
             Everything you need to know before you drop the keys.

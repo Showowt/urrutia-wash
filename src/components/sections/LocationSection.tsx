@@ -78,7 +78,7 @@ export default function LocationSection() {
 
             {/* ─── Info column ─── */}
             <RevealOnScroll>
-              <p className="font-mono text-xs text-water tracking-widest mb-3">05 — FIND US</p>
+              <p className="font-mono text-xs text-water tracking-widest mb-3">06 — FIND US</p>
               <h2 className="text-4xl lg:text-5xl font-bold leading-tight mb-2">
                 Henderson&rsquo;s premium hand wash &mdash; right where you train.
               </h2>

@@ -1,9 +1,16 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const PHOTOS = [
+interface Photo {
+  src: string;
+  alt: string;
+  label: string;
+}
+
+const STATIC_PHOTOS: Photo[] = [
   { src: '/gallery/brabus-g63-sunset.jpg', alt: 'Brabus G63 AMG at sunset — LVAC Henderson', label: 'G63 BRABUS' },
   { src: '/gallery/rolls-royce-cullinan-white.jpg', alt: 'Rolls-Royce Cullinan white — ceramic coating', label: 'CULLINAN' },
   { src: '/gallery/corvette-c8-red.jpg', alt: 'Corvette C8 Torch Red — ceramic coating', label: 'CORVETTE C8' },
@@ -20,10 +27,29 @@ const PHOTOS = [
   { src: '/gallery/camaro-challenger-duo.jpg', alt: 'Camaro SS + Challenger duo shot', label: 'MUSCLE DUO' },
 ];
 
-// Duplicate for seamless infinite scroll
-const DOUBLED = [...PHOTOS, ...PHOTOS];
-
 export default function PhotoShowcase() {
+  const [photos, setPhotos] = useState<Photo[]>(STATIC_PHOTOS);
+
+  useEffect(() => {
+    fetch('/api/gallery?limit=30')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && json.data.length > 0) {
+          const dbPhotos: Photo[] = json.data.map((p: { image_url: string; label: string; make: string; model: string; color: string; ai_description: string | null }) => ({
+            src: p.image_url,
+            alt: p.ai_description || `${p.make} ${p.model} ${p.color} — detailed at LVAC Henderson`,
+            label: p.label || `${p.make} ${p.model}`.toUpperCase(),
+          }));
+          // DB photos first (newest), then static
+          setPhotos([...dbPhotos, ...STATIC_PHOTOS]);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Duplicate for seamless infinite scroll
+  const doubled = [...photos, ...photos];
+
   return (
     <section className="py-12 lg:py-16 overflow-hidden relative">
       {/* Edge fades */}
@@ -49,7 +75,7 @@ export default function PhotoShowcase() {
 
       {/* Scrolling strip */}
       <div className="photo-strip-track flex gap-4 px-4" aria-hidden="true">
-        {DOUBLED.map((photo, i) => (
+        {doubled.map((photo, i) => (
           <div
             key={i}
             className="photo-strip-item relative w-[220px] sm:w-[280px] h-[160px] sm:h-[200px] rounded-xl overflow-hidden flex-shrink-0 group"
@@ -61,6 +87,7 @@ export default function PhotoShowcase() {
               sizes="280px"
               style={{ objectFit: 'cover' }}
               className="transition-transform duration-700 group-hover:scale-110"
+              unoptimized={photo.src.startsWith('http')}
             />
             <div
               className="absolute inset-0 pointer-events-none"

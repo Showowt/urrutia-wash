@@ -14,6 +14,7 @@ import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 // import Preloader from '@/components/cinema/Preloader';
 import HeroHeadline from '@/components/cinema/HeroHeadline';
 import StatsCounter from '@/components/cinema/StatsCounter';
+import GalleryGrid from '@/components/sections/GalleryGrid';
 import JsonLd, { type SchemaInput } from '@/components/seo/JsonLd';
 
 // ─── Schema.org structured data ───────────────────────────────────────────────
@@ -383,31 +384,7 @@ export default function HomePage() {
           </RevealOnScroll>
 
           <RevealOnScroll>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-              {[
-                { src: '/gallery/brabus-g63-sunset.jpg', alt: 'Brabus G63 AMG at sunset — ceramic detail', label: 'G63 AMG · BRABUS' },
-                { src: '/gallery/rolls-royce-cullinan-white.jpg', alt: 'Rolls-Royce Cullinan white — ceramic coating', label: 'ROLLS-ROYCE · CULLINAN' },
-                { src: '/gallery/corvette-c8-red.jpg', alt: 'Corvette C8 Torch Red — ceramic coating', label: 'CORVETTE C8 · RED' },
-                { src: '/gallery/bmw-m4-green.jpg', alt: 'BMW M4 Isle of Man Green — ceramic coating', label: 'BMW M4 · GREEN' },
-                { src: '/gallery/rolls-royce-ghost-black.jpg', alt: 'Rolls-Royce Ghost Black — full detail', label: 'RR GHOST · BLACK' },
-                { src: '/gallery/porsche-993-green.jpg', alt: 'Porsche 993 dark green — full detail', label: 'PORSCHE 993 · GREEN' },
-              ].map((photo, i) => (
-                <div key={i} className="aspect-[4/3] rounded-2xl relative overflow-hidden group">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    style={{ objectFit: 'cover', objectPosition: 'center' }}
-                    className="transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,8,16,0.8) 0%, transparent 60%)' }} />
-                  <div className="absolute bottom-3 left-3 font-mono text-[10px] text-white/90 tracking-widest">
-                    {photo.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <GalleryGrid />
           </RevealOnScroll>
 
           <div className="mt-8 flex justify-center">

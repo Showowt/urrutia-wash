@@ -27,7 +27,13 @@ const nextConfig: NextConfig = {
 
   // Explicitly allow only the image domains actually used
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
     qualities: [75, 90],
   },
 

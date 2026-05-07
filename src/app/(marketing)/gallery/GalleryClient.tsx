@@ -8,7 +8,7 @@ import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 type Filter = 'all' | 'express' | 'detail' | 'ceramic' | 'trucks';
 
 interface GalleryItem {
-  id: number;
+  id: string;
   label: string;
   sub: string;
   category: Filter;
@@ -18,306 +18,70 @@ interface GalleryItem {
   height: string;
 }
 
-const GALLERY_ITEMS: GalleryItem[] = [
-  {
-    id: 1,
-    label: 'G63 AMG · BRABUS',
-    sub: 'Full Detail + Ceramic',
-    category: 'ceramic',
-    imageSrc: '/gallery/brabus-g63-sunset.jpg',
-    imageAlt: 'Brabus G63 AMG at sunset — ceramic coating by LVAC Carwash Henderson',
-    span: 'col-span-2 row-span-2',
-    height: 'h-[460px] sm:h-[520px]',
-  },
-  {
-    id: 2,
-    label: 'Rolls-Royce Cullinan · Rose Gold',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/rolls-royce-cullinan-rose-gold.jpg',
-    imageAlt: 'Rolls-Royce Cullinan rose gold chrome wrap detailed at LVAC Henderson',
-    span: '',
-    height: 'h-[250px]',
-  },
-  {
-    id: 3,
-    label: 'Corvette C8 · Torch Red',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/corvette-c8-red.jpg',
-    imageAlt: 'Corvette C8 Torch Red ceramic coating at LVAC Carwash',
-    span: '',
-    height: 'h-[250px]',
-  },
-  {
-    id: 4,
-    label: 'Rolls-Royce Ghost · Black',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/rolls-royce-ghost-black.jpg',
-    imageAlt: 'Rolls-Royce Ghost Black detailed at LVAC Henderson',
-    span: 'col-span-2',
-    height: 'h-[300px]',
-  },
-  {
-    id: 5,
-    label: 'BMW M4 · Isle of Man Green',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/bmw-m4-green.jpg',
-    imageAlt: 'BMW M4 Isle of Man Green with carbon lip — ceramic coating',
-    span: '',
-    height: 'h-[320px]',
-  },
-  {
-    id: 6,
-    label: 'Ford Raptor · Dark Gray',
-    sub: 'Express Hand Wash',
-    category: 'trucks',
-    imageSrc: '/gallery/ford-raptor-gray.jpg',
-    imageAlt: 'Ford Raptor dark gray — express hand wash at LVAC Henderson',
-    span: '',
-    height: 'h-[320px]',
-  },
-  {
-    id: 7,
-    label: 'Porsche 993 · Dark Green',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/porsche-993-green.jpg',
-    imageAlt: 'Porsche 993 dark green classic detailed at LVAC Henderson',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 8,
-    label: 'Rolls-Royce Cullinan · White',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/rolls-royce-cullinan-white.jpg',
-    imageAlt: 'Rolls-Royce Cullinan white with teal wheels — ceramic coating at LVAC',
-    span: 'col-span-2',
-    height: 'h-[360px]',
-  },
-  {
-    id: 9,
-    label: 'Corvette C8 · Amplify Orange',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/corvette-c8-orange.jpg',
-    imageAlt: 'Corvette C8 Amplify Orange with gold wheels — full detail',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 10,
-    label: 'Cadillac Escalade · Sport Black',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/cadillac-escalade-black.jpg',
-    imageAlt: 'Cadillac Escalade Sport Black — full detail at LVAC Henderson',
-    span: '',
-    height: 'h-[300px]',
-  },
-  {
-    id: 11,
-    label: 'Camaro SS + Challenger · Duo',
-    sub: 'Express Hand Wash',
-    category: 'express',
-    imageSrc: '/gallery/camaro-challenger-duo.jpg',
-    imageAlt: 'Camaro SS Blue and Chrome Dodge Challenger — duo wash with mountain backdrop',
-    span: 'col-span-2',
-    height: 'h-[340px]',
-  },
-  {
-    id: 12,
-    label: 'Mercedes S-Class · Black',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/mercedes-s-class-black.jpg',
-    imageAlt: 'Mercedes S-Class Black — full detail at LVAC Henderson',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 13,
-    label: 'BMW M4 · Yas Marina Blue',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/bmw-m4-blue.jpg',
-    imageAlt: 'BMW M4 Yas Marina Blue — ceramic coating at LVAC wash station',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 14,
-    label: 'Ford F-450 · Platinum',
-    sub: 'Express Hand Wash',
-    category: 'trucks',
-    imageSrc: '/gallery/ford-f450-platinum.jpg',
-    imageAlt: 'Ford F-450 Platinum Stone Gray — express hand wash at LVAC',
-    span: '',
-    height: 'h-[320px]',
-  },
-  {
-    id: 15,
-    label: 'RAM 1500 · Rebel Black',
-    sub: 'Express Hand Wash',
-    category: 'trucks',
-    imageSrc: '/gallery/ram-1500-rebel-black.jpg',
-    imageAlt: 'RAM 1500 Rebel Black — express hand wash at LVAC Henderson',
-    span: '',
-    height: 'h-[320px]',
-  },
-  {
-    id: 16,
-    label: "'64 Impala · Convertible Red",
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/chevy-impala-64-red.jpg',
-    imageAlt: '1964 Chevy Impala Convertible Red — classic car full detail',
-    span: 'col-span-2',
-    height: 'h-[360px]',
-  },
-  {
-    id: 17,
-    label: 'Porsche 911 · Cabriolet White',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/porsche-911-cab-white.jpg',
-    imageAlt: 'Porsche 911 Cabriolet white with red interior — ceramic coating',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 18,
-    label: 'Rolls-Royce Cullinan · Black Badge',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/rolls-royce-cullinan-matte-black.jpg',
-    imageAlt: 'Rolls-Royce Cullinan Black Badge matte black — ceramic coating',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 19,
-    label: 'Corvette C8 · Ceramic Gray',
-    sub: 'Express Hand Wash',
-    category: 'express',
-    imageSrc: '/gallery/corvette-c8-silver.jpg',
-    imageAlt: 'Corvette C8 Ceramic Gray — express wash at LVAC station',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 20,
-    label: 'Indian Scout · Matte Black',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/indian-scout-matte.jpg',
-    imageAlt: 'Indian Scout motorcycle matte black — hand detailed at LVAC',
-    span: '',
-    height: 'h-[300px]',
-  },
-  {
-    id: 21,
-    label: 'RAM 1500 · Flame Red Lifted',
-    sub: 'Express Hand Wash',
-    category: 'trucks',
-    imageSrc: '/gallery/ram-1500-red-lifted.jpg',
-    imageAlt: 'RAM 1500 flame red lifted truck — express wash at LVAC',
-    span: '',
-    height: 'h-[320px]',
-  },
-  {
-    id: 22,
-    label: 'BMW X5 · Mineral White',
-    sub: 'Express Hand Wash',
-    category: 'express',
-    imageSrc: '/gallery/bmw-x5-white.jpg',
-    imageAlt: 'BMW X5 Mineral White — express hand wash at LVAC Henderson',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 23,
-    label: 'Lexus RC F · Sport White',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/lexus-rcf-white.jpg',
-    imageAlt: 'Lexus RC F-Sport White — full detail at LVAC Henderson',
-    span: 'col-span-2',
-    height: 'h-[340px]',
-  },
-  {
-    id: 24,
-    label: 'Corvette C7 · Mint Teal',
-    sub: 'Ceramic Coating',
-    category: 'ceramic',
-    imageSrc: '/gallery/corvette-c7-teal.jpg',
-    imageAlt: 'Corvette C7 mint teal — ceramic coating at LVAC Henderson',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 25,
-    label: 'Subaru WRX STI · Dark Gray',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/subaru-wrx-sti.jpg',
-    imageAlt: 'Subaru WRX STI dark gray with gold wheels — full detail',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 26,
-    label: 'Polaris Slingshot · Black/Red',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/polaris-slingshot.jpg',
-    imageAlt: 'Polaris Slingshot black and red — full detail at LVAC',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 27,
-    label: 'RAM 1500 · White',
-    sub: 'Express Hand Wash',
-    category: 'trucks',
-    imageSrc: '/gallery/ram-1500-white.jpg',
-    imageAlt: 'RAM 1500 white — express hand wash at LVAC Henderson',
-    span: '',
-    height: 'h-[280px]',
-  },
-  {
-    id: 28,
-    label: 'Spoon S2000 · Race Car',
-    sub: 'Full Detail',
-    category: 'detail',
-    imageSrc: '/gallery/s2000-spoon-racecar.jpg',
-    imageAlt: 'Spoon Sports S2000 race car yellow and blue — detailed at LVAC',
-    span: 'col-span-2',
-    height: 'h-[340px]',
-  },
-  {
-    id: 29,
-    label: 'Isuzu NPR · Commercial',
-    sub: 'Express Hand Wash',
-    category: 'trucks',
-    imageSrc: '/gallery/isuzu-npr-truck.jpg',
-    imageAlt: 'Isuzu NPR box truck — commercial vehicle wash at LVAC',
-    span: '',
-    height: 'h-[260px]',
-  },
+// Static photos as fallback — these always show
+const STATIC_ITEMS: GalleryItem[] = [
+  { id: 's1', label: 'G63 AMG · BRABUS', sub: 'Full Detail + Ceramic', category: 'ceramic', imageSrc: '/gallery/brabus-g63-sunset.jpg', imageAlt: 'Brabus G63 AMG at sunset — ceramic coating by LVAC Carwash Henderson', span: 'col-span-2 row-span-2', height: 'h-[460px] sm:h-[520px]' },
+  { id: 's2', label: 'Rolls-Royce Cullinan · Rose Gold', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/rolls-royce-cullinan-rose-gold.jpg', imageAlt: 'Rolls-Royce Cullinan rose gold chrome wrap detailed at LVAC Henderson', span: '', height: 'h-[250px]' },
+  { id: 's3', label: 'Corvette C8 · Torch Red', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/corvette-c8-red.jpg', imageAlt: 'Corvette C8 Torch Red ceramic coating at LVAC Carwash', span: '', height: 'h-[250px]' },
+  { id: 's4', label: 'Rolls-Royce Ghost · Black', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/rolls-royce-ghost-black.jpg', imageAlt: 'Rolls-Royce Ghost Black detailed at LVAC Henderson', span: 'col-span-2', height: 'h-[300px]' },
+  { id: 's5', label: 'BMW M4 · Isle of Man Green', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/bmw-m4-green.jpg', imageAlt: 'BMW M4 Isle of Man Green with carbon lip — ceramic coating', span: '', height: 'h-[320px]' },
+  { id: 's6', label: 'Ford Raptor · Dark Gray', sub: 'Express Hand Wash', category: 'trucks', imageSrc: '/gallery/ford-raptor-gray.jpg', imageAlt: 'Ford Raptor dark gray — express hand wash at LVAC Henderson', span: '', height: 'h-[320px]' },
+  { id: 's7', label: 'Porsche 993 · Dark Green', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/porsche-993-green.jpg', imageAlt: 'Porsche 993 dark green classic detailed at LVAC Henderson', span: '', height: 'h-[280px]' },
+  { id: 's8', label: 'Rolls-Royce Cullinan · White', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/rolls-royce-cullinan-white.jpg', imageAlt: 'Rolls-Royce Cullinan white with teal wheels — ceramic coating at LVAC', span: 'col-span-2', height: 'h-[360px]' },
+  { id: 's9', label: 'Corvette C8 · Amplify Orange', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/corvette-c8-orange.jpg', imageAlt: 'Corvette C8 Amplify Orange with gold wheels — full detail', span: '', height: 'h-[280px]' },
+  { id: 's10', label: 'Cadillac Escalade · Sport Black', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/cadillac-escalade-black.jpg', imageAlt: 'Cadillac Escalade Sport Black — full detail at LVAC Henderson', span: '', height: 'h-[300px]' },
+  { id: 's11', label: 'Camaro SS + Challenger · Duo', sub: 'Express Hand Wash', category: 'express', imageSrc: '/gallery/camaro-challenger-duo.jpg', imageAlt: 'Camaro SS Blue and Chrome Dodge Challenger — duo wash with mountain backdrop', span: 'col-span-2', height: 'h-[340px]' },
+  { id: 's12', label: 'Mercedes S-Class · Black', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/mercedes-s-class-black.jpg', imageAlt: 'Mercedes S-Class Black — full detail at LVAC Henderson', span: '', height: 'h-[280px]' },
+  { id: 's13', label: 'BMW M4 · Yas Marina Blue', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/bmw-m4-blue.jpg', imageAlt: 'BMW M4 Yas Marina Blue — ceramic coating at LVAC wash station', span: '', height: 'h-[280px]' },
+  { id: 's14', label: 'Ford F-450 · Platinum', sub: 'Express Hand Wash', category: 'trucks', imageSrc: '/gallery/ford-f450-platinum.jpg', imageAlt: 'Ford F-450 Platinum Stone Gray — express hand wash at LVAC', span: '', height: 'h-[320px]' },
+  { id: 's15', label: 'RAM 1500 · Rebel Black', sub: 'Express Hand Wash', category: 'trucks', imageSrc: '/gallery/ram-1500-rebel-black.jpg', imageAlt: 'RAM 1500 Rebel Black — express hand wash at LVAC Henderson', span: '', height: 'h-[320px]' },
+  { id: 's16', label: "'64 Impala · Convertible Red", sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/chevy-impala-64-red.jpg', imageAlt: '1964 Chevy Impala Convertible Red — classic car full detail', span: 'col-span-2', height: 'h-[360px]' },
+  { id: 's17', label: 'Porsche 911 · Cabriolet White', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/porsche-911-cab-white.jpg', imageAlt: 'Porsche 911 Cabriolet white with red interior — ceramic coating', span: '', height: 'h-[280px]' },
+  { id: 's18', label: 'Rolls-Royce Cullinan · Black Badge', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/rolls-royce-cullinan-matte-black.jpg', imageAlt: 'Rolls-Royce Cullinan Black Badge matte black — ceramic coating', span: '', height: 'h-[280px]' },
+  { id: 's19', label: 'Corvette C8 · Ceramic Gray', sub: 'Express Hand Wash', category: 'express', imageSrc: '/gallery/corvette-c8-silver.jpg', imageAlt: 'Corvette C8 Ceramic Gray — express wash at LVAC station', span: '', height: 'h-[280px]' },
+  { id: 's20', label: 'Indian Scout · Matte Black', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/indian-scout-matte.jpg', imageAlt: 'Indian Scout motorcycle matte black — hand detailed at LVAC', span: '', height: 'h-[300px]' },
+  { id: 's21', label: 'RAM 1500 · Flame Red Lifted', sub: 'Express Hand Wash', category: 'trucks', imageSrc: '/gallery/ram-1500-red-lifted.jpg', imageAlt: 'RAM 1500 flame red lifted truck — express wash at LVAC', span: '', height: 'h-[320px]' },
+  { id: 's22', label: 'BMW X5 · Mineral White', sub: 'Express Hand Wash', category: 'express', imageSrc: '/gallery/bmw-x5-white.jpg', imageAlt: 'BMW X5 Mineral White — express hand wash at LVAC Henderson', span: '', height: 'h-[280px]' },
+  { id: 's23', label: 'Lexus RC F · Sport White', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/lexus-rcf-white.jpg', imageAlt: 'Lexus RC F-Sport White — full detail at LVAC Henderson', span: 'col-span-2', height: 'h-[340px]' },
+  { id: 's24', label: 'Corvette C7 · Mint Teal', sub: 'Ceramic Coating', category: 'ceramic', imageSrc: '/gallery/corvette-c7-teal.jpg', imageAlt: 'Corvette C7 mint teal — ceramic coating at LVAC Henderson', span: '', height: 'h-[280px]' },
+  { id: 's25', label: 'Subaru WRX STI · Dark Gray', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/subaru-wrx-sti.jpg', imageAlt: 'Subaru WRX STI dark gray with gold wheels — full detail', span: '', height: 'h-[280px]' },
+  { id: 's26', label: 'Polaris Slingshot · Black/Red', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/polaris-slingshot.jpg', imageAlt: 'Polaris Slingshot black and red — full detail at LVAC', span: '', height: 'h-[280px]' },
+  { id: 's27', label: 'RAM 1500 · White', sub: 'Express Hand Wash', category: 'trucks', imageSrc: '/gallery/ram-1500-white.jpg', imageAlt: 'RAM 1500 white — express hand wash at LVAC Henderson', span: '', height: 'h-[280px]' },
+  { id: 's28', label: 'Spoon S2000 · Race Car', sub: 'Full Detail', category: 'detail', imageSrc: '/gallery/s2000-spoon-racecar.jpg', imageAlt: 'Spoon Sports S2000 race car yellow and blue — detailed at LVAC', span: 'col-span-2', height: 'h-[340px]' },
+  { id: 's29', label: 'Isuzu NPR · Commercial', sub: 'Express Hand Wash', category: 'trucks', imageSrc: '/gallery/isuzu-npr-truck.jpg', imageAlt: 'Isuzu NPR box truck — commercial vehicle wash at LVAC', span: '', height: 'h-[260px]' },
 ];
 
-const FILTERS: { label: string; value: Filter; count: number }[] = [
-  { label: 'All Work', value: 'all', count: GALLERY_ITEMS.length },
-  { label: 'Express Wash', value: 'express', count: GALLERY_ITEMS.filter(i => i.category === 'express').length },
-  { label: 'Full Detail', value: 'detail', count: GALLERY_ITEMS.filter(i => i.category === 'detail').length },
-  { label: 'Ceramic Coating', value: 'ceramic', count: GALLERY_ITEMS.filter(i => i.category === 'ceramic').length },
-  { label: 'Trucks & SUVs', value: 'trucks', count: GALLERY_ITEMS.filter(i => i.category === 'trucks').length },
+// Assign span/height patterns for DB photos
+const LAYOUT_PATTERNS = [
+  { span: '', height: 'h-[280px]' },
+  { span: '', height: 'h-[320px]' },
+  { span: 'col-span-2', height: 'h-[340px]' },
+  { span: '', height: 'h-[280px]' },
+  { span: '', height: 'h-[300px]' },
+  { span: '', height: 'h-[280px]' },
 ];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  express: 'Express Hand Wash',
+  detail: 'Full Detail',
+  ceramic: 'Ceramic Coating',
+  trucks: 'Trucks & SUVs',
+};
+
+function dbToGalleryItem(p: { id: string; image_url: string; label: string; category: string; make: string; model: string; color: string; ai_description: string | null; service_type: string | null }, index: number): GalleryItem {
+  const layout = LAYOUT_PATTERNS[index % LAYOUT_PATTERNS.length];
+  const cat = (['express', 'detail', 'ceramic', 'trucks'].includes(p.category) ? p.category : 'detail') as Filter;
+  return {
+    id: p.id,
+    label: p.label || `${p.make} ${p.model} · ${p.color}`.toUpperCase(),
+    sub: CATEGORY_LABELS[cat] || p.service_type || 'Detail',
+    category: cat,
+    imageSrc: p.image_url,
+    imageAlt: p.ai_description || `${p.make} ${p.model} ${p.color} — detailed at LVAC Henderson`,
+    span: layout.span,
+    height: layout.height,
+  };
+}
 
 /* --- Lightbox --- */
 function Lightbox({
@@ -357,7 +121,6 @@ function Lightbox({
       aria-modal="true"
       aria-label={`${item.label} — ${item.sub}`}
     >
-      {/* Close */}
       <button
         onClick={onClose}
         className="absolute top-5 right-5 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
@@ -368,7 +131,6 @@ function Lightbox({
         </svg>
       </button>
 
-      {/* Prev */}
       <button
         onClick={(e) => { e.stopPropagation(); onPrev(); }}
         className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
@@ -379,7 +141,6 @@ function Lightbox({
         </svg>
       </button>
 
-      {/* Next */}
       <button
         onClick={(e) => { e.stopPropagation(); onNext(); }}
         className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
@@ -390,7 +151,6 @@ function Lightbox({
         </svg>
       </button>
 
-      {/* Image */}
       <div
         className="relative w-[92vw] h-[80vh] sm:w-[85vw] sm:h-[85vh] lightbox-image"
         onClick={(e) => e.stopPropagation()}
@@ -403,10 +163,10 @@ function Lightbox({
           quality={90}
           style={{ objectFit: 'contain' }}
           priority
+          unoptimized={item.imageSrc.startsWith('http')}
         />
       </div>
 
-      {/* Caption bar */}
       <div className="absolute bottom-0 inset-x-0 p-5 sm:p-8 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
         <div className="max-w-7xl mx-auto flex items-end justify-between">
           <div>
@@ -435,12 +195,42 @@ function Breadcrumb() {
 
 /* --- Main Gallery Page --- */
 export default function GalleryPage() {
+  const [allItems, setAllItems] = useState<GalleryItem[]>(STATIC_ITEMS);
   const [activeFilter, setActiveFilter] = useState<Filter>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    fetch('/api/gallery?limit=100')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && json.data.length > 0) {
+          const dbItems = json.data.map(dbToGalleryItem);
+          // DB photos at the top (newest first), then static
+          setAllItems([...dbItems, ...STATIC_ITEMS]);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const filtered = activeFilter === 'all'
-    ? GALLERY_ITEMS
-    : GALLERY_ITEMS.filter((item) => item.category === activeFilter);
+    ? allItems
+    : allItems.filter((item) => item.category === activeFilter);
+
+  const filterCounts = {
+    all: allItems.length,
+    express: allItems.filter(i => i.category === 'express').length,
+    detail: allItems.filter(i => i.category === 'detail').length,
+    ceramic: allItems.filter(i => i.category === 'ceramic').length,
+    trucks: allItems.filter(i => i.category === 'trucks').length,
+  };
+
+  const filters: { label: string; value: Filter; count: number }[] = [
+    { label: 'All Work', value: 'all', count: filterCounts.all },
+    { label: 'Express Wash', value: 'express', count: filterCounts.express },
+    { label: 'Full Detail', value: 'detail', count: filterCounts.detail },
+    { label: 'Ceramic Coating', value: 'ceramic', count: filterCounts.ceramic },
+    { label: 'Trucks & SUVs', value: 'trucks', count: filterCounts.trucks },
+  ];
 
   const openLightbox = useCallback((idx: number) => setLightboxIndex(idx), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -466,7 +256,6 @@ export default function GalleryPage() {
           sizes="100vw"
           style={{ objectFit: 'cover', objectPosition: 'center 35%' }}
         />
-        {/* Cinematic overlay */}
         <div
           className="absolute inset-0"
           style={{
@@ -476,7 +265,6 @@ export default function GalleryPage() {
         <div className="absolute inset-0 hero-vignette" />
         <div className="film-grain absolute inset-0 pointer-events-none" aria-hidden="true" />
 
-        {/* Hero content */}
         <div className="absolute inset-0 flex flex-col justify-end z-10">
           <div className="max-w-7xl mx-auto px-5 lg:px-8 w-full pb-12 sm:pb-16">
             <RevealOnScroll>
@@ -485,7 +273,7 @@ export default function GalleryPage() {
             <RevealOnScroll delay={100}>
               <div className="mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-water/25 bg-water/5 text-xs font-mono text-water">
                 <span className="w-1.5 h-1.5 rounded-full bg-water pulse-ring" aria-hidden="true" />
-                {GALLERY_ITEMS.length} VEHICLES · @LVACWASHNDETAIL
+                {allItems.length} VEHICLES · @LVACWASHNDETAIL
               </div>
             </RevealOnScroll>
             <RevealOnScroll delay={200}>
@@ -504,7 +292,6 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        {/* Scroll hint */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 scroll-indicator">
           <svg className="w-5 h-5 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path d="M12 5v14M5 12l7 7 7-7" strokeLinecap="round" strokeLinejoin="round" />
@@ -517,7 +304,7 @@ export default function GalleryPage() {
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4">
             {[
-              { value: '500+', label: 'Vehicles Detailed' },
+              { value: `${allItems.length}+`, label: 'Vehicles Detailed' },
               { value: '4.7', label: 'Google Rating' },
               { value: '100%', label: 'Hand Finished' },
               { value: '27+', label: 'Five-Star Reviews' },
@@ -537,7 +324,7 @@ export default function GalleryPage() {
       <section className="py-6 bg-surface sticky top-16 z-30 border-b border-line">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-            {FILTERS.map((f) => (
+            {filters.map((f) => (
               <button
                 key={f.value}
                 onClick={() => { setActiveFilter(f.value); setLightboxIndex(null); }}
@@ -582,25 +369,22 @@ export default function GalleryPage() {
                     sizes={item.span.includes('col-span-2') ? '(max-width: 640px) 100vw, 66vw' : '(max-width: 640px) 100vw, 33vw'}
                     style={{ objectFit: 'cover', objectPosition: 'center' }}
                     className="transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                    unoptimized={item.imageSrc.startsWith('http')}
                   />
 
-                  {/* Permanent bottom gradient */}
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{ background: 'linear-gradient(to top, rgba(5,8,16,0.85) 0%, rgba(5,8,16,0.15) 40%, transparent 70%)' }}
                   />
 
-                  {/* Hover glow overlay */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none gallery-glow" />
 
-                  {/* View indicator */}
                   <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/5 border border-white/10 grid place-items-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 backdrop-blur-sm">
                     <svg className="w-4 h-4 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                       <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
 
-                  {/* Labels */}
                   <div className="absolute bottom-0 left-0 right-0 p-5">
                     <p className="font-mono text-[10px] tracking-widest text-water mb-1.5 translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
                       {item.sub.toUpperCase()}

@@ -187,7 +187,7 @@ export default function LocationSection() {
                 <div className="map-frame relative">
                   <div className="aspect-[4/3]">
                     <iframe
-                      src="https://www.openstreetmap.org/export/embed.html?bbox=-115.090%2C36.040%2C-115.045%2C36.075&layer=mapnik&marker=36.0570%2C-115.0680"
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=-115.0430%2C36.0735%2C-115.0330%2C36.0800&layer=mapnik&marker=36.0766%2C-115.0379"
                       className="w-full h-full"
                       style={{ filter: 'invert(0.9) hue-rotate(180deg) saturate(0.4) brightness(0.85)' }}
                       loading="lazy"

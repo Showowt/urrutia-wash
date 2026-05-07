@@ -32,8 +32,13 @@ async function analyzeCarPhoto(imageUrl: string): Promise<{
 } | null> {
   if (!ANTHROPIC_API_KEY) return null;
 
+  try {
   // Download image and convert to base64
   const imgRes = await fetch(imageUrl);
+  if (!imgRes.ok) {
+    await sendTelegramMessage(CHAT_ID, `DEBUG: Image download failed ${imgRes.status}`);
+    return null;
+  }
   const imgBuffer = await imgRes.arrayBuffer();
   const base64 = Buffer.from(imgBuffer).toString('base64');
   const mediaType = imgRes.headers.get('content-type') || 'image/jpeg';
@@ -72,6 +77,8 @@ If this is NOT a photo of a car/vehicle, respond with: {"error":"not a vehicle"}
   if (!res.ok) {
     const errBody = await res.text();
     console.error('[telegram webhook] Claude API error:', res.status, errBody);
+    // Send error detail to Telegram for debugging
+    await sendTelegramMessage(CHAT_ID, `DEBUG: Claude API ${res.status}\n${errBody.slice(0, 500)}`);
     return null;
   }
 
@@ -85,6 +92,10 @@ If this is NOT a photo of a car/vehicle, respond with: {"error":"not a vehicle"}
     return parsed;
   } catch {
     console.error('[telegram webhook] Failed to parse Claude response:', text);
+    return null;
+  }
+  } catch (err) {
+    await sendTelegramMessage(CHAT_ID, `DEBUG: analyzeCarPhoto error: ${err instanceof Error ? err.message : String(err)}`);
     return null;
   }
 }

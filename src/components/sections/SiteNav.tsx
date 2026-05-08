@@ -70,20 +70,27 @@ export default function SiteNav() {
             style={{ cursor: 'none' }}
           >
             <div
-              className="w-9 h-9 rounded-full relative grid place-items-center bg-gradient-to-br from-water-deep to-water glow-water"
+              className="w-9 h-9 rounded-full relative overflow-hidden shrink-0"
               style={{
                 transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease',
+                boxShadow: '0 0 16px rgba(0,180,255,0.3)',
               }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.transform = 'scale(1.12)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 0 28px rgba(0,180,255,0.6), inset 0 0 1px rgba(0,180,255,0.5)';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 0 28px rgba(0,180,255,0.6)';
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 0 16px rgba(0,180,255,0.3)';
               }}
             >
-              <span className="text-[10px] font-black tracking-tighter text-white">URR</span>
+              <img
+                src="/video/logo-poster.jpg"
+                alt="URRUTIA"
+                width={36}
+                height={36}
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="wordmark text-lg">URRUTIA</span>
           </a>

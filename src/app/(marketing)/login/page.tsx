@@ -197,10 +197,10 @@ export default function LoginPage() {
           <Link href="/" aria-label="Back to URRUTIA homepage">
             <div className="flex items-center gap-3 group">
               <div
-                className="w-12 h-12 rounded-full glow-water grid place-items-center transition-transform duration-300 group-hover:scale-105"
-                style={{ background: 'linear-gradient(135deg, #0066CC, #00B4FF)' }}
+                className="w-12 h-12 rounded-full overflow-hidden shrink-0 transition-transform duration-300 group-hover:scale-105"
+                style={{ boxShadow: '0 0 20px rgba(0,180,255,0.4)' }}
               >
-                <span className="text-xs font-black tracking-tighter text-white">URR</span>
+                <img src="/video/logo-poster.jpg" alt="URRUTIA" width={48} height={48} className="w-full h-full object-cover" />
               </div>
               <span className="wordmark text-2xl tracking-luxury">URRUTIA</span>
             </div>

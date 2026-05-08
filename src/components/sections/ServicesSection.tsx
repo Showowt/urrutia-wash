@@ -83,7 +83,7 @@ export default function ServicesSection() {
                     <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(27,34,54,0.8)' }}>
                       <div>
                         <p className="text-sm font-semibold">Exterior Only</p>
-                        <p className="text-xs text-muted">Hand wash, dry, wheels, tires</p>
+                        <p className="text-xs text-muted">Hand wash, dry, wheels, tires, jambs</p>
                       </div>
                       <span className="text-2xl font-black price-gradient">{card.exterior.price}</span>
                     </div>
@@ -92,7 +92,7 @@ export default function ServicesSection() {
                     <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(0,180,255,0.04)', border: '1px solid rgba(0,180,255,0.2)' }}>
                       <div>
                         <p className="text-sm font-semibold">Interior + Exterior</p>
-                        <p className="text-xs text-muted">Full wash + vacuum, dash, jambs</p>
+                        <p className="text-xs text-muted">Full exterior + vacuum, wipedown, windows</p>
                       </div>
                       <span className="text-2xl font-black price-gradient">{card.full.price}</span>
                     </div>

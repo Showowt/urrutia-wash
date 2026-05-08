@@ -519,8 +519,8 @@ export default function HomePage() {
           {/* Brand column */}
           <div className="md:col-span-4">
             <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-water-deep to-water glow-water grid place-items-center">
-                <span className="text-[10px] font-black tracking-tighter text-white">URR</span>
+              <div className="w-9 h-9 rounded-full overflow-hidden shrink-0" style={{ boxShadow: '0 0 16px rgba(0,180,255,0.3)' }}>
+                <img src="/video/logo-poster.jpg" alt="URRUTIA" width={36} height={36} className="w-full h-full object-cover" />
               </div>
               <span className="wordmark text-lg">URRUTIA</span>
             </div>

@@ -47,14 +47,12 @@ export default function MemberPage() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2.5">
             <div
-              className="w-9 h-9 rounded-full grid place-items-center"
+              className="w-9 h-9 rounded-full overflow-hidden shrink-0"
               style={{
-                background: "linear-gradient(135deg, #0066CC, #00B4FF)",
+                boxShadow: "0 0 16px rgba(0,180,255,0.3)",
               }}
             >
-              <span className="text-[10px] font-black tracking-tighter">
-                URR
-              </span>
+              <img src="/video/logo-poster.jpg" alt="URRUTIA" width={36} height={36} className="w-full h-full object-cover" />
             </div>
             <p className="font-bold tracking-widest text-sm">URRUTIA</p>
           </div>

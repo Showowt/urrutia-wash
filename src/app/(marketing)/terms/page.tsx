@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 const LAST_UPDATED = 'April 29, 2026';
-const BUSINESS_NAME = 'LVAC Carwash and Detailing';
+const BUSINESS_NAME = 'URRUTIA Carwash and Detailing';
 const BUSINESS_ADDRESS = '1195 Wellness Pl, Henderson, NV 89011';
 const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
 

@@ -3,58 +3,6 @@
 import { useState } from 'react';
 import BookingModal from '@/components/sections/BookingModal';
 
-/* ─── Promo Code Copy Button ─── */
-function PromoCode({ code }: { code: string }) {
-  const [copied, setCopied] = useState(false);
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback: select text
-    }
-  }
-
-  return (
-    <div className="inline-flex items-center gap-3 promo-badge rounded-2xl px-6 py-3 mx-auto">
-      <span className="font-mono text-flame font-black text-xl tracking-widest relative z-10">
-        {code}
-      </span>
-      <button
-        type="button"
-        onClick={handleCopy}
-        aria-label={copied ? 'Code copied!' : `Copy promo code ${code}`}
-        className="relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all duration-200 cursor-pointer"
-        style={{
-          background: copied ? 'rgba(16,185,129,0.15)' : 'rgba(255,107,26,0.12)',
-          border: '1px solid',
-          borderColor: copied ? 'rgba(16,185,129,0.4)' : 'rgba(255,107,26,0.35)',
-          color: copied ? '#10B981' : '#FF6B1A',
-        }}
-      >
-        {copied ? (
-          <>
-            <svg className="w-3 h-3" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            COPIED
-          </>
-        ) : (
-          <>
-            <svg className="w-3 h-3" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="5" y="5" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M3 11V3a2 2 0 0 1 2-2h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            COPY
-          </>
-        )}
-      </button>
-    </div>
-  );
-}
-
 /* ─── Decorative water droplet ─── */
 function WaterDrop({
   size,
@@ -172,13 +120,8 @@ export default function FinalCta() {
           </h2>
 
           <p className="text-lg text-muted max-w-xl mx-auto mb-8 leading-relaxed">
-            Book your first wash today. Use the code below for 20% off any service.
+            Book your first wash today — enter your phone at the top of the page to unlock 10% off + a free spray wax.
           </p>
-
-          {/* Promo code badge */}
-          <div className="flex justify-center mb-10">
-            <PromoCode code="FIRST20" />
-          </div>
 
           {/* Main CTA */}
           <button

@@ -8,7 +8,7 @@ export const metadata = {
 
 const LAST_UPDATED = 'April 29, 2026';
 const CONTACT_EMAIL = 'lvaccarwash@gmail.com';
-const BUSINESS_NAME = 'LVAC Carwash and Detailing';
+const BUSINESS_NAME = 'URRUTIA Carwash and Detailing';
 
 function Breadcrumb() {
   return (

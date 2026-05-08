@@ -154,6 +154,9 @@ export default function PromoBanner() {
                 {error}
               </p>
             )}
+            <p className="text-[9px] text-muted/60 font-mono w-full text-center sm:text-right mt-1">
+              By entering your number you agree to receive SMS from URRUTIA. Msg &amp; data rates apply. Reply STOP to opt out.
+            </p>
           </div>
         ) : (
           /* ── Phase 2: Show code ── */

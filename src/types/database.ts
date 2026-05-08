@@ -290,6 +290,8 @@ export type Database = {
           used: boolean;
           used_at: string | null;
           order_reference: string | null;
+          expires_at: string;
+          ip_address: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -302,6 +304,8 @@ export type Database = {
           used?: boolean;
           used_at?: string | null;
           order_reference?: string | null;
+          expires_at?: string;
+          ip_address?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -314,8 +318,28 @@ export type Database = {
           used?: boolean;
           used_at?: string | null;
           order_reference?: string | null;
+          expires_at?: string;
+          ip_address?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      promo_rate_limits: {
+        Row: {
+          id: string;
+          ip_address: string;
+          attempted_at: string;
+        };
+        Insert: {
+          id?: string;
+          ip_address: string;
+          attempted_at?: string;
+        };
+        Update: {
+          id?: string;
+          ip_address?: string;
+          attempted_at?: string;
         };
         Relationships: [];
       };

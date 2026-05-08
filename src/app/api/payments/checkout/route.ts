@@ -71,12 +71,17 @@ export async function POST(request: NextRequest) {
       const supabase = createServiceClient();
       const code = body.promo_code.trim().toUpperCase();
 
-      const { data: promoRow } = await supabase
+      let promoRow = (await supabase
         .from("promo_codes")
         .select("*")
         .eq("code", code)
         .eq("used", false)
-        .maybeSingle();
+        .maybeSingle()).data;
+
+      // Check expiration
+      if (promoRow?.expires_at && new Date(promoRow.expires_at) < new Date()) {
+        promoRow = null;
+      }
 
       if (promoRow) {
         // Apply discount

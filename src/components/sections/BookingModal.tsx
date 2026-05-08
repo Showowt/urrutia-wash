@@ -483,8 +483,10 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                     )}
                   </button>
 
-                  <p className="text-[10px] text-center text-muted font-mono">
-                    Secure payment via Square. You&rsquo;ll be redirected to complete payment.
+                  <p className="text-[10px] text-center text-muted font-mono leading-relaxed">
+                    By submitting this form, you agree to receive SMS messages from URRUTIA regarding your service, including booking confirmations, wash status updates, and occasional check-ins. Message and data rates may apply. Reply STOP to unsubscribe at any time. See our{' '}
+                    <a href="/sms-consent" className="underline hover:text-water">SMS Consent Policy</a>.
+                    Secure payment via Square.
                   </p>
                 </div>
               </div>

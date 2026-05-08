@@ -43,6 +43,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check expiration
+    if (promoRaw.expires_at && new Date(promoRaw.expires_at) < new Date()) {
+      return NextResponse.json(
+        { data: null, error: "expired", message: "This promo code has expired" },
+        { status: 410 },
+      );
+    }
+
     return NextResponse.json({
       data: {
         code: promoRaw.code,

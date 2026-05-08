@@ -40,6 +40,12 @@ const OPENING_HOURS = [
 
 const homepageSchemas: SchemaInput[] = [
   {
+    type: 'WebSite',
+    name: 'LVAC Carwash and Detailing',
+    url: BUSINESS_URL,
+    description: 'Premium hand wash and auto detailing at LVAC Henderson, NV. Express wash, full detail, ceramic coating — while you work out.',
+  },
+  {
     type: 'LocalBusiness',
     name: 'LVAC Carwash and Detailing',
     description:

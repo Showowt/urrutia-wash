@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Privacy Policy — URRUTIA Carwash & Detail',
-  description: 'Privacy Policy for URRUTIA Carwash & Detail. How we collect, use, and protect your personal information.',
-  robots: { index: true, follow: true },
+  title: 'Privacy Policy — URRUTIA Carwash & Detail | Henderson, NV',
+  description: 'Privacy Policy for URRUTIA Carwash & Detail. How we collect, use, and protect your personal information. Henderson, NV car wash.',
+  alternates: { canonical: '/privacy' },
 };
 
 const LAST_UPDATED = 'April 29, 2026';

@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms of Service — URRUTIA Carwash & Detail',
-  description: 'Terms of Service for URRUTIA Carwash & Detail. Car wash and detailing services in Henderson, NV.',
-  robots: { index: true, follow: true },
+  title: 'Terms of Service — URRUTIA Carwash & Detail | Henderson, NV',
+  description: 'Terms of Service for URRUTIA Carwash & Detail. Car wash and detailing services at LVAC Henderson, NV.',
+  alternates: { canonical: '/terms' },
 };
 
 const LAST_UPDATED = 'April 29, 2026';

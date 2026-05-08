@@ -74,12 +74,30 @@ export interface FAQPageSchema {
   questions: Array<{ question: string; answer: string }>;
 }
 
+export interface WebSiteSchema {
+  type: 'WebSite';
+  name: string;
+  url: string;
+  description?: string;
+  potentialAction?: {
+    target: string;
+    queryInput: string;
+  };
+}
+
+export interface BreadcrumbListSchema {
+  type: 'BreadcrumbList';
+  items: Array<{ name: string; url: string }>;
+}
+
 export type SchemaInput =
   | LocalBusinessSchema
   | AutoRepairSchema
   | ReviewSchema
   | AggregateRatingSchema
-  | FAQPageSchema;
+  | FAQPageSchema
+  | WebSiteSchema
+  | BreadcrumbListSchema;
 
 function buildLocalBusiness(s: LocalBusinessSchema) {
   return {
@@ -205,6 +223,41 @@ function buildFAQPage(s: FAQPageSchema) {
   };
 }
 
+function buildWebSite(s: WebSiteSchema) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: s.name,
+    url: s.url,
+    description: s.description,
+    ...(s.potentialAction
+      ? {
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+              '@type': 'EntryPoint',
+              urlTemplate: s.potentialAction.target,
+            },
+            'query-input': s.potentialAction.queryInput,
+          },
+        }
+      : {}),
+  };
+}
+
+function buildBreadcrumbList(s: BreadcrumbListSchema) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: s.items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
 function toJsonLd(schema: SchemaInput): object {
   switch (schema.type) {
     case 'LocalBusiness':
@@ -217,6 +270,10 @@ function toJsonLd(schema: SchemaInput): object {
       return buildAggregateRating(schema);
     case 'FAQPage':
       return buildFAQPage(schema);
+    case 'WebSite':
+      return buildWebSite(schema);
+    case 'BreadcrumbList':
+      return buildBreadcrumbList(schema);
   }
 }
 

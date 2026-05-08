@@ -2,7 +2,13 @@
 // Intentionally does NOT inherit the marketing SiteNav/SiteFooter
 // so the login experience is focused and uncluttered.
 
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Login — URRUTIA Car Wash',
+  robots: { index: false, follow: false },
+};
 
 export default function LoginLayout({ children }: { children: ReactNode }) {
   return (

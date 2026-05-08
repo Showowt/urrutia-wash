@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'SMS Consent & TCPA Disclosure — URRUTIA Carwash & Detail',
-  description: 'SMS consent policy and TCPA disclosure for URRUTIA Carwash & Detail. How we use text messaging and how to opt out.',
-  robots: { index: true, follow: true },
+  title: 'SMS Consent & TCPA Disclosure — URRUTIA Carwash & Detail | Henderson, NV',
+  description: 'SMS consent policy and TCPA disclosure for URRUTIA Carwash & Detail Henderson, NV. How we use text messaging and how to opt out.',
+  alternates: { canonical: '/sms-consent' },
 };
 
 const LAST_UPDATED = 'April 29, 2026';

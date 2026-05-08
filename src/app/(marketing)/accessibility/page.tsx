@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Accessibility Statement — URRUTIA Carwash & Detail',
-  description: 'Accessibility statement for URRUTIA Carwash & Detail. Our commitment to WCAG 2.1 AA compliance and ADA accessibility.',
-  robots: { index: true, follow: true },
+  title: 'Accessibility Statement — URRUTIA Carwash & Detail | Henderson, NV',
+  description: 'Accessibility statement for URRUTIA Carwash & Detail Henderson, NV. Our commitment to WCAG 2.1 AA compliance and ADA accessibility.',
+  alternates: { canonical: '/accessibility' },
 };
 
 const LAST_UPDATED = 'April 29, 2026';

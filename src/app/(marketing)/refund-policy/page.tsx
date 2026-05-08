@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Refund & Cancellation Policy — URRUTIA Carwash & Detail',
-  description: 'Refund and cancellation policy for URRUTIA Carwash & Detail. Henderson, NV car wash and detailing.',
-  robots: { index: true, follow: true },
+  title: 'Refund & Cancellation Policy — URRUTIA Carwash & Detail | Henderson, NV',
+  description: 'Refund and cancellation policy for URRUTIA Carwash & Detail. Henderson, NV car wash and detailing at LVAC.',
+  alternates: { canonical: '/refund-policy' },
 };
 
 const LAST_UPDATED = 'April 29, 2026';

@@ -1,12 +1,34 @@
 import Link from 'next/link';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
+import JsonLd, { type SchemaInput } from '@/components/seo/JsonLd';
+
+const breadcrumbSchema: SchemaInput[] = [
+  {
+    type: 'BreadcrumbList',
+    items: [
+      { name: 'Home', url: 'https://www.washduringworkout.com' },
+      { name: 'About', url: 'https://www.washduringworkout.com/about' },
+    ],
+  },
+];
 
 export const metadata = {
   title: 'About — URRUTIA Premium Car Wash & Detail | Henderson, NV',
-  description: 'Meet the team behind URRUTIA Carwash & Detail. Premium hand wash and detailing at LVAC Henderson, NV. Serving Henderson, Green Valley, and the Las Vegas valley.',
+  description: 'Meet the team behind URRUTIA Carwash & Detail. Premium hand wash and detailing at LVAC Henderson, NV. Serving Henderson, Green Valley, and the Las Vegas valley. 7,200+ vehicles washed. 4.7-star Google rating.',
+  keywords: ['about urrutia car wash', 'car wash team henderson nv', 'LVAC car wash owners', 'henderson car wash company', 'car detailing professionals henderson', 'hand car wash experts las vegas'],
   openGraph: {
     title: 'About URRUTIA | Premium Car Wash Henderson, NV',
-    description: 'Meet the team behind URRUTIA Carwash & Detail. Premium hand wash and detailing at LVAC Henderson, NV.',
+    description: 'Meet the team behind URRUTIA Carwash & Detail. Premium hand wash and detailing at LVAC Henderson, NV. 7,200+ vehicles. 4.7-star rating.',
+    type: 'website',
+    images: [{ url: '/gallery/brabus-g63-sunset.jpg', width: 1200, height: 630, alt: 'URRUTIA Car Wash team — Henderson, NV' }],
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'About URRUTIA | Car Wash Henderson, NV',
+    description: 'Meet the team behind URRUTIA. 7,200+ vehicles washed. Premium hand wash at LVAC Henderson.',
+  },
+  alternates: {
+    canonical: '/about',
   },
 };
 
@@ -92,6 +114,7 @@ function Breadcrumb() {
 export default function AboutPage() {
   return (
     <>
+      <JsonLd schemas={breadcrumbSchema} />
       {/* ─── Hero ─── */}
       <section className="relative pt-28 pb-20 overflow-hidden hero-bg">
         <div className="hero-grid absolute inset-0 z-0" aria-hidden="true" />

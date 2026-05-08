@@ -133,6 +133,8 @@ async function handleHelp(chatId: string) {
     `/stats — Today's numbers\n` +
     `/queue — Active wash queue\n` +
     `/promos — Active promo codes\n` +
+    `/promo 50 — Create 50% off code\n` +
+    `/promo 100 — Create free wash code\n` +
     `/members — Membership count\n\n` +
     `<b>SITE</b>\n` +
     `/health — Test all endpoints\n` +
@@ -415,7 +417,7 @@ async function handlePromos(chatId: string) {
   const supabase = createServiceClient();
   const { data: promos, count } = await supabase
     .from('promo_codes')
-    .select('code, phone, discount_percent, used, created_at', { count: 'exact' })
+    .select('code, phone, discount_percent, used, created_at, expires_at', { count: 'exact' })
     .eq('used', false)
     .order('created_at', { ascending: false })
     .limit(10);
@@ -426,16 +428,82 @@ async function handlePromos(chatId: string) {
     .eq('used', true);
 
   if (!promos || promos.length === 0) {
-    await sendTelegramMessage(chatId, `No active promo codes.\n${usedCount ?? 0} codes used total.`);
+    await sendTelegramMessage(chatId,
+      `No active promo codes.\n${usedCount ?? 0} codes used total.\n\nCreate one: /promo 20\n(See /help for format)`
+    );
     return;
   }
 
-  const lines = promos.map(p =>
-    `<code>${p.code}</code> — ${p.discount_percent}% off\nPhone: ${p.phone}`
-  );
+  const lines = promos.map(p => {
+    const expired = p.expires_at && new Date(p.expires_at) < new Date();
+    return `<code>${p.code}</code> — ${p.discount_percent}% off${expired ? ' [EXPIRED]' : ''}\nPhone: ${p.phone}`;
+  });
 
   await sendTelegramMessage(chatId,
-    `<b>Active Promos</b> (${count ?? 0} unused)\n\n${lines.join('\n\n')}\n\n${usedCount ?? 0} codes used total.`
+    `<b>Active Promos</b> (${count ?? 0} unused)\n\n${lines.join('\n\n')}\n\n${usedCount ?? 0} codes used total.\n\nCreate one: /promo 20`
+  );
+}
+
+async function handleCreatePromo(chatId: string, args: string) {
+  // Format: /promo PERCENT [PHONE] [DAYS]
+  // Examples:
+  //   /promo 100                → 100% off, no phone, expires 7 days
+  //   /promo 50 7025551234      → 50% off, tied to phone, expires 7 days
+  //   /promo 20 7025551234 30   → 20% off, tied to phone, expires 30 days
+  const parts = args.trim().split(/\s+/);
+
+  if (!parts[0] || isNaN(parseInt(parts[0]))) {
+    await sendTelegramMessage(chatId,
+      `<b>Create Promo Code</b>\n\n` +
+      `Format: /promo PERCENT [PHONE] [DAYS]\n\n` +
+      `<b>Examples:</b>\n` +
+      `/promo 100 — Free wash (7 day expiry)\n` +
+      `/promo 50 — 50% off (7 day expiry)\n` +
+      `/promo 20 7025551234 — 20% off for specific customer\n` +
+      `/promo 15 7025551234 30 — 15% off, 30 day expiry\n\n` +
+      `Code is generated automatically. One-time use.`
+    );
+    return;
+  }
+
+  const discount = Math.min(100, Math.max(1, parseInt(parts[0])));
+  const phone = parts[1]?.replace(/\D/g, '').slice(-10) || '0000000000';
+  const days = parseInt(parts[2]) || 7;
+
+  // Generate code
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'URR-';
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  const expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.from('promo_codes').insert({
+    phone,
+    code,
+    discount_percent: discount,
+    free_addon: discount >= 50 ? 'spray_wax' : null,
+    expires_at: expiresAt,
+    ip_address: 'telegram-admin',
+  });
+
+  if (error) {
+    await sendTelegramMessage(chatId, `Failed to create promo: ${error.message}`);
+    return;
+  }
+
+  const phoneLabel = phone === '0000000000' ? 'Any customer' : phone;
+
+  await sendTelegramMessage(chatId,
+    `<b>PROMO CODE CREATED</b>\n\n` +
+    `Code: <code>${code}</code>\n` +
+    `Discount: <b>${discount}% OFF</b>\n` +
+    `${discount >= 50 ? '+ FREE Spray Wax\n' : ''}` +
+    `For: ${phoneLabel}\n` +
+    `Expires: ${days} days\n\n` +
+    `One-time use. Customer enters at checkout.`
   );
 }
 
@@ -639,6 +707,8 @@ export async function POST(request: NextRequest) {
           await handleQueue(chatId); break;
         case '/promos':
           await handlePromos(chatId); break;
+        case '/promo':
+          await handleCreatePromo(chatId, args); break;
         case '/members':
           await handleMembers(chatId); break;
         case '/health':

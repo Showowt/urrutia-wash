@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 
 const BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN || '').trim();
-const CHAT_ID = (process.env.TELEGRAM_CHAT_ID || '').trim();
+const CHAT_IDS = (process.env.TELEGRAM_CHAT_ID || '').trim().split(',').map(s => s.trim()).filter(Boolean);
 const ANTHROPIC_API_KEY = (process.env.ANTHROPIC_API_KEY || '').trim();
 const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim();
 const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || 'https://washduringworkout.com').trim();
+
+function isAuthorized(chatId: string): boolean {
+  return CHAT_IDS.includes(chatId);
+}
+
+// Send a message to ALL authorized chat IDs (for notifications)
+async function broadcastMessage(text: string) {
+  for (const id of CHAT_IDS) {
+    await sendTelegramMessage(id, text);
+  }
+}
 
 async function sendTelegramMessage(chatId: string | number, text: string) {
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -543,10 +554,32 @@ export async function POST(request: NextRequest) {
     }
 
     const chatId = String(message.chat.id);
-    console.log('[telegram webhook] Received from chat:', chatId, '| Expected:', CHAT_ID, '| Type:', message.chat.type);
+    console.log('[telegram webhook] Received from chat:', chatId, '| Authorized IDs:', CHAT_IDS.join(','), '| Type:', message.chat.type);
 
-    if (chatId !== CHAT_ID) {
-      console.log('[telegram webhook] Chat ID mismatch — ignoring. From:', chatId);
+    // Allow /debug from anyone so new users can identify their chat ID
+    const rawText = (message.text || '').trim().toLowerCase();
+    if (rawText === '/debug') {
+      const authorized = isAuthorized(chatId);
+      await sendTelegramMessage(chatId,
+        `<b>Debug Info</b>\n\n` +
+        `Chat ID: <code>${chatId}</code>\n` +
+        `Chat type: ${message.chat.type}\n` +
+        `From: ${message.from?.first_name || 'unknown'} (${message.from?.id || 'unknown'})\n` +
+        `Bot token set: ${BOT_TOKEN ? 'YES' : 'NO'}\n` +
+        `Anthropic key set: ${ANTHROPIC_API_KEY ? 'YES' : 'NO'}\n` +
+        `Supabase URL set: ${SUPABASE_URL ? 'YES' : 'NO'}\n` +
+        `Authorized: ${authorized ? 'YES' : 'NO'}\n` +
+        `${!authorized ? '\n⚠️ Your Chat ID is NOT authorized. Ask admin to add <code>' + chatId + '</code> to TELEGRAM_CHAT_ID env var.' : '✅ You are authorized.'}`
+      );
+      return NextResponse.json({ ok: true });
+    }
+
+    if (!isAuthorized(chatId)) {
+      console.log('[telegram webhook] Unauthorized chat ID:', chatId, '| From:', message.from?.first_name);
+      // Send a helpful message to unauthorized users
+      await sendTelegramMessage(chatId,
+        `Not authorized. Your chat ID: <code>${chatId}</code>\nSend this to the admin to get access.`
+      );
       return NextResponse.json({ ok: true });
     }
 
@@ -613,17 +646,7 @@ export async function POST(request: NextRequest) {
         case '/site':
           await handleSiteLinks(chatId); break;
         case '/debug':
-          await sendTelegramMessage(chatId,
-            `<b>Debug Info</b>\n\n` +
-            `Chat ID: <code>${chatId}</code>\n` +
-            `Chat type: ${message.chat.type}\n` +
-            `From: ${message.from?.first_name || 'unknown'} (${message.from?.id || 'unknown'})\n` +
-            `Bot token set: ${BOT_TOKEN ? 'YES' : 'NO'}\n` +
-            `Anthropic key set: ${ANTHROPIC_API_KEY ? 'YES' : 'NO'}\n` +
-            `Supabase URL set: ${SUPABASE_URL ? 'YES' : 'NO'}\n` +
-            `Expected chat ID: <code>${CHAT_ID}</code>\n` +
-            `Match: ${chatId === CHAT_ID ? 'YES' : 'NO'}`
-          );
+          // Handled above (before auth check) so anyone can use it
           break;
         default:
           // Don't respond to random text — only commands
@@ -734,8 +757,8 @@ export async function POST(request: NextRequest) {
     console.error('[telegram webhook] Unhandled error:', err);
     // Try to notify via Telegram if possible
     try {
-      if (CHAT_ID) {
-        await sendTelegramMessage(CHAT_ID, `⚠️ Webhook error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      if (CHAT_IDS.length > 0) {
+        await broadcastMessage(`⚠️ Webhook error: ${err instanceof Error ? err.message : 'Unknown error'}`);
       }
     } catch { /* ignore */ }
     return NextResponse.json({ ok: true });

@@ -78,11 +78,11 @@ export async function POST(request: NextRequest) {
         }
 
         // Notify owner via Telegram
-        await notifyPayment(
+        await notifyPayment({
           reference,
           amountCents,
-          `Payment completed via Square`
-        );
+          description: `Payment completed via Square`,
+        });
 
         break;
       }

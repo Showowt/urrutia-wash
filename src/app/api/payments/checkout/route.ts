@@ -18,6 +18,8 @@ interface CheckoutBody {
   customer_name?: string;
   customer_email?: string;
   customer_phone?: string;
+  customer_vehicle?: string;
+  customer_plate?: string;
   // Promo code
   promo_code?: string;
 }
@@ -125,7 +127,15 @@ export async function POST(request: NextRequest) {
     });
 
     // Notify owner via Telegram (fire-and-forget)
-    await notifyPayment(reference, amountCents, description);
+    await notifyPayment({
+      reference,
+      amountCents,
+      description,
+      customerName: body.customer_name,
+      customerPhone: body.customer_phone,
+      vehicle: body.customer_vehicle,
+      plate: body.customer_plate,
+    });
 
     return NextResponse.json({
       data: {

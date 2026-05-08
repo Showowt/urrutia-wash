@@ -209,6 +209,8 @@ export default function WalkInPage() {
           service_id: selectedService.id,
           customer_name: customerName,
           customer_phone: phone.replace(/\D/g, ""),
+          customer_vehicle: selectedVehicle ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}` : undefined,
+          customer_plate: selectedVehicle?.plate || undefined,
         }),
       });
 

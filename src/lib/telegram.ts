@@ -10,28 +10,38 @@ interface SendResult {
 
 async function send(text: string, parseMode: "HTML" | "Markdown" = "HTML"): Promise<SendResult> {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const chatIds = process.env.TELEGRAM_CHAT_ID;
 
-  if (!botToken || !chatId) {
+  if (!botToken || !chatIds) {
     console.warn("[telegram] Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID");
     return { ok: false, error: "Telegram not configured" };
   }
 
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: parseMode,
-      }),
-    });
+  // Support comma-separated chat IDs to notify multiple people (e.g. owner + manager)
+  const ids = chatIds.split(",").map((id) => id.trim()).filter(Boolean);
 
-    if (!res.ok) {
-      const body = await res.text();
-      console.error("[telegram] Send failed:", body);
-      return { ok: false, error: body };
+  try {
+    const results = await Promise.allSettled(
+      ids.map((chatId) =>
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            parse_mode: parseMode,
+          }),
+        })
+      )
+    );
+
+    for (const result of results) {
+      if (result.status === "rejected") {
+        console.error("[telegram] Send failed:", result.reason);
+      } else if (!result.value.ok) {
+        const body = await result.value.text();
+        console.error("[telegram] Send failed:", body);
+      }
     }
 
     return { ok: true };
@@ -86,11 +96,24 @@ export async function notifyBooking(details: {
 }
 
 /** Payment completed */
-export async function notifyPayment(reference: string, amountCents: number, description: string): Promise<SendResult> {
-  return send(
-    `<b>PAYMENT RECEIVED</b>\n\n` +
-    `Ref: <code>${reference}</code>\n` +
-    `Amount: <b>$${(amountCents / 100).toFixed(2)}</b>\n` +
-    `${description}`
-  );
+export async function notifyPayment(details: {
+  reference: string;
+  amountCents: number;
+  description: string;
+  customerName?: string;
+  customerPhone?: string;
+  vehicle?: string;
+  plate?: string;
+}): Promise<SendResult> {
+  const lines = [
+    `<b>PAYMENT RECEIVED</b>\n`,
+    `Ref: <code>${details.reference}</code>`,
+    `Amount: <b>$${(details.amountCents / 100).toFixed(2)}</b>`,
+    `Service: ${details.description}`,
+  ];
+  if (details.customerName) lines.push(`Name: ${details.customerName}`);
+  if (details.customerPhone) lines.push(`Phone: <code>${details.customerPhone}</code>`);
+  if (details.vehicle) lines.push(`Vehicle: ${details.vehicle}`);
+  if (details.plate) lines.push(`Plate: <code>${details.plate}</code>`);
+  return send(lines.join("\n"));
 }

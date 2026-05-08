@@ -253,6 +253,8 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
       const checkoutBody: Record<string, unknown> = {
         customer_name: form.name.trim(),
         customer_phone: form.phone.trim(),
+        customer_vehicle: form.vehicle.trim() || undefined,
+        customer_plate: form.plate.trim() || undefined,
       };
 
       if (isService(form.service)) {

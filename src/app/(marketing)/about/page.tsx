@@ -12,7 +12,7 @@ export const metadata = {
 
 const TRUST_SIGNALS = [
   {
-    stat: '1,200+',
+    stat: '7,200+',
     label: 'Vehicles Washed',
     color: 'water',
     icon: (
@@ -303,7 +303,7 @@ export default function AboutPage() {
           <RevealOnScroll>
             <h2 className="text-4xl font-black mb-4">Come see the work.</h2>
             <p className="text-muted mb-8 text-lg">
-              LVAC Henderson. Monday through Saturday, 7:00 to 4:30. Drop the keys.
+              LVAC Henderson. Monday through Saturday, 8:00 to 5:00. Drop the keys.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact" className="btn-primary px-8 py-4 rounded-full text-base font-bold shimmer-btn">

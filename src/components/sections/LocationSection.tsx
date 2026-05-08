@@ -5,9 +5,9 @@ import { MapPin, Clock, Phone } from 'lucide-react';
 import BookingModal from '@/components/sections/BookingModal';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
-type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | null;
+type ModalPreset = 'small_exterior' | 'small_full' | 'medium_exterior' | 'medium_full' | 'large_exterior' | 'large_full' | 'detail' | 'weekly_small_exterior' | 'weekly_small_full' | 'weekly_medium_exterior' | 'weekly_medium_full' | 'weekly_large_exterior' | 'weekly_large_full' | null;
 
-/* ─── Operating hours: Mon–Sat 7:00–16:30 PST ─── */
+/* ─── Operating hours: Mon–Sat 8:00–17:00 PST ─── */
 function getOperatingStatus(): { isOpen: boolean; label: string; nextAction: string } {
   // Use PST (UTC-8) / PDT (UTC-7) — Henderson, NV
   const now = new Date();
@@ -20,8 +20,8 @@ function getOperatingStatus(): { isOpen: boolean; label: string; nextAction: str
   const minute  = pst.getMinutes();
   const timeVal = hour * 60 + minute; // minutes since midnight
 
-  const openMin  = 7 * 60;       // 7:00 AM
-  const closeMin = 16 * 60 + 30; // 4:30 PM
+  const openMin  = 8 * 60;       // 8:00 AM
+  const closeMin = 17 * 60;      // 5:00 PM
 
   const isWeekday = day >= 1 && day <= 6; // Mon–Sat
 
@@ -34,7 +34,7 @@ function getOperatingStatus(): { isOpen: boolean; label: string; nextAction: str
   }
 
   if (day === 0) {
-    return { isOpen: false, label: 'Closed Today', nextAction: 'Opens Mon at 7:00 AM' };
+    return { isOpen: false, label: 'Closed Today', nextAction: 'Opens Mon at 8:00 AM' };
   }
 
   if (timeVal < openMin && isWeekday) {
@@ -50,7 +50,7 @@ function getOperatingStatus(): { isOpen: boolean; label: string; nextAction: str
 
   // After closing on a weekday
   const nextDay = day === 6 ? 'Mon' : ['Mon','Tue','Wed','Thu','Fri','Sat'][day];
-  return { isOpen: false, label: 'Closed', nextAction: `Opens ${nextDay} at 7:00 AM` };
+  return { isOpen: false, label: 'Closed', nextAction: `Opens ${nextDay} at 8:00 AM` };
 }
 
 export default function LocationSection() {
@@ -129,7 +129,7 @@ export default function LocationSection() {
                   <div>
                     <p className="font-semibold mb-1">Hours</p>
                     <p className="text-sm text-muted">
-                      Mon &ndash; Sat &middot; 7:00 AM &ndash; 4:30 PM
+                      Mon &ndash; Sat &middot; 8:00 AM &ndash; 5:00 PM
                       <br />
                       Closed Sundays
                     </p>

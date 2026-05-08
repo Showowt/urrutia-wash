@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSquareCheckout } from "@/lib/square/config";
 import { createServiceClient } from "@/lib/supabase/server";
-import { SERVICES, MEMBERSHIPS, calculateTotal } from "@/lib/square/pricing";
-import type { ServiceId, MembershipId } from "@/lib/square/pricing";
+import { SERVICES, WEEKLY_PLANS, ADD_ONS, calculateTotal } from "@/lib/square/pricing";
+import type { ServiceId, WeeklyPlanId } from "@/lib/square/pricing";
 import { notifyPromoUsed, notifyPayment } from "@/lib/telegram";
 
 interface CheckoutBody {
   // For one-time services
   service_id?: ServiceId;
   add_on_ids?: string[];
-  // For memberships
-  membership_id?: MembershipId;
-  billing_cycle?: "monthly" | "annual";
+  // For weekly plans
+  membership_id?: WeeklyPlanId;
   // Legacy/direct amount (for walkin or custom)
   amount_cents?: number;
   description?: string;
@@ -23,8 +22,8 @@ interface CheckoutBody {
   promo_code?: string;
 }
 
-const VALID_SERVICES: ServiceId[] = ["express", "classic", "detail", "ceramic"];
-const VALID_MEMBERSHIPS: MembershipId[] = ["solo", "duo", "fleet"];
+const VALID_SERVICES: ServiceId[] = ["small_exterior", "small_full", "medium_exterior", "medium_full", "large_exterior", "large_full", "detail"];
+const VALID_WEEKLY_PLANS: WeeklyPlanId[] = ["weekly_small_exterior", "weekly_small_full", "weekly_medium_exterior", "weekly_medium_full", "weekly_large_exterior", "weekly_large_full"];
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,24 +41,18 @@ export async function POST(request: NextRequest) {
       amountCents = calculateTotal(body.service_id, addOnIds);
 
       const addOnLabels = addOnIds
-        .map((id) => service.addOns.find((a) => a.id === id)?.label)
+        .map((id) => ADD_ONS.find((a) => a.id === id)?.label)
         .filter(Boolean);
 
       description = addOnLabels.length > 0
         ? `${service.label} + ${addOnLabels.join(", ")}`
         : service.label;
 
-    } else if (body.membership_id && VALID_MEMBERSHIPS.includes(body.membership_id)) {
-      // Membership first-month payment
-      const membership = MEMBERSHIPS[body.membership_id];
-      const cycle = body.billing_cycle ?? "monthly";
-      amountCents = cycle === "annual"
-        ? membership.annualMonthlyCents * 12
-        : membership.monthlyCents;
-
-      description = cycle === "annual"
-        ? `${membership.label} — Annual (12 months)`
-        : `${membership.label} — First Month`;
+    } else if (body.membership_id && VALID_WEEKLY_PLANS.includes(body.membership_id)) {
+      // Weekly plan monthly payment
+      const plan = WEEKLY_PLANS[body.membership_id];
+      amountCents = plan.monthlyCents;
+      description = `${plan.label} — Monthly (4 washes)`;
 
     } else if (body.amount_cents && body.amount_cents >= 100) {
       // Direct amount (walkin, custom, test)

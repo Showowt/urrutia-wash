@@ -160,7 +160,7 @@ export default function AccessibilityPage() {
                   <li>
                     Instagram: <a href="https://instagram.com/lvacwashndetail" target="_blank" rel="noopener noreferrer" className="text-water hover:underline">@lvacwashndetail</a>
                   </li>
-                  <li>In person: 1195 Wellness Pl, Henderson, NV 89011 · Mon–Sat 7:00–4:30</li>
+                  <li>In person: 1195 Wellness Pl, Henderson, NV 89011 · Mon–Sat 8:00–5:00</li>
                 </ul>
                 <p className="mt-4 text-muted">
                   Please describe the barrier you encountered, the page or feature affected, the assistive technology or browser you use, and how we can best help you. We aim to respond within 2 business days and resolve issues within 30 days.

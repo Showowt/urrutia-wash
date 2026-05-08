@@ -85,18 +85,46 @@ export const DEMO_HISTORY = [
 
 export const SERVICES = [
   {
-    id: "express" as const,
-    name: "Express Hand Wash",
+    id: "small_exterior" as const,
+    name: "Small — Exterior Only",
     duration: 30,
     price: 35,
     desc: "Hand wash, dry, wheels, tires, windows",
   },
   {
-    id: "classic" as const,
-    name: "Wash + Interior",
+    id: "small_full" as const,
+    name: "Small — Interior + Exterior",
+    duration: 45,
+    price: 55,
+    desc: "Full hand wash + vacuum, dash, door jambs",
+  },
+  {
+    id: "medium_exterior" as const,
+    name: "Medium — Exterior Only",
+    duration: 35,
+    price: 40,
+    desc: "Hand wash, dry, wheels, tires, windows",
+  },
+  {
+    id: "medium_full" as const,
+    name: "Medium — Interior + Exterior",
     duration: 50,
+    price: 65,
+    desc: "Full hand wash + vacuum, dash, door jambs",
+  },
+  {
+    id: "large_exterior" as const,
+    name: "Large — Exterior Only",
+    duration: 40,
+    price: 45,
+    desc: "Hand wash, dry, wheels, tires, windows",
+  },
+  {
+    id: "large_full" as const,
+    name: "Large — Interior + Exterior",
+    duration: 60,
     price: 75,
-    desc: "Express + full vacuum + dash + door jambs",
+    desc: "Full hand wash + vacuum, dash, door jambs",
   },
   {
     id: "detail" as const,
@@ -104,13 +132,6 @@ export const SERVICES = [
     duration: 180,
     price: 295,
     desc: "Clay bar, hand wax, deep interior, leather",
-  },
-  {
-    id: "ceramic" as const,
-    name: "Ceramic Coating",
-    duration: 0,
-    price: 895,
-    desc: "Multi-stage paint correction + 9H ceramic",
   },
 ];
 

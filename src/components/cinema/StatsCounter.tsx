@@ -10,7 +10,7 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { value: 1200, suffix: '+', label: 'VEHICLES SERVICED' },
+  { value: 7200, suffix: '+', label: 'VEHICLES SERVICED' },
   { value: 4.7, suffix: '★', label: 'CLIENT RATING' },
   { value: 100, suffix: '%', label: 'HAND-WASHED' },
   { value: 7, suffix: 'DAY', label: 'MOBILE COVERAGE' },

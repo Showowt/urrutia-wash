@@ -74,18 +74,46 @@ const DEMO_CUSTOMERS: CustomerMatch[] = [
 
 const SERVICES: ServiceOption[] = [
   {
-    id: "express",
-    label: "Express",
+    id: "small_exterior",
+    label: "Small — Ext",
     priceCents: 3500,
     duration: "30 min",
-    desc: "Hand wash · dry · wheels · windows",
+    desc: "Exterior only · sedans · coupes",
   },
   {
-    id: "classic",
-    label: "Classic",
-    priceCents: 7500,
+    id: "small_full",
+    label: "Small — Full",
+    priceCents: 5500,
+    duration: "45 min",
+    desc: "Interior + exterior · sedans · coupes",
+  },
+  {
+    id: "medium_exterior",
+    label: "Medium — Ext",
+    priceCents: 4000,
+    duration: "35 min",
+    desc: "Exterior only · SUVs · crossovers",
+  },
+  {
+    id: "medium_full",
+    label: "Medium — Full",
+    priceCents: 6500,
     duration: "50 min",
-    desc: "Express + vacuum + dash + door jambs",
+    desc: "Interior + exterior · SUVs · crossovers",
+  },
+  {
+    id: "large_exterior",
+    label: "Large — Ext",
+    priceCents: 4500,
+    duration: "40 min",
+    desc: "Exterior only · trucks · full-size SUVs",
+  },
+  {
+    id: "large_full",
+    label: "Large — Full",
+    priceCents: 7500,
+    duration: "60 min",
+    desc: "Interior + exterior · trucks · full-size SUVs",
   },
   {
     id: "detail",
@@ -93,13 +121,6 @@ const SERVICES: ServiceOption[] = [
     priceCents: 29500,
     duration: "3–4 hrs",
     desc: "Clay bar · hand wax · deep interior · leather",
-  },
-  {
-    id: "ceramic",
-    label: "Ceramic",
-    priceCents: 89500,
-    duration: "Full day",
-    desc: "Paint correction + 9H ceramic coating",
   },
 ];
 

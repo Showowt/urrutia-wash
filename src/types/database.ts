@@ -7,7 +7,14 @@
 
 export type MembershipTier = "SOLO" | "DUO" | "FLEET";
 export type MembershipStatus = "active" | "paused" | "cancelled";
-export type ServiceType = "express" | "classic" | "detail" | "ceramic";
+export type ServiceType =
+  | "small_exterior"
+  | "small_full"
+  | "medium_exterior"
+  | "medium_full"
+  | "large_exterior"
+  | "large_full"
+  | "detail";
 export type LocationType = "lvac" | "mobile";
 export type WashStatus =
   | "queued"

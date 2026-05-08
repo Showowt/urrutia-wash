@@ -527,6 +527,9 @@ async function handleSiteLinks(chatId: string) {
   );
 }
 
+// ─── ROUTE CONFIG ─────────────────────────────────────────────
+export const maxDuration = 60; // Allow up to 60s for photo analysis + upload
+
 // ─── MAIN HANDLER ──────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
@@ -534,18 +537,42 @@ export async function POST(request: NextRequest) {
     const update = await request.json();
 
     const message = update.message;
-    if (!message) return NextResponse.json({ ok: true });
-
-    const chatId = String(message.chat.id);
-    if (chatId !== CHAT_ID) {
+    if (!message) {
+      console.log('[telegram webhook] No message in update:', JSON.stringify(update).slice(0, 200));
       return NextResponse.json({ ok: true });
     }
 
-    // Check if the message has a photo
-    const photos = message.photo;
+    const chatId = String(message.chat.id);
+    console.log('[telegram webhook] Received from chat:', chatId, '| Expected:', CHAT_ID, '| Type:', message.chat.type);
+
+    if (chatId !== CHAT_ID) {
+      console.log('[telegram webhook] Chat ID mismatch — ignoring. From:', chatId);
+      return NextResponse.json({ ok: true });
+    }
+
+    // Check if the message has a photo (compressed) or document (uncompressed/file)
+    let photos = message.photo;
+    let isDocument = false;
+
+    // Handle photos sent as documents (uncompressed / "Send as file")
+    if ((!photos || photos.length === 0) && message.document) {
+      const doc = message.document;
+      const mime = doc.mime_type || '';
+      if (mime.startsWith('image/')) {
+        // Treat document as a photo
+        photos = [{ file_id: doc.file_id, file_unique_id: doc.file_unique_id, width: 0, height: 0, file_size: doc.file_size }];
+        isDocument = true;
+        console.log('[telegram webhook] Photo sent as document:', doc.file_name, mime);
+      }
+    }
+
     if (!photos || photos.length === 0) {
       // Handle text commands
-      const raw = (message.text || '').trim();
+      const raw = (message.text || message.caption || '').trim();
+      if (!raw) {
+        console.log('[telegram webhook] Empty message (no text, no photo, no document):', JSON.stringify(message).slice(0, 300));
+        return NextResponse.json({ ok: true });
+      }
       const lower = raw.toLowerCase();
       const [cmd, ...argParts] = lower.split(/\s+/);
       const args = raw.slice(cmd.length).trim();
@@ -585,8 +612,22 @@ export async function POST(request: NextRequest) {
           await handleHealth(chatId); break;
         case '/site':
           await handleSiteLinks(chatId); break;
+        case '/debug':
+          await sendTelegramMessage(chatId,
+            `<b>Debug Info</b>\n\n` +
+            `Chat ID: <code>${chatId}</code>\n` +
+            `Chat type: ${message.chat.type}\n` +
+            `From: ${message.from?.first_name || 'unknown'} (${message.from?.id || 'unknown'})\n` +
+            `Bot token set: ${BOT_TOKEN ? 'YES' : 'NO'}\n` +
+            `Anthropic key set: ${ANTHROPIC_API_KEY ? 'YES' : 'NO'}\n` +
+            `Supabase URL set: ${SUPABASE_URL ? 'YES' : 'NO'}\n` +
+            `Expected chat ID: <code>${CHAT_ID}</code>\n` +
+            `Match: ${chatId === CHAT_ID ? 'YES' : 'NO'}`
+          );
+          break;
         default:
           // Don't respond to random text — only commands
+          console.log('[telegram webhook] Unknown command or text:', raw.slice(0, 100));
           break;
       }
 
@@ -594,22 +635,29 @@ export async function POST(request: NextRequest) {
     }
 
     // ─── PHOTO UPLOAD FLOW ───
+    console.log('[telegram webhook] Photo received. Count:', photos.length, '| isDocument:', isDocument, '| caption:', message.caption || 'none');
+
     const photo = photos[photos.length - 1];
     const fileUrl = await getFileUrl(photo.file_id);
     if (!fileUrl) {
+      console.error('[telegram webhook] getFile failed for file_id:', photo.file_id);
       await sendTelegramMessage(chatId, 'Could not download photo. Try again.');
       return NextResponse.json({ ok: true });
     }
 
+    console.log('[telegram webhook] File URL obtained, analyzing with Claude...');
     await sendTelegramMessage(chatId, 'Analyzing car...');
 
     const analysis = await analyzeCarPhoto(fileUrl);
     if (!analysis) {
+      console.error('[telegram webhook] Claude analysis returned null for:', fileUrl);
       await sendTelegramMessage(chatId,
         'Could not identify a vehicle in this photo. Make sure the car is clearly visible and try again.'
       );
       return NextResponse.json({ ok: true });
     }
+
+    console.log('[telegram webhook] Analysis result:', JSON.stringify(analysis));
 
     // Download image and upload to Supabase Storage
     const imgRes = await fetch(fileUrl);
@@ -666,6 +714,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
+    console.log('[telegram webhook] Photo #' + nextOrder + ' inserted successfully:', analysis.label);
+
     const caption = message.caption;
     const captionLine = caption ? `\nCaption: <i>${caption}</i>` : '';
 
@@ -681,7 +731,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error('[telegram webhook] Error:', err);
+    console.error('[telegram webhook] Unhandled error:', err);
+    // Try to notify via Telegram if possible
+    try {
+      if (CHAT_ID) {
+        await sendTelegramMessage(CHAT_ID, `⚠️ Webhook error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      }
+    } catch { /* ignore */ }
     return NextResponse.json({ ok: true });
   }
 }

@@ -30,7 +30,7 @@ interface WashDetail {
   amountCents: number;
   tipCents: number;
   notes: string;
-  memberTier: "SOLO" | "DUO" | "FLEET" | null;
+  weeklyPlan: "weekly_small_exterior" | "weekly_small_full" | "weekly_medium_exterior" | "weekly_medium_full" | "weekly_large_exterior" | "weekly_large_full" | null;
 }
 
 const DEMO_WASHES: Record<string, WashDetail> = {
@@ -43,16 +43,16 @@ const DEMO_WASHES: Record<string, WashDetail> = {
     vehicleModel: "Raptor",
     vehicleColor: "Lead Foot Gray",
     plate: "NV·8H4-LX9",
-    serviceLabel: "Wash + Interior",
-    serviceType: "classic",
+    serviceLabel: "Medium — Int + Ext",
+    serviceType: "medium_full",
     status: "washing",
     scheduledFor: "8:00 AM",
     startedAt: "8:04 AM",
     operator: "Carlos V.",
-    amountCents: 7500,
+    amountCents: 6500,
     tipCents: 0,
     notes: "Pre-existing scratch above rear wheel — photographed.",
-    memberTier: "DUO",
+    weeklyPlan: "weekly_medium_full",
   },
   "w-004": {
     id: "w-004",
@@ -63,16 +63,16 @@ const DEMO_WASHES: Record<string, WashDetail> = {
     vehicleModel: "Cullinan",
     vehicleColor: "Andalucian White",
     plate: "NV·RR1-CUL",
-    serviceLabel: "Ceramic Coating",
-    serviceType: "ceramic",
+    serviceLabel: "Large — Int + Ext",
+    serviceType: "large_full",
     status: "detailing",
-    scheduledFor: "7:00 AM",
-    startedAt: "7:05 AM",
+    scheduledFor: "8:00 AM",
+    startedAt: "8:05 AM",
     operator: "Carlos V.",
-    amountCents: 89500,
+    amountCents: 7500,
     tipCents: 0,
     notes: "",
-    memberTier: "FLEET",
+    weeklyPlan: "weekly_large_full",
   },
 };
 
@@ -125,8 +125,8 @@ export default function WashDetailPage() {
       vehicleModel: "Vehicle",
       vehicleColor: "—",
       plate: "—",
-      serviceLabel: "Express Wash",
-      serviceType: "express",
+      serviceLabel: "Small — Ext Only",
+      serviceType: "small_exterior",
       status: "queued",
       scheduledFor: "—",
       startedAt: null,
@@ -134,7 +134,7 @@ export default function WashDetailPage() {
       amountCents: 3500,
       tipCents: 0,
       notes: "",
-      memberTier: null,
+      weeklyPlan: null,
     };
 
   const [wash, setWash] = useState<WashDetail>(initialWash);
@@ -177,10 +177,14 @@ export default function WashDetailPage() {
   const advanceColor = ADVANCE_COLOR[wash.status] ?? "#8B95A8";
   const currentStepIdx = WASH_FLOW.findIndex((s) => s.status === wash.status);
 
-  const tierColors: Record<string, { bg: string; text: string; border: string }> = {
-    SOLO: { bg: "rgba(0,180,255,0.08)", text: "#00B4FF", border: "rgba(0,180,255,0.25)" },
-    DUO: { bg: "rgba(139,92,246,0.08)", text: "#8B5CF6", border: "rgba(139,92,246,0.25)" },
-    FLEET: { bg: "rgba(255,107,26,0.08)", text: "#FF6B1A", border: "rgba(255,107,26,0.25)" },
+  const planStyle = { bg: "rgba(0,180,255,0.08)", text: "#00B4FF", border: "rgba(0,180,255,0.25)" };
+  const PLAN_LABELS: Record<string, string> = {
+    weekly_small_exterior: "WEEKLY · SM EXT",
+    weekly_small_full: "WEEKLY · SM FULL",
+    weekly_medium_exterior: "WEEKLY · MD EXT",
+    weekly_medium_full: "WEEKLY · MD FULL",
+    weekly_large_exterior: "WEEKLY · LG EXT",
+    weekly_large_full: "WEEKLY · LG FULL",
   };
 
   return (
@@ -210,17 +214,14 @@ export default function WashDetailPage() {
               {wash.customerName}
             </h1>
             <StatusBadge status={wash.status} size="md" />
-            {wash.memberTier && (() => {
-              const c = tierColors[wash.memberTier] ?? tierColors.SOLO;
-              return (
+            {wash.weeklyPlan && (
                 <span
                   className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg"
-                  style={{ background: c.bg, color: c.text, border: `1px solid ${c.border}` }}
+                  style={{ background: planStyle.bg, color: planStyle.text, border: `1px solid ${planStyle.border}` }}
                 >
-                  {wash.memberTier}
+                  {PLAN_LABELS[wash.weeklyPlan] ?? "WEEKLY"}
                 </span>
-              );
-            })()}
+            )}
           </div>
           <p className="text-sm font-mono mt-0.5" style={{ color: "#8B95A8" }}>
             {wash.serviceLabel} &middot; Scheduled {wash.scheduledFor}

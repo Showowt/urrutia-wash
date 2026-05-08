@@ -22,7 +22,7 @@ export const bookingSchema = z.object({
     .max(10)
     .regex(/^[A-Z0-9\- ]+$/i, "Invalid plate")
     .optional(),
-  service_type: z.enum(["express", "classic", "detail", "ceramic"]),
+  service_type: z.enum(["small_exterior", "small_full", "medium_exterior", "medium_full", "large_exterior", "large_full", "detail"]),
   location: z.enum(["lvac", "mobile"]),
   mobile_address: z.string().max(500).optional(),
   scheduled_for: z.string().datetime({ offset: true }).optional(),

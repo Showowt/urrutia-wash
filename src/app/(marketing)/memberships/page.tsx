@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import MembershipsClient from './MembershipsClient';
 
 export const metadata: Metadata = {
-  title: 'Memberships — SOLO, DUO & FLEET Plans | URRUTIA Car Wash Henderson',
-  description: 'Join URRUTIA Club. SOLO ($89/mo), DUO ($149/mo), FLEET ($279/mo). Unlimited priority booking, automatic punch tracking, Apple Wallet pass. Cancel anytime.',
-  keywords: ['car wash membership henderson nv', 'unlimited car wash subscription las vegas', 'LVAC car wash membership', 'auto detailing membership henderson'],
+  title: 'Weekly Plans — Save on Regular Washes | URRUTIA Car Wash Henderson',
+  description: 'Weekly wash plans: Small from $120/mo, Medium from $130/mo, Large from $150/mo. 4 washes per month, paid upfront. Automatic punch tracking.',
+  keywords: ['car wash plan henderson nv', 'weekly car wash subscription las vegas', 'LVAC car wash plan', 'auto detailing plan henderson'],
   openGraph: {
-    title: 'URRUTIA Club Memberships — Car Wash Henderson, NV',
-    description: 'SOLO, DUO, and FLEET membership plans. Priority booking, locked-in pricing, punch card loyalty. Cancel anytime.',
+    title: 'URRUTIA Weekly Plans — Car Wash Henderson, NV',
+    description: 'Weekly wash plans priced by vehicle size. 4 washes per month, paid on the 1st. Automatic punch tracking.',
     type: 'website',
   },
   alternates: {

@@ -30,12 +30,12 @@ const BUSINESS_URL = 'https://www.washduringworkout.com';
 const BUSINESS_IMAGE = `${BUSINESS_URL}/gallery/brabus-g63-sunset.jpg`;
 const BUSINESS_PHONE = '+1-702-326-4101';
 const OPENING_HOURS = [
-  'Mo 07:00-16:30',
-  'Tu 07:00-16:30',
-  'We 07:00-16:30',
-  'Th 07:00-16:30',
-  'Fr 07:00-16:30',
-  'Sa 07:00-16:30',
+  'Mo 08:00-17:00',
+  'Tu 08:00-17:00',
+  'We 08:00-17:00',
+  'Th 08:00-17:00',
+  'Fr 08:00-17:00',
+  'Sa 08:00-17:00',
 ];
 
 const homepageSchemas: SchemaInput[] = [
@@ -71,29 +71,46 @@ const homepageSchemas: SchemaInput[] = [
       name: 'Car Wash & Detail Services',
       itemListElement: [
         {
-          name: 'Express Hand Wash',
-          description: 'Full exterior hand wash with spot-free rinse and hand dry.',
+          name: 'Small Car — Exterior Only',
+          description: 'Full exterior hand wash, wheels, tires, hand dry.',
           price: '35',
           priceCurrency: 'USD',
         },
         {
-          name: 'Wash + Interior',
+          name: 'Small Car — Interior + Exterior',
           description: 'Exterior hand wash plus full interior vacuum, wipe-down, and glass clean.',
+          price: '55',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Medium Car — Exterior Only',
+          description: 'Full exterior hand wash for SUVs and crossovers.',
+          price: '40',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Medium Car — Interior + Exterior',
+          description: 'Exterior hand wash plus full interior for SUVs and crossovers.',
+          price: '65',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Large Car — Exterior Only',
+          description: 'Full exterior hand wash for trucks and full-size SUVs.',
+          price: '45',
+          priceCurrency: 'USD',
+        },
+        {
+          name: 'Large Car — Interior + Exterior',
+          description: 'Exterior hand wash plus full interior for trucks and full-size SUVs.',
           price: '75',
           priceCurrency: 'USD',
         },
         {
           name: 'Full Detail',
           description:
-            'Complete paint decontamination, interior deep clean, leather conditioning, and ceramic spray sealant.',
+            'Complete paint decontamination, interior deep clean, leather conditioning, and paint sealant.',
           price: '295',
-          priceCurrency: 'USD',
-        },
-        {
-          name: 'Ceramic Coating',
-          description:
-            'Professional-grade 9H ceramic coating with multi-year paint protection and hydrophobic finish.',
-          price: '895',
           priceCurrency: 'USD',
         },
       ],
@@ -117,7 +134,7 @@ const homepageSchemas: SchemaInput[] = [
       },
       {
         question: 'What are your hours?',
-        answer: 'We are open Monday through Saturday from 7:00 AM to 4:30 PM. We are closed on Sundays at this location.',
+        answer: 'We are open Monday through Saturday from 8:00 AM to 5:00 PM. We are closed on Sundays at this location.',
       },
       {
         question: 'Do you have a first-wash discount?',
@@ -130,14 +147,14 @@ const homepageSchemas: SchemaInput[] = [
           'Park at LVAC Henderson, hand your keys to your detailer, and work out. We send you an SMS with before/after photos the moment your car is ready. Walk out to a clean car.',
       },
       {
-        question: 'Do you offer memberships?',
+        question: 'Do you offer weekly plans?',
         answer:
-          'Yes. We offer three membership tiers: SOLO ($89/mo, 4 washes), DUO ($149/mo, 8 washes, 2 vehicles), and FLEET ($279/mo, unlimited washes, up to 4 vehicles). Members also receive discounts on details and ceramic coatings.',
+          'Yes. We offer weekly wash plans priced by vehicle size: Small from $120/mo, Medium from $130/mo, Large from $150/mo. Each plan includes 4 washes per month, paid upfront on the 1st.',
       },
       {
-        question: 'Do you do ceramic coating?',
+        question: 'How much is a full detail?',
         answer:
-          'Yes. We offer professional 9H ceramic coating starting at $895. This includes full paint decontamination and a multi-year hydrophobic protection warranty.',
+          'Full detail starts at $295. This includes clay bar decontamination, hand wax, deep interior shampoo, leather conditioning, engine bay cleaning, and before/after photos.',
       },
     ],
   },
@@ -215,7 +232,7 @@ export default function HomePage() {
             <div className="trust-strip flex-wrap sm:flex-nowrap items-center gap-x-8 gap-y-3 font-mono text-xs text-muted">
               <span className="flex items-center gap-2 shrink-0">
                 <span className="w-1 h-1 rounded-full bg-success" aria-hidden="true" />
-                OPEN MON–SAT 7:00–4:30
+                OPEN MON–SAT 8:00–5:00
               </span>
               <span className="flex items-center gap-2 shrink-0">
                 <span className="w-1 h-1 rounded-full bg-water" aria-hidden="true" />
@@ -223,11 +240,11 @@ export default function HomePage() {
               </span>
               <span className="flex items-center gap-2 shrink-0">
                 <span className="w-1 h-1 rounded-full bg-flame" aria-hidden="true" />
-                HAND WASH FROM $35
+                WASHES FROM $35
               </span>
               <span className="flex items-center gap-2 shrink-0">
                 <span className="w-1 h-1 rounded-full bg-ink" aria-hidden="true" />
-                FULL DETAIL FROM $295
+                FULL DETAIL $295
               </span>
             </div>
           </div>
@@ -555,7 +572,7 @@ export default function HomePage() {
               <p className="text-ink font-medium">LVAC Henderson</p>
               <p>1195 Wellness Pl</p>
               <p>Henderson, NV 89011</p>
-              <p className="pt-1">Mon&ndash;Sat · 7:00 AM &ndash; 4:30 PM</p>
+              <p className="pt-1">Mon&ndash;Sat · 8:00 AM &ndash; 5:00 PM</p>
               <p>
                 <a href="tel:+17023264101" className="text-water hover:text-water-deep transition">
                   (702) 326-4101

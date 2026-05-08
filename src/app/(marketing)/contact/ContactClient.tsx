@@ -65,7 +65,7 @@ export default function ContactPage() {
     },
     {
       label: 'Hours',
-      value: 'Mon–Sat · 7:00 AM – 4:30 PM',
+      value: 'Mon–Sat · 8:00 AM – 5:00 PM',
       sub: 'Sunday · Closed',
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -99,7 +99,7 @@ export default function ContactPage() {
           <RevealOnScroll delay={100}>
             <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-water/25 bg-water/5 text-xs font-mono text-water">
               <span className="w-1.5 h-1.5 rounded-full bg-success status-live" aria-hidden="true" />
-              OPEN MON–SAT · 7:00–4:30
+              OPEN MON–SAT · 8:00–5:00
             </div>
           </RevealOnScroll>
           <RevealOnScroll delay={200}>

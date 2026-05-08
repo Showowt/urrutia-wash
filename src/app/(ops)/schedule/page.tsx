@@ -17,24 +17,24 @@ export default function SchedulePage() {
     {
       date: "Thu May 1",
       washes: [
-        { time: "7:00 AM", customer: "Sofia Martinez", service: "Express Wash", plate: "NV·EV9-MSM" },
-        { time: "8:30 AM", customer: "Marcus Reed", service: "Wash + Interior", plate: "NV·8H4-LX9" },
+        { time: "8:00 AM", customer: "Sofia Martinez", service: "Small — Int + Ext", plate: "NV·EV9-MSM" },
+        { time: "9:00 AM", customer: "Marcus Reed", service: "Medium — Int + Ext", plate: "NV·8H4-LX9" },
       ],
     },
     {
       date: "Fri May 2",
       washes: [
-        { time: "10:00 AM", customer: "Derek Nash", service: "Express Wash", plate: "NV·D20-JEP" },
+        { time: "10:00 AM", customer: "Derek Nash", service: "Medium — Ext Only", plate: "NV·D20-JEP" },
         { time: "1:00 PM", customer: "Amanda Torres", service: "Full Detail", plate: "NV·A24-BMW" },
-        { time: "3:00 PM", customer: "Diego Arroyo", service: "Wash + Interior", plate: "NV·G63-AMG" },
+        { time: "3:00 PM", customer: "Diego Arroyo", service: "Large — Int + Ext", plate: "NV·G63-AMG" },
       ],
     },
   ];
 
   const serviceColor = (svc: string) => {
-    if (svc.includes("Ceramic")) return "#8B5CF6";
     if (svc.includes("Detail")) return "#FF6B1A";
-    if (svc.includes("Interior")) return "#00B4FF";
+    if (svc.includes("Int")) return "#00B4FF";
+    if (svc.includes("Ext")) return "#8B5CF6";
     return "#8B95A8";
   };
 

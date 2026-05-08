@@ -200,14 +200,16 @@ export async function POST(request: Request) {
     });
 
     // ── 5. Send confirmation SMS ───────────────────────
-    const serviceLabel =
-      service_type === "express"
-        ? "Express Hand Wash"
-        : service_type === "classic"
-          ? "Wash + Interior"
-          : service_type === "detail"
-            ? "Full Detail"
-            : "Ceramic Coating";
+    const SERVICE_LABELS: Record<string, string> = {
+      small_exterior: "Small — Exterior Only",
+      small_full: "Small — Interior + Exterior",
+      medium_exterior: "Medium — Exterior Only",
+      medium_full: "Medium — Interior + Exterior",
+      large_exterior: "Large — Exterior Only",
+      large_full: "Large — Interior + Exterior",
+      detail: "Full Detail",
+    };
+    const serviceLabel = SERVICE_LABELS[service_type] ?? service_type;
 
     const timeLabel = scheduled_for
       ? new Date(scheduled_for).toLocaleString("en-US", {

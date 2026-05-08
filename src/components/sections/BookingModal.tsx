@@ -2,29 +2,35 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { X, Check, ArrowRight } from 'lucide-react';
-import { SERVICES, MEMBERSHIPS } from '@/lib/square/pricing';
-import type { ServiceId, MembershipId } from '@/lib/square/pricing';
+import { SERVICES, WEEKLY_PLANS, ADD_ONS } from '@/lib/square/pricing';
+import type { ServiceId, WeeklyPlanId } from '@/lib/square/pricing';
 import type { BookingInput } from '@/lib/validators/booking';
 
 type LocationType = BookingInput['location'];
 
 type ServiceOption = {
-  value: ServiceId | MembershipId;
+  value: ServiceId | WeeklyPlanId;
   label: string;
 };
 
 const SERVICE_OPTIONS: ServiceOption[] = [
-  { value: 'express', label: 'Express Hand Wash · $35' },
-  { value: 'classic', label: 'Wash + Interior · $75' },
+  { value: 'small_exterior', label: 'Small — Exterior Only · $35' },
+  { value: 'small_full', label: 'Small — Interior + Exterior · $55' },
+  { value: 'medium_exterior', label: 'Medium — Exterior Only · $40' },
+  { value: 'medium_full', label: 'Medium — Interior + Exterior · $65' },
+  { value: 'large_exterior', label: 'Large — Exterior Only · $45' },
+  { value: 'large_full', label: 'Large — Interior + Exterior · $75' },
   { value: 'detail', label: 'Full Detail · from $295' },
-  { value: 'ceramic', label: 'Ceramic Coating · from $895' },
-  { value: 'solo', label: 'Solo Membership · $89/mo' },
-  { value: 'duo', label: 'Duo Membership · $149/mo' },
-  { value: 'fleet', label: 'Fleet Membership · $279/mo' },
+  { value: 'weekly_small_exterior', label: 'Weekly Plan — Small Exterior · $120/mo' },
+  { value: 'weekly_small_full', label: 'Weekly Plan — Small Full · $180/mo' },
+  { value: 'weekly_medium_exterior', label: 'Weekly Plan — Medium Exterior · $130/mo' },
+  { value: 'weekly_medium_full', label: 'Weekly Plan — Medium Full · $220/mo' },
+  { value: 'weekly_large_exterior', label: 'Weekly Plan — Large Exterior · $150/mo' },
+  { value: 'weekly_large_full', label: 'Weekly Plan — Large Full · $250/mo' },
 ];
 
-const VALID_SERVICES: ServiceId[] = ['express', 'classic', 'detail', 'ceramic'];
-const VALID_MEMBERSHIPS: MembershipId[] = ['solo', 'duo', 'fleet'];
+const VALID_SERVICES: ServiceId[] = ['small_exterior', 'small_full', 'medium_exterior', 'medium_full', 'large_exterior', 'large_full', 'detail'];
+const VALID_WEEKLY_PLANS: WeeklyPlanId[] = ['weekly_small_exterior', 'weekly_small_full', 'weekly_medium_exterior', 'weekly_medium_full', 'weekly_large_exterior', 'weekly_large_full'];
 
 type ModalPreset = ServiceOption['value'] | null;
 
@@ -64,8 +70,8 @@ function isService(val: string): val is ServiceId {
   return VALID_SERVICES.includes(val as ServiceId);
 }
 
-function isMembership(val: string): val is MembershipId {
-  return VALID_MEMBERSHIPS.includes(val as MembershipId);
+function isWeeklyPlan(val: string): val is WeeklyPlanId {
+  return VALID_WEEKLY_PLANS.includes(val as WeeklyPlanId);
 }
 
 function formatCents(cents: number): string {
@@ -87,7 +93,7 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
     phone: '',
     vehicle: '',
     plate: '',
-    service: 'express',
+    service: 'small_exterior',
     location: 'lvac',
     when: '',
     selectedAddOns: [],
@@ -185,16 +191,14 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
     if (isService(form.service)) {
       const svc = SERVICES[form.service];
       const addOnTotal = form.selectedAddOns.reduce((sum, id) => {
-        const addOn = svc.addOns.find((a) => a.id === id);
+        const addOn = ADD_ONS.find((a) => a.id === id);
         return sum + (addOn?.priceCents ?? 0);
       }, 0);
       return svc.priceCents + addOnTotal;
     }
-    if (isMembership(form.service)) {
-      const mem = MEMBERSHIPS[form.service];
-      return form.billingCycle === 'annual'
-        ? mem.annualMonthlyCents * 12
-        : mem.monthlyCents;
+    if (isWeeklyPlan(form.service)) {
+      const plan = WEEKLY_PLANS[form.service];
+      return plan.monthlyCents;
     }
     return 0;
   }
@@ -226,7 +230,7 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
 
     // Also submit the booking for tracking
     try {
-      const apiServiceType = isService(form.service) ? form.service : 'express';
+      const apiServiceType = isService(form.service) ? form.service : 'small_exterior';
       await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -254,9 +258,8 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
       if (isService(form.service)) {
         checkoutBody.service_id = form.service;
         checkoutBody.add_on_ids = form.selectedAddOns;
-      } else if (isMembership(form.service)) {
+      } else if (isWeeklyPlan(form.service)) {
         checkoutBody.membership_id = form.service;
-        checkoutBody.billing_cycle = form.billingCycle;
       }
 
       // Attach promo code if valid
@@ -284,8 +287,8 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
     }
   }
 
-  // Get add-ons for current service
-  const currentAddOns = isService(form.service) ? SERVICES[form.service].addOns : [];
+  // Add-ons available for any wash service
+  const currentAddOns = isService(form.service) ? ADD_ONS : [];
 
   if (!isOpen) return null;
 
@@ -425,36 +428,11 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                     </select>
                   </div>
 
-                  {/* Billing cycle for memberships */}
-                  {isMembership(form.service) && (
-                    <div>
-                      <p className="block text-xs font-mono text-muted mb-1.5 tracking-widest">
-                        BILLING
-                      </p>
-                      <div className="grid grid-cols-2 gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setForm((prev) => ({ ...prev, billingCycle: 'monthly' }))}
-                          aria-pressed={form.billingCycle === 'monthly'}
-                          className={`card rounded-xl px-3 py-3 text-sm text-left transition-all cursor-pointer ${
-                            form.billingCycle === 'monthly' ? 'border-water/60' : ''
-                          }`}
-                        >
-                          <p className="font-semibold">Monthly</p>
-                          <p className="text-xs text-muted mt-0.5">Cancel anytime</p>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setForm((prev) => ({ ...prev, billingCycle: 'annual' }))}
-                          aria-pressed={form.billingCycle === 'annual'}
-                          className={`card rounded-xl px-3 py-3 text-sm text-left transition-all cursor-pointer ${
-                            form.billingCycle === 'annual' ? 'border-water/60' : ''
-                          }`}
-                        >
-                          <p className="font-semibold">Annual <span className="text-flame text-xs font-mono">-15%</span></p>
-                          <p className="text-xs text-muted mt-0.5">Billed upfront</p>
-                        </button>
-                      </div>
+                  {/* Weekly plan note */}
+                  {isWeeklyPlan(form.service) && (
+                    <div className="card rounded-xl px-3 py-3 text-sm">
+                      <p className="font-semibold">Weekly Plan — 4 washes/month</p>
+                      <p className="text-xs text-muted mt-0.5">Paid on the 1st of each month</p>
                     </div>
                   )}
 
@@ -524,10 +502,10 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                 </button>
 
                 <p className="font-mono text-[10px] tracking-widest text-water mb-2">
-                  {isMembership(form.service) ? 'CONFIRM MEMBERSHIP' : 'CUSTOMIZE YOUR SERVICE'}
+                  {isWeeklyPlan(form.service) ? 'CONFIRM MEMBERSHIP' : 'CUSTOMIZE YOUR SERVICE'}
                 </p>
                 <h3 className="text-2xl font-bold mb-6">
-                  {isMembership(form.service)
+                  {isWeeklyPlan(form.service)
                     ? 'Review & pay'
                     : 'Add extras to your wash'}
                 </h3>
@@ -574,30 +552,23 @@ export default function BookingModal({ isOpen, onClose, preset }: BookingModalPr
                   </div>
                 )}
 
-                {/* Membership billing summary */}
-                {isMembership(form.service) && (
+                {/* Weekly plan summary */}
+                {isWeeklyPlan(form.service) && (
                   <div className="card rounded-xl p-4 mb-6">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-muted">Plan</span>
                       <span className="text-sm font-semibold">
-                        {MEMBERSHIPS[form.service as MembershipId].label}
+                        {WEEKLY_PLANS[form.service as WeeklyPlanId].label}
                       </span>
                     </div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-muted">Billing</span>
-                      <span className="text-sm font-semibold capitalize">{form.billingCycle}</span>
+                      <span className="text-sm text-muted">Frequency</span>
+                      <span className="text-sm font-semibold">4 washes / month</span>
                     </div>
-                    {form.billingCycle === 'annual' && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted">Savings</span>
-                        <span className="text-sm font-semibold text-flame">
-                          Save {formatCents(
-                            (MEMBERSHIPS[form.service as MembershipId].monthlyCents -
-                              MEMBERSHIPS[form.service as MembershipId].annualMonthlyCents) * 12
-                          )}/yr
-                        </span>
-                      </div>
-                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted">Billing</span>
+                      <span className="text-sm font-semibold">Paid on 1st of month</span>
+                    </div>
                   </div>
                 )}
 

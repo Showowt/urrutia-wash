@@ -157,7 +157,7 @@ export default function SmsConsentPage() {
             <section>
               <h2 className="text-2xl font-bold mb-4 text-ink">5. Quiet Hours</h2>
               <p className="text-sm">
-                We do not send marketing or promotional SMS messages before 8:00 AM or after 9:00 PM local time (Pacific Time, which applies to Henderson, NV). Service-critical messages (e.g., your car is ready for pickup) may be sent outside these hours if your appointment runs into the early morning, but this is rare given our 7:00 AM–4:30 PM operating hours.
+                We do not send marketing or promotional SMS messages before 8:00 AM or after 9:00 PM local time (Pacific Time, which applies to Henderson, NV). Service-critical messages (e.g., your car is ready for pickup) may be sent outside these hours if your appointment runs into the early morning, but this is rare given our 8:00 AM–5:00 PM operating hours.
               </p>
             </section>
 

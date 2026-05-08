@@ -1,25 +1,52 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import BookingModal from '@/components/sections/BookingModal';
 import RevealOnScroll from '@/components/cinema/RevealOnScroll';
 
-type BillingCycle = 'monthly' | 'annual';
-type ModalPreset = 'express' | 'classic' | 'detail' | 'ceramic' | 'solo' | 'duo' | 'fleet' | null;
-
-const PRICES = {
-  solo: { monthly: 89, annual: 76 },
-  duo: { monthly: 149, annual: 127 },
-  fleet: { monthly: 279, annual: 237 },
-} as const;
+type ModalPreset = 'weekly_small_exterior' | 'weekly_small_full' | 'weekly_medium_exterior' | 'weekly_medium_full' | 'weekly_large_exterior' | 'weekly_large_full' | null;
 
 /* ─── Punch card numbers ─── */
 const PUNCH_FILLED = [1, 2, 3, 4, 5];
 const PUNCH_PARTIAL = [6];
 const PUNCH_EMPTY = [7, 8, 9];
 
+const PLAN_CARDS = [
+  {
+    size: 'SMALL',
+    desc: 'Sedans · Coupes',
+    color: 'water',
+    highlighted: false,
+    exteriorPrice: 120,
+    fullPrice: 180,
+    exteriorId: 'weekly_small_exterior' as ModalPreset,
+    fullId: 'weekly_small_full' as ModalPreset,
+  },
+  {
+    size: 'MEDIUM',
+    desc: 'SUVs · Crossovers',
+    color: 'water',
+    highlighted: true,
+    badge: 'RECOMMENDED',
+    exteriorPrice: 130,
+    fullPrice: 220,
+    exteriorId: 'weekly_medium_exterior' as ModalPreset,
+    fullId: 'weekly_medium_full' as ModalPreset,
+  },
+  {
+    size: 'LARGE',
+    desc: 'Trucks · Full-size SUVs',
+    color: 'flame',
+    highlighted: false,
+    exteriorPrice: 150,
+    fullPrice: 250,
+    exteriorId: 'weekly_large_exterior' as ModalPreset,
+    fullId: 'weekly_large_full' as ModalPreset,
+  },
+];
+
 export default function MembershipSection() {
-  const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPreset, setModalPreset] = useState<ModalPreset>(null);
   const [punchVisible, setPunchVisible] = useState(false);
@@ -54,9 +81,6 @@ export default function MembershipSection() {
     return () => observer.disconnect();
   }, []);
 
-  const annualSavingsSolo = (PRICES.solo.monthly - PRICES.solo.annual) * 12;
-  const annualSavingsDuo  = (PRICES.duo.monthly  - PRICES.duo.annual)  * 12;
-
   return (
     <>
       <section id="membership" className="py-24 lg:py-32 relative overflow-hidden">
@@ -73,18 +97,17 @@ export default function MembershipSection() {
 
         <div className="max-w-7xl mx-auto px-5 lg:px-8 relative">
           <RevealOnScroll className="max-w-2xl mb-4">
-            <p className="font-mono text-xs text-water tracking-widest mb-3">03 — URRUTIA CLUB</p>
+            <p className="font-mono text-xs text-water tracking-widest mb-3">03 — WEEKLY PLANS</p>
             <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
-              Become a member. Skip the booking.
+              Come in every week. Stay clean all month.
             </h2>
             <p className="mt-4 text-muted text-lg">
-              Members get priority slots, locked-in pricing, automatic punch-card redemption, and
-              free interior wipe-downs. Cancel anytime.
+              4 washes per month, paid on the 1st. Priced by vehicle size. Priority slots, automatic punch tracking. Cancel anytime.
             </p>
           </RevealOnScroll>
 
           {/* Social proof line */}
-          <RevealOnScroll className="mb-8" delay={80}>
+          <RevealOnScroll className="mb-10" delay={80}>
             <div className="flex items-center gap-2 mt-3">
               <div className="flex -space-x-1.5">
                 {['bg-water/60', 'bg-flame/60', 'bg-water-deep/60'].map((c, i) => (
@@ -97,223 +120,97 @@ export default function MembershipSection() {
                 ))}
               </div>
               <p className="text-sm text-muted">
-                <span className="text-ink font-semibold">200+</span> Henderson drivers trust URRUTIA Club
+                <span className="text-ink font-semibold">200+</span> Henderson drivers on weekly plans
               </p>
             </div>
           </RevealOnScroll>
 
-          {/* Billing toggle */}
-          <RevealOnScroll>
-            <div className="inline-flex items-center gap-1 p-1 bg-surface-2 border border-line rounded-full mb-10">
-              <button
-                onClick={() => setBilling('monthly')}
-                aria-pressed={billing === 'monthly'}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
-                  billing === 'monthly'
-                    ? 'bg-white text-[#08101F] shadow-md'
-                    : 'text-muted hover:text-ink'
-                }`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBilling('annual')}
-                aria-pressed={billing === 'annual'}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
-                  billing === 'annual'
-                    ? 'bg-white text-[#08101F] shadow-md'
-                    : 'text-muted hover:text-ink'
-                }`}
-              >
-                Annual
-                <span
-                  className={`font-mono text-[10px] font-bold ${
-                    billing === 'annual' ? 'text-flame' : 'savings-badge'
-                  }`}
-                >
-                  SAVE 15%
-                </span>
-              </button>
-            </div>
-          </RevealOnScroll>
-
           <div className="grid md:grid-cols-3 gap-4">
-
-            {/* SOLO */}
-            <RevealOnScroll>
-              <div className="card rounded-2xl p-7 flex flex-col h-full">
-                <p className="font-mono text-[11px] tracking-widest text-muted mb-1">TIER 01</p>
-                <h3 className="text-2xl font-bold mb-1">SOLO</h3>
-                <p className="text-sm text-muted mb-5">For one driver, one car.</p>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-5xl font-black price-gradient">
-                    ${PRICES.solo[billing]}
-                  </span>
-                  <span className="text-muted">/ mo</span>
-                </div>
-                <div className="mb-7 min-h-[24px]">
-                  {billing === 'annual' ? (
-                    <p className="text-xs font-mono">
-                      <span className="savings-badge font-bold">Save ${annualSavingsSolo}/yr</span>
-                      {' '}· billed annually
-                    </p>
-                  ) : (
-                    <p className="text-xs text-muted font-mono">billed monthly</p>
-                  )}
-                </div>
-                <ul className="space-y-3 text-sm flex-1 mb-7">
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span><b className="text-ink">4</b> hand washes / month</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>15% off all detail packages</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>Priority booking slots</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>Free interior wipe-down on every wash</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>10th wash free (auto-redeemed)</span>
-                  </li>
-                </ul>
-                <button
-                  onClick={() => openBooking('solo')}
-                  className="btn-ghost w-full py-3 rounded-xl text-sm cursor-pointer"
-                >
-                  Start Solo
-                </button>
-              </div>
-            </RevealOnScroll>
-
-            {/* DUO — recommended */}
-            <RevealOnScroll delay={100}>
-              <div
-                className="rounded-2xl p-7 flex flex-col h-full relative duo-glow"
-                style={{
-                  background:
-                    'linear-gradient(160deg, rgba(0,180,255,0.07) 0%, rgba(0,180,255,0.02) 50%, rgba(0,100,200,0.03) 100%)',
-                  border: '1px solid rgba(0,180,255,0.45)',
-                }}
-              >
-                {/* Water-colored light source */}
+            {PLAN_CARDS.map((card, i) => (
+              <RevealOnScroll key={card.size} delay={i * 100}>
                 <div
-                  className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-32 pointer-events-none rounded-full"
-                  aria-hidden="true"
-                  style={{
+                  className={`rounded-2xl p-7 flex flex-col h-full relative ${
+                    card.highlighted ? 'duo-glow' : 'card'
+                  }`}
+                  style={card.highlighted ? {
                     background:
-                      'radial-gradient(ellipse at center, rgba(0,180,255,0.22) 0%, transparent 70%)',
-                    filter: 'blur(20px)',
-                  }}
-                />
-
-                <div className="absolute -top-3.5 left-5 px-3.5 py-1 rounded-full text-[10px] font-bold tracking-widest bg-gradient-to-r from-water to-water-deep text-white z-10">
-                  RECOMMENDED
-                </div>
-
-                <p className="font-mono text-[11px] tracking-widest text-water mb-1 mt-1">TIER 02</p>
-                <h3 className="text-2xl font-bold mb-1">DUO</h3>
-                <p className="text-sm text-muted mb-5">Two cars. One household. One bill.</p>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-5xl font-black price-gradient">
-                    ${PRICES.duo[billing]}
-                  </span>
-                  <span className="text-muted">/ mo</span>
-                </div>
-                <div className="mb-7 min-h-[24px]">
-                  {billing === 'annual' ? (
-                    <p className="text-xs font-mono">
-                      <span className="savings-badge font-bold">Save ${annualSavingsDuo}/yr</span>
-                      {' '}· billed annually
-                    </p>
-                  ) : (
-                    <p className="text-xs text-muted font-mono">billed monthly</p>
+                      'linear-gradient(160deg, rgba(0,180,255,0.07) 0%, rgba(0,180,255,0.02) 50%, rgba(0,100,200,0.03) 100%)',
+                    border: '1px solid rgba(0,180,255,0.45)',
+                  } : {}}
+                >
+                  {card.badge && (
+                    <>
+                      <div
+                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-32 pointer-events-none rounded-full"
+                        aria-hidden="true"
+                        style={{
+                          background:
+                            'radial-gradient(ellipse at center, rgba(0,180,255,0.22) 0%, transparent 70%)',
+                          filter: 'blur(20px)',
+                        }}
+                      />
+                      <div className="absolute -top-3.5 left-5 px-3.5 py-1 rounded-full text-[10px] font-bold tracking-widest bg-gradient-to-r from-water to-water-deep text-white z-10">
+                        {card.badge}
+                      </div>
+                    </>
                   )}
-                </div>
-                <ul className="space-y-3 text-sm flex-1 mb-7">
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span><b className="text-ink">8</b> hand washes / month (2 cars)</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>20% off all detail packages</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>Same-day booking guarantee</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>Free interior shampoo quarterly</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-water">→</span>
-                    <span>Apple Wallet membership pass</span>
-                  </li>
-                </ul>
-                <button
-                  onClick={() => openBooking('duo')}
-                  className="btn-primary w-full py-3 rounded-xl text-sm cursor-pointer"
-                >
-                  Start Duo
-                </button>
-              </div>
-            </RevealOnScroll>
 
-            {/* FLEET */}
-            <RevealOnScroll delay={200}>
-              <div className="card rounded-2xl p-7 flex flex-col h-full">
-                <p className="font-mono text-[11px] tracking-widest text-flame mb-1">TIER 03</p>
-                <h3 className="text-2xl font-bold mb-1">FLEET</h3>
-                <p className="text-sm text-muted mb-5">Unlimited washes. Up to 4 vehicles.</p>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-5xl font-black price-gradient">
-                    ${PRICES.fleet[billing]}
-                  </span>
-                  <span className="text-muted">/ mo</span>
-                </div>
-                <div className="mb-7 min-h-[24px]">
-                  <p className="text-xs text-muted font-mono">
-                    {billing === 'annual' ? 'billed annually · save 15%' : 'billed monthly'}
+                  <p className={`font-mono text-[11px] tracking-widest text-${card.color} mb-1 ${card.badge ? 'mt-1' : ''}`}>
+                    {card.size}
                   </p>
+                  <h3 className="text-2xl font-bold mb-1">{card.desc}</h3>
+                  <p className="text-sm text-muted mb-5">4 washes/month · Paid on 1st</p>
+
+                  {/* Exterior price */}
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-4xl font-black price-gradient">
+                      ${card.exteriorPrice}
+                    </span>
+                    <span className="text-muted text-sm">/ mo · ext only</span>
+                  </div>
+                  <div className="flex items-baseline gap-1 mb-5">
+                    <span className="text-4xl font-black price-gradient">
+                      ${card.fullPrice}
+                    </span>
+                    <span className="text-muted text-sm">/ mo · int + ext</span>
+                  </div>
+
+                  <ul className="space-y-3 text-sm flex-1 mb-7">
+                    <li className="flex gap-3">
+                      <span className={`text-${card.color}`}>→</span>
+                      <span><b className="text-ink">4</b> washes per month</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className={`text-${card.color}`}>→</span>
+                      <span>Priority booking slots</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className={`text-${card.color}`}>→</span>
+                      <span>10th wash free (auto-redeemed)</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className={`text-${card.color}`}>→</span>
+                      <span>SMS confirmation every visit</span>
+                    </li>
+                  </ul>
+
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => openBooking(card.exteriorId)}
+                      className="btn-ghost w-full py-3 rounded-xl text-sm cursor-pointer"
+                    >
+                      Start Exterior — ${card.exteriorPrice}/mo
+                    </button>
+                    <button
+                      onClick={() => openBooking(card.fullId)}
+                      className={`w-full py-3 rounded-xl text-sm cursor-pointer ${card.highlighted ? 'btn-primary' : 'btn-ghost'}`}
+                    >
+                      Start Full — ${card.fullPrice}/mo
+                    </button>
+                  </div>
                 </div>
-                <ul className="space-y-3 text-sm flex-1 mb-7">
-                  <li className="flex gap-3">
-                    <span className="text-flame">→</span>
-                    <span><b className="text-ink">Unlimited</b> hand washes</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-flame">→</span>
-                    <span>Up to <b className="text-ink">4</b> registered vehicles</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-flame">→</span>
-                    <span>30% off all detail packages</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-flame">→</span>
-                    <span>Priority scheduling every visit</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-flame">→</span>
-                    <span>Dedicated account manager</span>
-                  </li>
-                </ul>
-                <button
-                  onClick={() => openBooking('fleet')}
-                  className="btn-ghost w-full py-3 rounded-xl text-sm cursor-pointer"
-                >
-                  Start Fleet
-                </button>
-              </div>
-            </RevealOnScroll>
+              </RevealOnScroll>
+            ))}
           </div>
 
           {/* ─── Punch Card ─── */}
@@ -380,6 +277,19 @@ export default function MembershipSection() {
                 </div>
               </div>
             </div>
+          </RevealOnScroll>
+
+          {/* Link to full plans page */}
+          <RevealOnScroll className="mt-6 text-center">
+            <Link
+              href="/memberships"
+              className="btn-ghost px-6 py-3 rounded-full text-sm inline-flex items-center gap-2"
+            >
+              See All Weekly Plans
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
           </RevealOnScroll>
 
         </div>

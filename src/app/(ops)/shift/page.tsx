@@ -18,7 +18,7 @@ function formatDollars(cents: number): string {
 
 export default function ShiftPage() {
   const [clockedIn, setClockedIn] = useState(true);
-  const [clockInTime] = useState("7:00 AM");
+  const [clockInTime] = useState("8:00 AM");
 
   const totalTips = CREW.reduce((sum, c) => sum + c.tipsCents, 0);
 
